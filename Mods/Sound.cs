@@ -52,7 +52,7 @@ namespace Seralyth.Mods
         {
             if (!Directory.Exists($"{PluginInfo.BaseDirectory}/Sounds" + Subdirectory))
                 Directory.CreateDirectory($"{PluginInfo.BaseDirectory}/Sounds" + Subdirectory);
-
+            
             List<string> enabledSounds = (from binfo in Buttons.buttons[Buttons.GetCategory("Soundboard")] where binfo.enabled select binfo.overlapText).ToList();
             List<ButtonInfo> soundButtons = new List<ButtonInfo>();
             if (Subdirectory != "")
@@ -62,16 +62,16 @@ namespace Seralyth.Mods
 
             string[] folders = Directory.GetDirectories($"{PluginInfo.BaseDirectory}/Sounds" + Subdirectory);
             soundButtons.AddRange(from folder in folders
-                                  let substringLength = ($"{PluginInfo.BaseDirectory}/Sounds" + Subdirectory + "/").Length
-                                  let FolderName = folder.Replace("\\", "/")[substringLength..]
-                                  select new ButtonInfo
-                                  {
-                                      buttonText = "SoundboardFolder" + FolderName.Hash(),
-                                      overlapText = $"<sprite name=\"Folder\">  {FolderName}  ",
-                                      method = () => OpenFolder(folder[21..]),
-                                      isTogglable = false,
-                                      toolTip = "Opens the " + FolderName + " folder."
-                                  });
+            let substringLength = ($"{PluginInfo.BaseDirectory}/Sounds" + Subdirectory + "/").Length
+            let FolderName = folder.Replace("\\", "/")[substringLength..]
+            select new ButtonInfo
+            {
+                buttonText = "SoundboardFolder" + FolderName.Hash(),
+                overlapText = $"<sprite name=\"Folder\">  {FolderName}  ",
+                method = () => OpenFolder(folder[21..]),
+                isTogglable = false,
+                toolTip = "Opens the " + FolderName + " folder."
+            });
 
             string[] files = Directory.GetFiles($"{PluginInfo.BaseDirectory}/Sounds" + Subdirectory);
             if (!RecorderPatch.enabled || Buttons.GetIndex("Legacy Microphone").enabled)
@@ -91,23 +91,22 @@ namespace Seralyth.Mods
                     };
                     if (OverlapAudio)
                     {
-                        buttonInfo.method = () => PlayAudio(file);
+                        buttonInfo.method = () => PlayAudio(file[14..]);
                         buttonInfo.isTogglable = false;
                     }
                     else
                     {
-                        buttonInfo.method = () => PlaySoundboardSound(file, buttonInfo, LoopAudio, BindMode > 0);
+                        buttonInfo.method = () => PlaySoundboardSound(file[14..], buttonInfo, LoopAudio, BindMode > 0);
                         buttonInfo.disableMethod = () => StopSoundboardSound(buttonInfo);
                     }
 
                     soundButtons.Add(buttonInfo);
-                }
-                else
+                } else
                 {
                     if (BindMode > 0)
                     {
                         bool enabled = enabledSounds.Contains(soundName);
-                        soundButtons.Add(new ButtonInfo { buttonText = "SoundboardSound" + soundName.Hash(), overlapText = soundName, method = () => PrepareBindAudio(file), disableMethod = StopAllSounds, enabled = enabled, toolTip = "Plays \"" + RemoveFileExtension(fileName).Replace("_", " ") + "\" through your microphone." });
+                        soundButtons.Add(new ButtonInfo { buttonText = "SoundboardSound" + soundName.Hash(), overlapText = soundName, method = () => PrepareBindAudio(file[14..]), disableMethod = StopAllSounds, enabled = enabled, toolTip = "Plays \"" + RemoveFileExtension(fileName).Replace("_", " ") + "\" through your microphone." });
 
                     }
                     else
@@ -115,15 +114,15 @@ namespace Seralyth.Mods
                         if (LoopAudio)
                         {
                             bool enabled = enabledSounds.Contains(soundName);
-                            soundButtons.Add(new ButtonInfo { buttonText = "SoundboardSound" + soundName.Hash(), overlapText = soundName, enableMethod = () => PlayAudio(file), disableMethod = StopAllSounds, enabled = enabled, toolTip = "Plays \"" + RemoveFileExtension(fileName).Replace("_", " ") + "\" through your microphone." });
+                            soundButtons.Add(new ButtonInfo { buttonText = "SoundboardSound" + soundName.Hash(), overlapText = soundName, enableMethod = () => PlayAudio(file[14..]), disableMethod = StopAllSounds, enabled = enabled, toolTip = "Plays \"" + RemoveFileExtension(fileName).Replace("_", " ") + "\" through your microphone." });
                         }
                         else
-                            soundButtons.Add(new ButtonInfo { buttonText = "SoundboardSound" + soundName.Hash(), overlapText = RemoveFileExtension(fileName).Replace("_", " "), method = () => PlayAudio(file), isTogglable = false, toolTip = "Plays \"" + RemoveFileExtension(fileName).Replace("_", " ") + "\" through your microphone." });
+                            soundButtons.Add(new ButtonInfo { buttonText = "SoundboardSound" + soundName.Hash(), overlapText = RemoveFileExtension(fileName).Replace("_", " "), method = () => PlayAudio(file[14..]), isTogglable = false, toolTip = "Plays \"" + RemoveFileExtension(fileName).Replace("_", " ") + "\" through your microphone." });
                     }
                 }
+                
 
-
-
+                
             }
             soundButtons.Add(new ButtonInfo { buttonText = "Stop All Sounds", method = StopAllSounds, isTogglable = false, toolTip = "Stops all currently playing sounds." });
             soundButtons.Add(new ButtonInfo { buttonText = "Open Sound Folder", method = OpenSoundFolder, isTogglable = false, toolTip = "Opens a folder containing all of your sounds." });
@@ -177,13 +176,13 @@ namespace Seralyth.Mods
             string filename = $"Sounds{Subdirectory}/{name}.{GetFileExtension(url)}";
             if (File.Exists($"{PluginInfo.BaseDirectory}/{filename}"))
                 File.Delete($"{PluginInfo.BaseDirectory}/{filename}");
-
+            
             audioFilePool.Remove(name);
-
+            
             AudioClip soundDownloaded = LoadSoundFromURL(url, filename);
             if (soundDownloaded.length < 20f)
                 Play2DAudio(soundDownloaded);
-
+            
             NotificationManager.SendNotification("<color=grey>[</color><color=green>SUCCESS</color><color=grey>]</color> Successfully downloaded " + name + " to the soundboard.");
         }
 
@@ -263,7 +262,7 @@ namespace Seralyth.Mods
             if (bind && BindMode > 0)
             {
                 bool bindPressed = bindings[BindMode - 1];
-                shouldPlay = bindPressed && !lastBindPressed;
+                shouldPlay = bindPressed && !lastBindPressed; 
                 lastBindPressed = bindPressed;
             }
 
@@ -482,7 +481,7 @@ namespace Seralyth.Mods
         {
             if (Time.time > soundSpamDelay)
                 squeakToggle = !squeakToggle;
-
+            
             SoundSpam(squeakToggle ? 75 : 76);
         }
 
