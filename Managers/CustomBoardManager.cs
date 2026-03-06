@@ -168,7 +168,7 @@ namespace Seralyth.Managers
 
         #region Game Boards
         public const int StumpLeaderboardIndex = 3;
-        public const int ForestLeaderboardIndex = 2;
+        public const int ForestLeaderboardIndex = 3;
 
         public static string motdTemplate = "You are using build {0}. This menu was created by Seralyth on GitHub." +
         "This menu is completely free and open sourced, if you paid for this menu you have been scammed. " +
