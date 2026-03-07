@@ -576,6 +576,13 @@ namespace Seralyth.Mods
         public static float subThingyZ;
 
         public static Vector3 lastPosition = Vector3.zero;
+        public static void EnableWASDFly()
+        {
+            lastPosition = GorillaTagger.Instance.rigidbody.transform.position;
+            if (XRSettings.isDeviceActive && Time.time < timeMenuStarted + 1f)
+                Toggle("WASD Fly");
+        }
+
         public static void WASDFly()
         {
             bool stationary = !Buttons.GetIndex("Disable Stationary WASD Fly").enabled;
