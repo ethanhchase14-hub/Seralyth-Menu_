@@ -762,8 +762,15 @@ namespace Seralyth.Menu
                         }
                     } else if (RecorderPatch.enabled)
                     {
-                        if (!Buttons.GetIndex("Microphone Feedback").enabled)
-                            NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = VoiceManager.Get().AudioClips.Any() || VoiceManager.Get().PostProcessors.Any();
+                        bool enabled = VoiceManager.Get().AudioClips.Any()
+                         || VoiceManager.Get().PostProcessors.Any()
+                         || VoiceManager.Get().Pitch != 1f;
+
+                        if (toggleDebugEchoMode != enabled)
+                        {
+                            NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = enabled;
+                            toggleDebugEchoMode = enabled;
+                        }
 
                     }
                     
@@ -7176,6 +7183,8 @@ jgs \_   _/ |Oo\
         public static bool redactText;
 
         public static string inputTextColor = "green";
+
+        public static bool toggleDebugEchoMode;
         
         public static bool annoyingMode; // Build with this enabled for a surprise
         public static readonly string[] facts = {

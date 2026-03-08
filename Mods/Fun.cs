@@ -2195,10 +2195,7 @@ namespace Seralyth.Mods
                 return;
 
             if (RecorderPatch.enabled)
-            {
                 VoiceManager.Get().Pitch = pitch;
-                NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = pitch != 1;
-            }
             else
             {
                 Recorder mic = NetworkSystem.Instance.VoiceConnection.PrimaryRecorder;
@@ -2231,7 +2228,9 @@ namespace Seralyth.Mods
 
         public static void SetDebugEchoMode(bool value)
         {
-            if (NetworkSystem.Instance.VoiceConnection.PrimaryRecorder != null)
+            if (!PhotonNetwork.InRoom)
+                return;
+            if (NetworkSystem.Instance.VoiceConnection.PrimaryRecorder != null && NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.IsRecording)
                 NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = value;
         }
 
