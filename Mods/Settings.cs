@@ -228,22 +228,25 @@ namespace Seralyth.Mods
             {
                 string[] lines = File.ReadAllLines(source);
 
-                if (lines.Length >= 5) // this is very bad but it basically shifts some values from ii's menu to fit with this
+                if (lines.Length >= 5)
                 {
                     string[] settings = lines[2].Split(new[] { ";;" }, StringSplitOptions.None);
 
                     int pcbgIndex = 13;
+                    const int maxPcbg = 6;
+                    const int maxPageType = 6;
+                    const int maxThemeType = 65;
 
                     if (pcbgIndex < settings.Length && int.TryParse(settings[pcbgIndex], out int pcbgVal))
-                        settings[pcbgIndex] = (pcbgVal + 1).ToString();
+                        settings[pcbgIndex] = Math.Clamp(pcbgVal + 1, 0, maxPcbg).ToString();
 
                     lines[2] = string.Join(";;", settings);
 
                     if (int.TryParse(lines[3], out int pageType))
-                        lines[3] = (pageType - 1).ToString();
+                        lines[3] = Math.Clamp(pageType - 1, 0, maxPageType).ToString();
 
                     if (int.TryParse(lines[4], out int theme))
-                        lines[4] = (theme - 1).ToString();
+                        lines[4] = Math.Clamp(theme - 1, 0, maxThemeType).ToString();
                 }
 
                 File.WriteAllLines(destination, lines);
