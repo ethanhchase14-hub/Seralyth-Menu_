@@ -48,13 +48,13 @@ namespace Seralyth.Mods
         public static bool OverlapAudio = false;
         public static int BindMode;
         public static string Subdirectory = "";
-        public static readonly Dictionary<string, ButtonInfo[]> cachedButtons = new Dictionary<string, ButtonInfo[]>();
+        public static readonly Dictionary<string, ButtonInfo[]> CachedButtons = new Dictionary<string, ButtonInfo[]>();
 
         public static void LoadSoundboard(bool openCategory = true)
         {
             string key = Subdirectory ?? "";
 
-            if (cachedButtons.TryGetValue(key, out ButtonInfo[] buttons))
+            if (CachedButtons.TryGetValue(key, out ButtonInfo[] buttons))
             {
                 Buttons.buttons[Buttons.GetCategory("Soundboard")] = buttons;
 
@@ -206,7 +206,7 @@ namespace Seralyth.Mods
                 buttonText = "Reload Sounds",
                 method = () =>
                 {
-                    cachedButtons.Clear();
+                    CachedButtons.Clear();
                     LoadSoundboard();
                 },
                 isTogglable = false,
@@ -221,8 +221,8 @@ namespace Seralyth.Mods
                 toolTip = "Opens a public audio library, where you can download your own sounds."
             });
 
-            cachedButtons[key] = soundButtons.ToArray();
-            Buttons.buttons[Buttons.GetCategory("Soundboard")] = cachedButtons[key];
+            CachedButtons[key] = soundButtons.ToArray();
+            Buttons.buttons[Buttons.GetCategory("Soundboard")] = CachedButtons[key];
 
             if (openCategory)
                 Buttons.CurrentCategoryName = "Soundboard";
@@ -277,7 +277,7 @@ namespace Seralyth.Mods
                     Play2DAudio(clip);
             });
 
-            cachedButtons.Remove(Subdirectory ?? "");
+            CachedButtons.Remove(Subdirectory ?? "");
 
             NotificationManager.SendNotification("<color=grey>[</color><color=green>SUCCESS</color><color=grey>]</color> Successfully downloaded " + name + " to the soundboard.");
         }
@@ -434,7 +434,7 @@ namespace Seralyth.Mods
             if (soundboardAudioManager != null)
                 soundboardAudioManager.GetComponent<AudioSource>().Stop();
 
-            foreach (ButtonInfo[] buttonArray in cachedButtons.Values)
+            foreach (ButtonInfo[] buttonArray in CachedButtons.Values)
             {
                 foreach (ButtonInfo button in buttonArray)
                 {
