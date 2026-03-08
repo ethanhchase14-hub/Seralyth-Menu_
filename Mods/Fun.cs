@@ -2195,7 +2195,13 @@ namespace Seralyth.Mods
                 return;
 
             if (RecorderPatch.enabled)
+            {
+                LogManager.Log("1");
                 VoiceManager.Get().Pitch = pitch;
+                if (VoiceManager.Get().Pitch != 1f)
+                    NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = true;
+                LogManager.Log("2");
+            }
             else
             {
                 Recorder mic = NetworkSystem.Instance.VoiceConnection.PrimaryRecorder;
@@ -2318,6 +2324,8 @@ namespace Seralyth.Mods
             Sound.FixMicrophone();
 
             RecorderPatch.enabled = !Buttons.GetIndex("Legacy Microphone").enabled;
+
+            NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = false;
         }
 
         public static void SaveNarration(string text)
