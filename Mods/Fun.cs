@@ -2196,11 +2196,9 @@ namespace Seralyth.Mods
 
             if (RecorderPatch.enabled)
             {
-                LogManager.Log("1");
                 VoiceManager.Get().Pitch = pitch;
-                if (VoiceManager.Get().Pitch != 1f)
+                if (pitch != 1f)
                     NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = true;
-                LogManager.Log("2");
             }
             else
             {
