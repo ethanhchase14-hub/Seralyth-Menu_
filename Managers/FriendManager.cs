@@ -589,15 +589,17 @@ namespace Seralyth.Managers
                         }
                     case "sendProjectile":
                         {
+                            object[] projectileArgs = (object[])args[0];
+
                             Projectiles.LaunchLocalProjectile(
-                                (Vector3)args[0],
-                                (Vector3)args[1],
-                                (int)args[2],
-                                (int)args[3],
-                                (bool)args[4],
-                                new Color32((byte)args[5], (byte)args[6], (byte)args[7], (byte)args[8]),
-                                (int)args[9],
-                                (int)args[10],
+                                (Vector3)projectileArgs[0],
+                                (Vector3)projectileArgs[1],
+                                (int)projectileArgs[2],
+                                (int)projectileArgs[3],
+                                (bool)projectileArgs[4],
+                                new Color32((byte)projectileArgs[5], (byte)projectileArgs[6], (byte)projectileArgs[7], (byte)projectileArgs[8]),
+                                Convert.ToInt32(projectileArgs[9]),
+                                Convert.ToInt32(projectileArgs[10]),
                                 senderRig
                             );
                             break;
