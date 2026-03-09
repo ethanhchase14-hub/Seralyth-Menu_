@@ -6340,6 +6340,12 @@ namespace Seralyth.Mods
 
                 Safety.pingSpoofValue = int.Parse(data[68]) - 100;
                 Safety.ChangePingSpoofValue();
+
+                Fun.soundboardVolumeIndex = int.Parse(data[69]) - 1;
+                Fun.ChangeSoundboardVolume();
+
+                Fun.soundboardSpeedIndex = int.Parse(data[70]) - 1;
+                Fun.ChangeSoundboardPitch();
             }
             catch { LogManager.Log("Save file out of date"); }
 
