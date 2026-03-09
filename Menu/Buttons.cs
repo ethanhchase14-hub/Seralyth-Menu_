@@ -2402,7 +2402,6 @@ namespace Seralyth.Menu
 
                 new ButtonInfo { buttonText = "Change Soundboard Speed", overlapText = "Change Soundboard Speed <color=grey>[</color><color=green>1</color><color=grey>]</color>", method =() => Fun.ChangeSoundboardPitch(), enableMethod =() => Fun.ChangeSoundboardPitch(), disableMethod =() => Fun.ChangeSoundboardPitch(false), incremental = true, isTogglable = false, toolTip = "Changes the speed of your sounds" },
                 new ButtonInfo { buttonText = "Local Soundboard", enableMethod =() => Sound.localSoundboard = true, disableMethod =()=> Sound.localSoundboard = false, enabled = true, toolTip = "Decides if you should hear your own soundboards or not." },
-
             },
 
             new[] { // Overpowered Settings [31]
