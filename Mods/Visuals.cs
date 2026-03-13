@@ -251,25 +251,26 @@ namespace Seralyth.Mods
         public static void EnableFog() =>
             ZoneShaderSettings.activeInstance.SetGroundFogValue(new Color(0.9569f, 0.6941f, 0.502f, 0.1216f), 40f, 10f, 40f);
 
-        private static readonly List<TimeOfDayDependentAudio> disabledAmbientObjects = new List<TimeOfDayDependentAudio>();
+        private static readonly Dictionary<TimeOfDayDependentAudio, float> ambientObjects = new Dictionary<TimeOfDayDependentAudio, float>();
+
         public static void DisableAmbience()
         {
             foreach (TimeOfDayDependentAudio ambientObject in GetAllType<TimeOfDayDependentAudio>())
             {
-                if (ambientObject.gameObject.activeSelf)
+                if (ambientObject.currentVolume != 0 && !ambientObjects.ContainsKey(ambientObject))
                 {
-                    disabledAmbientObjects.Add(ambientObject);
-                    ambientObject.gameObject.SetActive(false);
+                    ambientObjects.Add(ambientObject, ambientObject.currentVolume);
+                    ambientObject.currentVolume = 0f;
                 }
             }
         }
 
         public static void EnableAmbience()
         {
-            foreach (TimeOfDayDependentAudio ambientObject in disabledAmbientObjects)
-                ambientObject.gameObject.SetActive(true);
+            foreach (KeyValuePair<TimeOfDayDependentAudio, float> pair in ambientObjects)
+                pair.Key.currentVolume = pair.Value;
 
-            disabledAmbientObjects.Clear();
+            ambientObjects.Clear();
         }
 
         public static void ResetFog() =>
