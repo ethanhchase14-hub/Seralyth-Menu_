@@ -120,7 +120,9 @@ namespace Seralyth.Mods
             "CakePieces_Anchor_LEFT",
             "CakePieces_Anchor_RIGHT",
             "BalloonAnimalProjectileAnchor_LEFT",
-            "BalloonAnimalProjectileAnchor_RIGHT"
+            "BalloonAnimalProjectileAnchor_RIGHT",
+            "EnergyWafer_Anchor_LEFT",
+            "EnergyWafer_Anchor_RIGHT"
         };
 
         public static string SnowballName = "GrowingSnowball";
@@ -425,7 +427,8 @@ namespace Seralyth.Mods
                 "Slingshot",
                 "Pillow",
                 "Cake",
-                "Balloon Animal"
+                "Balloon Animal",
+                "Energy Wafer"
             };
 
             if (positive)
