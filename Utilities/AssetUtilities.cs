@@ -85,7 +85,7 @@ namespace Seralyth.Utilities
 
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    LogManager.LogError($"Failed to load audio file '{fileName}': {request.error}");
+                    LogManager.LogError($"Failed to load audio file '{fileName}': {request.error}\nPath: {url}");
                     onLoaded?.Invoke(null);
                     yield break;
                 }
