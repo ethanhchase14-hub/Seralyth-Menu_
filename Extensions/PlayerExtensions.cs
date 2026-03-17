@@ -21,9 +21,9 @@
 
 using ExitGames.Client.Photon;
 using GorillaLocomotion;
-using Seralyth.Utilities;
 using Photon.Pun;
 using Photon.Realtime;
+using Seralyth.Utilities;
 using System.Linq;
 using UnityEngine;
 

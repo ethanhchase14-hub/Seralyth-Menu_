@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-﻿using HarmonyLib;
+using HarmonyLib;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static Seralyth.Menu.Main;
@@ -45,9 +45,10 @@ namespace Seralyth.Patches.Menu
                 material.SetFloat("_ZWrite", 0);
                 material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
                 material.renderQueue = (int)RenderQueue.Transparent;
-            } else
+            }
+            else
                 __result.GetComponent<Renderer>().material.shader = Shader.Find(shinyMenu ? "Universal Render Pipeline/Lit" : "GorillaTag/UberShader");
-            
+
             __result.GetComponent<Renderer>().material.color = backgroundColor.GetColor(0);
         }
     }

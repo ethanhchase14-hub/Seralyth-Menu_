@@ -27,17 +27,17 @@ using GorillaLocomotion.Gameplay;
 using GorillaNetworking;
 using GorillaTagScripts;
 using GorillaTagScripts.VirtualStumpCustomMaps;
+using Ionic.Zlib;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon.Voice;
+using Photon.Voice.PUN;
 using Seralyth.Classes.Menu;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
 using Seralyth.Utilities;
-using Ionic.Zlib;
-using Photon.Pun;
-using Photon.Realtime;
-using Photon.Voice;
-using Photon.Voice.PUN;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -65,7 +65,7 @@ namespace Seralyth.Mods
             GorillaGuardianManager guardianManager = (GorillaGuardianManager)GorillaGameManager.instance;
             if (guardianManager.IsPlayerGuardian(target))
                 return;
-            
+
             foreach (TappableGuardianIdol tgi in GetAllType<TappableGuardianIdol>())
             {
                 if (tgi.manager && tgi.manager.photonView && !tgi.isChangingPositions)
@@ -287,7 +287,7 @@ namespace Seralyth.Mods
                 NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You are not master client.");
                 return;
             }
-                
+
             NetPlayer player = GetPlayerFromVRRig(rig);
             materialState.TryGetValue(rig, out var state);
 
@@ -520,7 +520,7 @@ namespace Seralyth.Mods
             if (Time.time > crashAllDelay && rig.transform.position.x < -5)
             {
                 crashAllDelay = Time.time + 0.1f;
-                
+
                 BetaSetVelocityPlayer(target, (rig.transform.position.y > 55f ? Vector3.right : Vector3.up) * 50f);
                 RPCProtection();
             }
@@ -898,7 +898,7 @@ namespace Seralyth.Mods
                 var GunData = RenderGun();
                 RaycastHit Ray = GunData.Ray;
 
-                if (gunLocked && lockTarget != null) 
+                if (gunLocked && lockTarget != null)
                     GameEntityCrash(ManagerRegistry.GhostReactor.GameEntityManager, lockTarget.GetPhotonPlayer(), lockTarget.transform.position);
 
                 if (GetGunInput(true))
@@ -1020,7 +1020,7 @@ namespace Seralyth.Mods
                             reportDelay = Time.time + 0.5f;
                             GorillaPlayerScoreboardLine.ReportPlayer(GetPlayerFromVRRig(lockTarget).UserId, GorillaPlayerLineButton.ButtonType.Cheating, GetPlayerFromVRRig(lockTarget).NickName);
                         }
-                        
+
                         SerializePatch.OverrideSerialization = () =>
                         {
                             GetPlayerFromVRRig(lockTarget);
@@ -1346,10 +1346,10 @@ namespace Seralyth.Mods
                         return;
                 }
 
-                List<GameEntity> entities = gameEntityManager.entities.Where(e => 
-                    e != null && 
-                    e.typeId == hash && 
-                    Vector3.Distance(ServerLeftHandPos, e.transform.position) < maxDistance && 
+                List<GameEntity> entities = gameEntityManager.entities.Where(e =>
+                    e != null &&
+                    e.typeId == hash &&
+                    Vector3.Distance(ServerLeftHandPos, e.transform.position) < maxDistance &&
                     Vector3.Distance(GorillaTagger.Instance.bodyCollider.transform.position, e.transform.position) > 3f &&
                     gameEntityManager.ValidateGrab(e, PhotonNetwork.LocalPlayer.actorNumber, true)).ToList();
 
@@ -1432,9 +1432,9 @@ namespace Seralyth.Mods
 
                 byte[] array = GZipStream.CompressBuffer(data);
 
-                object[] createData = { 
-                    (int)manager.zone, 
-                    array 
+                object[] createData = {
+                    (int)manager.zone,
+                    array
                 };
 
                 switch (target)
@@ -1917,7 +1917,8 @@ namespace Seralyth.Mods
                             {
                                 ManagerRegistry.GhostReactor.GameEntityManager.photonView.RPC("DestroyItemRPC", RpcTarget.All, new[] { gameEntity.GetNetId() });
                                 RPCProtection();
-                            } else
+                            }
+                            else
                             {
                                 gameEntity.RequestGrab(true, Vector3.zero, Quaternion.identity);
                                 gameEntity.RequestThrow(true, GorillaTagger.Instance.bodyCollider.transform.position - (Vector3.up * 14f), Quaternion.identity, Vector3.zero, Vector3.zero);
@@ -1981,7 +1982,8 @@ namespace Seralyth.Mods
             Transform head = GorillaTagger.Instance.headCollider.transform;
             VRRig targetRig = rigs
                 .Where(rig => rig != null)
-                .Select(rig => new {
+                .Select(rig => new
+                {
                     Rig = rig,
                     ToRig = (rig.transform.position - head.position).normalized,
                     Distance = Vector3.Distance(head.position, rig.transform.position)
@@ -2006,7 +2008,7 @@ namespace Seralyth.Mods
             ControllerInputPoller.instance.leftControllerGripFloat = 1f;
 
             int hash = GadgetByName["MegaChargeBlasterGadget"];
- 
+
             GameEntityManager gameEntityManager = ManagerRegistry.SuperInfection.GameEntityManager;
             GamePlayer gamePlayer = GamePlayer.GetGamePlayer(PhotonNetwork.LocalPlayer);
             if (gamePlayer.IsHoldingEntity(gameEntityManager, true))
@@ -2016,7 +2018,8 @@ namespace Seralyth.Mods
                     return blaster;
                 else
                     entity.RequestThrow(true, entity.transform.position, entity.transform.rotation, Vector3.zero, Vector3.zero, gameEntityManager);
-            } else
+            }
+            else
             {
                 if (NetworkSystem.Instance.IsMasterClient)
                 {
@@ -2231,25 +2234,26 @@ namespace Seralyth.Mods
         {
             if (GetBlaster() == null)
                 SerializePatch.OverrideSerialization = null;
-            else SerializePatch.OverrideSerialization ??= () => {
-                    MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
+            else SerializePatch.OverrideSerialization ??= () =>
+            {
+                MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
-                    Vector3 archivePos = VRRig.LocalRig.transform.position;
+                Vector3 archivePos = VRRig.LocalRig.transform.position;
 
-                    foreach (NetPlayer Player in NetworkSystem.Instance.PlayerListOthers)
-                    {
-                        VRRig targetRig = GetVRRigFromPlayer(Player);
+                foreach (NetPlayer Player in NetworkSystem.Instance.PlayerListOthers)
+                {
+                    VRRig targetRig = GetVRRigFromPlayer(Player);
 
-                        VRRig.LocalRig.transform.position = targetRig.transform.position - Vector3.up;
-                        SendSerialize(GorillaTagger.Instance.myVRRig.GetView, new RaiseEventOptions { TargetActors = new[] { Player.ActorNumber } });
-                    }
+                    VRRig.LocalRig.transform.position = targetRig.transform.position - Vector3.up;
+                    SendSerialize(GorillaTagger.Instance.myVRRig.GetView, new RaiseEventOptions { TargetActors = new[] { Player.ActorNumber } });
+                }
 
-                    RPCProtection();
+                RPCProtection();
 
-                    VRRig.LocalRig.transform.position = archivePos;
+                VRRig.LocalRig.transform.position = archivePos;
 
-                    return false;
-                };
+                return false;
+            };
 
             foreach (NetPlayer Player in NetworkSystem.Instance.PlayerListOthers)
             {
@@ -2289,7 +2293,8 @@ namespace Seralyth.Mods
         {
             if (GetBlaster() == null)
                 SerializePatch.OverrideSerialization = null;
-            else SerializePatch.OverrideSerialization ??= () => {
+            else SerializePatch.OverrideSerialization ??= () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -2347,7 +2352,8 @@ namespace Seralyth.Mods
         {
             if (GetBlaster() == null)
                 SerializePatch.OverrideSerialization = null;
-            else SerializePatch.OverrideSerialization ??= () => {
+            else SerializePatch.OverrideSerialization ??= () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -2405,7 +2411,8 @@ namespace Seralyth.Mods
         {
             if (GetBlaster() == null)
                 SerializePatch.OverrideSerialization = null;
-            else SerializePatch.OverrideSerialization ??= () => {
+            else SerializePatch.OverrideSerialization ??= () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -2463,7 +2470,8 @@ namespace Seralyth.Mods
         {
             if (GetBlaster() == null)
                 SerializePatch.OverrideSerialization = null;
-            else SerializePatch.OverrideSerialization ??= () => {
+            else SerializePatch.OverrideSerialization ??= () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -2517,11 +2525,11 @@ namespace Seralyth.Mods
             }
         }
 
-        public static Dictionary<string, int> GadgetByName 
-        { 
-            get => 
+        public static Dictionary<string, int> GadgetByName
+        {
+            get =>
                 ManagerRegistry.SuperInfection.GameEntityManager.itemPrefabFactory
-                .ToDictionary(prefab => prefab.Value.name, prefab => prefab.Key); 
+                .ToDictionary(prefab => prefab.Value.name, prefab => prefab.Key);
         }
 
         public static void SpamGadgetGrip(int objectId)
@@ -2633,7 +2641,7 @@ namespace Seralyth.Mods
         public static HalloweenGhostChaser _lucy;
         public static HalloweenGhostChaser Lucy
         {
-            get 
+            get
             {
                 _lucy ??= GetObject("Environment Objects/05Maze_PersistentObjects/2025_Halloween1_PersistentObjects/Halloween Ghosts/Lucy/Halloween Ghost/FloatingChaseSkeleton").GetComponent<HalloweenGhostChaser>();
                 return _lucy;
@@ -2812,7 +2820,8 @@ namespace Seralyth.Mods
             HalloweenGhostChaser hgc = Lucy;
             if (SerializePatch.OverrideSerialization != null)
             {
-                SerializePatch.OverrideSerialization = () => {
+                SerializePatch.OverrideSerialization = () =>
+                {
                     MassSerialize(true, new[] { hgc.GetView });
                     return false;
                 };
@@ -3001,7 +3010,8 @@ namespace Seralyth.Mods
         {
             if (SerializePatch.OverrideSerialization != null)
             {
-                SerializePatch.OverrideSerialization = () => {
+                SerializePatch.OverrideSerialization = () =>
+                {
                     MassSerialize(true, new[] { Lurker.GetView });
                     return false;
                 };
@@ -3081,7 +3091,8 @@ namespace Seralyth.Mods
                 Lurker.transform.rotation = GorillaTagger.Instance.headCollider.transform.rotation;
 
                 Lurker.currentState = LurkerGhost.ghostState.seek;
-                SerializePatch.OverrideSerialization = () => {
+                SerializePatch.OverrideSerialization = () =>
+                {
                     MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                     foreach (NetPlayer Player in NetworkSystem.Instance.PlayerListOthers)
@@ -3132,21 +3143,21 @@ namespace Seralyth.Mods
                             break;
                         }
                     case RpcTarget.Others:
-                    {
-                        foreach (var rig in VRRigCache.ActiveRigs.Where(rig => !rig.isLocal))
                         {
-                            GetNetworkViewFromVRRig(rig).SendRPC("GrabbedByPlayer", GetPlayerFromVRRig(rig), true, false, false);
-                            GetNetworkViewFromVRRig(rig).SendRPC("DroppedByPlayer", GetPlayerFromVRRig(rig), velocity);
-                        }
+                            foreach (var rig in VRRigCache.ActiveRigs.Where(rig => !rig.isLocal))
+                            {
+                                GetNetworkViewFromVRRig(rig).SendRPC("GrabbedByPlayer", GetPlayerFromVRRig(rig), true, false, false);
+                                GetNetworkViewFromVRRig(rig).SendRPC("DroppedByPlayer", GetPlayerFromVRRig(rig), velocity);
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                     case RpcTarget.MasterClient:
-                    {
-                        GetNetworkViewFromVRRig(GetVRRigFromPlayer(NetworkSystem.Instance.MasterClient)).SendRPC("GrabbedByPlayer", RpcTarget.Others, true, false, false);
-                        GetNetworkViewFromVRRig(GetVRRigFromPlayer(NetworkSystem.Instance.MasterClient)).SendRPC("DroppedByPlayer", RpcTarget.Others, velocity);
-                        break;
-                    }
+                        {
+                            GetNetworkViewFromVRRig(GetVRRigFromPlayer(NetworkSystem.Instance.MasterClient)).SendRPC("GrabbedByPlayer", RpcTarget.Others, true, false, false);
+                            GetNetworkViewFromVRRig(GetVRRigFromPlayer(NetworkSystem.Instance.MasterClient)).SendRPC("DroppedByPlayer", RpcTarget.Others, velocity);
+                            break;
+                        }
                 }
             }
             else
@@ -3259,7 +3270,7 @@ namespace Seralyth.Mods
                     VRRig gunTarget = Ray.collider.GetComponentInParent<VRRig>();
                     if (gunTarget && !gunTarget.IsLocal())
                     {
-                        BetaSetVelocityPlayer(GetPlayerFromVRRig(gunTarget), new Vector3(0f, 19.9f, 0f) );
+                        BetaSetVelocityPlayer(GetPlayerFromVRRig(gunTarget), new Vector3(0f, 19.9f, 0f));
                         RPCProtection();
                         flingDelay = Time.time + 0.1f;
                     }
@@ -3372,7 +3383,8 @@ namespace Seralyth.Mods
 
                 Object.Destroy(SlingshotProjectileGameObject);
                 return Data;
-            } catch
+            }
+            catch
             {
                 LogManager.Log("Falling back to archiveIncrement");
 
@@ -3590,7 +3602,7 @@ namespace Seralyth.Mods
                     SendSerialize(GorillaTagger.Instance.myVRRig.GetView, options);
                 }
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 LogManager.LogError($"Error in BetaSpawnSnowball: {e}");
             }
@@ -4082,7 +4094,7 @@ namespace Seralyth.Mods
                     {
                         Vector3 targetDirection = GorillaTagger.Instance.headCollider.transform.position - rig.headMesh.transform.position;
                         BetaSpawnSnowball(GorillaTagger.Instance.headCollider.transform.position + new Vector3(0f, 0.5f, 0f) + new Vector3(targetDirection.x, 0f, targetDirection.z).normalized / 1.7f, new Vector3(0f, -500f, 0f), 2, NetPlayerToPlayer(GetPlayerFromVRRig(rig)));
-                        
+
                         if (Buttons.GetIndex("Graphic Punch Mod").enabled)
                             Projectiles.BetaFireProjectile("AppleLeftAnchor", rig.headMesh.transform.position, Vector3.down * 600f, new Color32(100, 0, 0, 255));
 
@@ -4721,7 +4733,7 @@ namespace Seralyth.Mods
 
                 if (photonView.Prefix > 0)
                     rpcData[1] = (short)photonView.Prefix;
-                
+
                 if (PhotonNetwork.PhotonServerSettings.RpcList.Contains(method))
                     rpcData[5] = (byte)PhotonNetwork.PhotonServerSettings.RpcList.IndexOf(method);
 
@@ -5087,7 +5099,7 @@ namespace Seralyth.Mods
                     {
                         foreach (var plr in VRRigCache.ActiveRigs.Where(plr => !plr.isLocal))
                             BetaSetVelocityPlayer(GetPlayerFromVRRig(plr), Vector3.Normalize(NewPointer.transform.position - plr.transform.position) * 50f);
-                        
+
                         RPCProtection();
                         flingDelay = Time.time + 0.2f;
                     }
@@ -5108,7 +5120,7 @@ namespace Seralyth.Mods
                     {
                         foreach (var plr in VRRigCache.ActiveRigs.Where(plr => !plr.isLocal))
                             BetaSetVelocityPlayer(GetPlayerFromVRRig(plr), Vector3.Normalize(plr.transform.position - NewPointer.transform.position) * 50f);
-                        
+
                         RPCProtection();
                         flingDelay = Time.time + 0.2f;
                     }
@@ -5134,7 +5146,7 @@ namespace Seralyth.Mods
                 }
             }
         }
-        
+
         private static float slamDel;
         private static bool flip;
         public static void EffectSpamHands()
@@ -5152,7 +5164,7 @@ namespace Seralyth.Mods
                     }
                     else
                         NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You must be guardian.");
-                    
+
                     slamDel = Time.time + 0.05f;
                 }
             }
@@ -5169,7 +5181,7 @@ namespace Seralyth.Mods
                     }
                     else
                         NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You must be guardian.");
-                    
+
                     slamDel = Time.time + 0.05f;
                 }
             }
@@ -5195,10 +5207,10 @@ namespace Seralyth.Mods
                         }
                         else
                             NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You must be guardian.");
-                        
+
                         slamDel = Time.time + 0.05f;
                     }
-                    
+
                 }
             }
         }
@@ -5614,7 +5626,7 @@ namespace Seralyth.Mods
                     for (int i = 0; i < 2; i++)
                         MuteTarget(new int[] { lockTarget.GetPlayer().ActorNumber });
                 }
-                    
+
 
                 if (GetGunInput(true))
                 {
@@ -6187,7 +6199,7 @@ namespace Seralyth.Mods
                     else
                         GRElevatorManager._instance.SendRPC("RemoteElevatorButtonPress", RpcTarget.MasterClient, new[] { 3, (int)GRElevatorManager._instance.currentLocation });
 
-                     RPCProtection();
+                    RPCProtection();
                 }
             }
         }
@@ -6237,8 +6249,8 @@ namespace Seralyth.Mods
 
             if (NetworkSystem.Instance.IsMasterClient)
             {
-				NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You are master client! You have no one to kick.");
-				kickCoroutine = null;
+                NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You are master client! You have no one to kick.");
+                kickCoroutine = null;
                 yield break;
             }
 
@@ -6250,7 +6262,7 @@ namespace Seralyth.Mods
             NotificationManager.SendNotification($"<color=grey>[</color><color=purple>KICK</color><color=grey>]</color> Kicking {name}.");
             float time;
             RPCProtection();
-            kick:
+        kick:
             {
                 time = Time.time + 10f;
                 int view = PhotonNetwork.AllocateViewID(0);
@@ -6267,7 +6279,7 @@ namespace Seralyth.Mods
                     }, SendOptions.SendReliable);
                 }
             }
-            
+
 
             while (PhotonNetwork.PlayerList.Contains(player))
             {
@@ -6316,7 +6328,7 @@ namespace Seralyth.Mods
                 NotificationManager.SendNotification($"<color=grey>[</color><color=purple>KICK</color><color=grey>]</color> Kicking {name}.");
                 RPCProtection();
                 float time;
-                kick:
+            kick:
                 {
                     time = Time.time + 10f;
                     int view = PhotonNetwork.AllocateViewID(0);
@@ -6488,7 +6500,7 @@ namespace Seralyth.Mods
         {
             if (NetworkSystem.Instance.InRoom || !NetworkSystem.Instance.IsMasterClient)
                 VisualizeMasterClient();
-			
+
             if (GetGunInput(false))
             {
                 var GunData = RenderGun();
@@ -6622,10 +6634,10 @@ namespace Seralyth.Mods
 
                     GreyZoneManager.Instance.ActivateGreyZoneAuthority();
                 }
-				
+
                 else if (!status)
                     GreyZoneManager.Instance.DeactivateGreyZoneAuthority();
-            }        
+            }
         }
 
         public static float spazGreyDelay;
@@ -6641,8 +6653,8 @@ namespace Seralyth.Mods
             ActivateGreyZoneGun(greyState);
         }
 
-        public static void SpazGreyZone() 
-        { 
+        public static void SpazGreyZone()
+        {
             if (Time.time > spazGreyDelay)
             {
                 greyState = !greyState;
@@ -6756,7 +6768,8 @@ namespace Seralyth.Mods
                                 return true;
                             };
                         }
-                    } else
+                    }
+                    else
                     {
                         if (SerializePatch.OverrideSerialization != null)
                             SerializePatch.OverrideSerialization = null;
@@ -6787,7 +6800,7 @@ namespace Seralyth.Mods
                         if (lockTarget == null && FriendshipGroupDetection.Instance.IsInMyGroup(gunTarget.GetPlayer().UserId))
                         {
                             for (int i = 0; i < 3970; i++)
-                                FriendshipGroupDetection.Instance.photonView.RPC("RequestPartyGameMode", gunTarget.GetPhotonPlayer(), 
+                                FriendshipGroupDetection.Instance.photonView.RPC("RequestPartyGameMode", gunTarget.GetPhotonPlayer(),
                                     new object[] { GameMode.gameModeKeyByName.Keys.ToArray()[Random.Range(0, GameMode.gameModeKeyByName.Keys.Count)] });
 
                             RPCProtection();
@@ -6924,7 +6937,7 @@ namespace Seralyth.Mods
                 return;
             if (PhotonNetwork.PlayerList.Length > 5)
             {
-                if (!skip) 
+                if (!skip)
                     NotificationManager.SendNotification($"<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> {PhotonNetwork.PlayerList.Length - 5} people must leave for this mod to work.");
                 return;
             }
@@ -6994,7 +7007,7 @@ namespace Seralyth.Mods
             {
                 foreach (VRRig nearbyPlayer in nearbyPlayers)
                 {
-                     DestroyPlayer(NetPlayerToPlayer(GetPlayerFromVRRig(nearbyPlayer)));
+                    DestroyPlayer(NetPlayerToPlayer(GetPlayerFromVRRig(nearbyPlayer)));
                 }
             }
         }
@@ -7038,7 +7051,8 @@ namespace Seralyth.Mods
                     hitTargetNetworkState.hitCooldownTime = 0;
                     hitTargetNetworkState.TargetHit(Vector3.zero, Vector3.zero);
                 }
-            } else NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You are not master client.");
+            }
+            else NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You are not master client.");
         }
 
         public static void InfectionToTag()
@@ -7429,7 +7443,8 @@ namespace Seralyth.Mods
                     }
                     else
                         glider.OnHover(null, null);
-                } catch { }
+                }
+                catch { }
                 index++;
             }
         }
@@ -7489,10 +7504,12 @@ namespace Seralyth.Mods
             {
                 var ClosestNode = Rope.nodes
                     .Skip(1)
-                    .Select((v, i) => new { index = i, 
-                                            transform = v,
-                                            distance = Vector3.Distance(GorillaTagger.Instance.bodyCollider.transform.position, v.transform.position) 
-                                          })
+                    .Select((v, i) => new
+                    {
+                        index = i,
+                        transform = v,
+                        distance = Vector3.Distance(GorillaTagger.Instance.bodyCollider.transform.position, v.transform.position)
+                    })
                     .OrderBy(x => x.distance)
                     .First();
 

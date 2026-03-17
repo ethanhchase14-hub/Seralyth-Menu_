@@ -25,9 +25,9 @@ using PlayFab.ClientModels;
 using PlayFab.Internal;
 using System;
 using System.Collections.Generic;
+using static Seralyth.Patches.PatchHandler;
 using static Seralyth.Utilities.RandomUtilities;
 using Random = UnityEngine.Random;
-using static Seralyth.Patches.PatchHandler;
 
 namespace Seralyth.Patches.Safety
 {

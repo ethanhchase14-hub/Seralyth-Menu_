@@ -21,9 +21,7 @@
 
 using HarmonyLib;
 using Seralyth.Managers;
-using Seralyth.Patches.Safety;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -45,9 +43,19 @@ namespace Seralyth.Patches
         public static void PatchAll(bool awake = false)
         {
             if (IsPatched) return;
-            instance ??= new Harmony(PluginInfo.GUID);
+            instance ??= new HarmonyLib.Harmony(PluginInfo.GUID);
 
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes()
+            Type[] types; // Allows for cross mod loader support
+            try
+            {
+                types = Assembly.GetExecutingAssembly().GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                types = e.Types.Where(t => t != null).ToArray();
+            }
+
+            foreach (var type in types
                          .Where(t => t.IsClass && t.GetCustomAttribute<HarmonyPatch>() != null && t.GetCustomAttribute<PatchOnAwake>() != null == awake))
             {
                 try
@@ -97,7 +105,7 @@ namespace Seralyth.Patches
             instance.Unpatch(original, HarmonyPatchType.All, instance.Id);
         }
 
-        private static Harmony instance;
+        private static HarmonyLib.Harmony instance;
         public const string InstanceId = PluginInfo.GUID;
     }
 }

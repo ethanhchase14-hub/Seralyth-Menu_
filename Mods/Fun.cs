@@ -30,13 +30,6 @@ using GorillaTag.Cosmetics;
 using GorillaTag.Rendering;
 using GorillaTagScripts;
 using GorillaTagScripts.Builder;
-using Seralyth.Classes.Menu;
-using Seralyth.Classes.Mods;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Patches.Menu;
-using Seralyth.Utilities;
 using Ionic.Zlib;
 using Photon.Pun;
 using Photon.Realtime;
@@ -46,6 +39,13 @@ using Photon.Voice.Unity.UtilityScripts;
 using PlayFab;
 using PlayFab.ClientModels;
 using POpusCodec.Enums;
+using Seralyth.Classes.Menu;
+using Seralyth.Classes.Mods;
+using Seralyth.Extensions;
+using Seralyth.Managers;
+using Seralyth.Menu;
+using Seralyth.Patches.Menu;
+using Seralyth.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,7 +87,7 @@ namespace Seralyth.Mods
 
         public static void SidewaysHead() =>
             VRRig.LocalRig.head.trackingRotationOffset.y = 90f;
- 
+
 
         public static float lastBangTime;
         public static readonly float BPM = 159f;
@@ -96,8 +96,8 @@ namespace Seralyth.Mods
             if (Time.time > lastBangTime)
             {
                 VRRig.LocalRig.head.trackingRotationOffset.x = 50f;
-                lastBangTime = Time.time + 60f/BPM;
-            } 
+                lastBangTime = Time.time + 60f / BPM;
+            }
             else
                 VRRig.LocalRig.head.trackingRotationOffset.x = Mathf.Lerp(VRRig.LocalRig.head.trackingRotationOffset.x, 0f, 0.1f);
         }
@@ -341,28 +341,29 @@ namespace Seralyth.Mods
                         GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlaySplashEffect", NetPlayerToPlayer(player), parameters);
                         break;
                     case RpcTarget target:
-                    {
-                        if (target == RpcTarget.All)
                         {
-                            ObjectPools.instance.Instantiate(GTPlayer.Instance.waterParams.rippleEffect, splashPosition, splashRotation, GTPlayer.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
-                            ObjectPools.instance.Instantiate(GTPlayer.Instance.waterParams.splashEffect, splashPosition, splashRotation, splashScale).GetComponent<WaterSplashEffect>().PlayEffect(bigSplash, enteringWater, splashScale);
+                            if (target == RpcTarget.All)
+                            {
+                                ObjectPools.instance.Instantiate(GTPlayer.Instance.waterParams.rippleEffect, splashPosition, splashRotation, GTPlayer.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
+                                ObjectPools.instance.Instantiate(GTPlayer.Instance.waterParams.splashEffect, splashPosition, splashRotation, splashScale).GetComponent<WaterSplashEffect>().PlayEffect(bigSplash, enteringWater, splashScale);
 
-                            target = RpcTarget.Others;
+                                target = RpcTarget.Others;
+                            }
+
+                            GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlaySplashEffect", target, parameters);
+                            break;
                         }
-
-                        GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlaySplashEffect", target, parameters);
-                        break;
-                    }
                     case int[] targets:
-                    {
-                        if (targets.Contains(NetworkSystem.Instance.LocalPlayer.ActorNumber))
-                            ObjectPools.instance.Instantiate(GTPlayer.Instance.waterParams.rippleEffect, splashPosition, splashRotation, GTPlayer.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
+                        {
+                            if (targets.Contains(NetworkSystem.Instance.LocalPlayer.ActorNumber))
+                                ObjectPools.instance.Instantiate(GTPlayer.Instance.waterParams.rippleEffect, splashPosition, splashRotation, GTPlayer.Instance.waterParams.rippleEffectScale * boundingRadius * 2f);
 
-                        Overpowered.SpecialTargetRPC(GorillaTagger.Instance.myVRRig.GetView, "RPC_PlaySplashEffect", new RaiseEventOptions { TargetActors = targets }, parameters);
-                        break;
-                    }
+                            Overpowered.SpecialTargetRPC(GorillaTagger.Instance.myVRRig.GetView, "RPC_PlaySplashEffect", new RaiseEventOptions { TargetActors = targets }, parameters);
+                            break;
+                        }
                 }
-            } catch { }
+            }
+            catch { }
 
             RPCProtection();
         }
@@ -414,7 +415,7 @@ namespace Seralyth.Mods
                     gunLocked = false;
             }
         }
-		
+
         public static void WaterSplashAura()
         {
             if (Time.time > splashDel)
@@ -457,7 +458,8 @@ namespace Seralyth.Mods
                     RaycastHit ray = GTPlayer.Instance.lastHitInfoHand;
                     BetaWaterSplash(GorillaTagger.Instance.leftHandTransform.position, Quaternion.Euler(ray.normal), 4f, 100f, true, false);
                     splashDel = Time.time + 0.1f;
-                } else if (GTPlayer.Instance.IsHandTouching(false))
+                }
+                else if (GTPlayer.Instance.IsHandTouching(false))
                 {
                     RaycastHit ray = GTPlayer.Instance.lastHitInfoHand;
                     BetaWaterSplash(GorillaTagger.Instance.rightHandTransform.position, Quaternion.Euler(ray.normal), 4f, 100f, true, false);
@@ -533,7 +535,7 @@ namespace Seralyth.Mods
         }
 
         public static readonly List<object[]> keyLogs = new List<object[]>();
-        
+
         public static void EventReceived_KeyboardTracker(EventData data)
         {
             try
@@ -723,7 +725,7 @@ namespace Seralyth.Mods
             LoadTextureFromURL($"{PluginInfo.ServerResourcePath}/Images/Mods/Fun/jumpscare.png", "Images/Mods/Fun/jumpscare.png");
             LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Mods/Fun/jumpscare.ogg", "Audio/Mods/Fun/jumpscare.ogg");
         }
-        
+
         public static void JumpscareOnTag()
         {
             bool isTagged = VRRig.LocalRig.IsTagged();
@@ -791,7 +793,8 @@ namespace Seralyth.Mods
 
                     FreeCamObject.transform.position = lockTarget.headMesh.transform.transform.TransformPoint(new Vector3(0f, 0.25f, 0.25f));
                     FreeCamObject.transform.rotation = lockTarget.headMesh.transform.rotation;
-                } else
+                }
+                else
                 {
                     var GunData = RenderGun();
                     RaycastHit Ray = GunData.Ray;
@@ -1157,7 +1160,7 @@ namespace Seralyth.Mods
                     string[] input = keyboardInput.Split(',').Select(s => s.Trim()).ToArray();
                     Hashtable props = new Hashtable();
 
-                    foreach(string mod in input)
+                    foreach (string mod in input)
                     {
                         string foundKey = null;
 
@@ -1252,7 +1255,7 @@ namespace Seralyth.Mods
 
         private static float hitDelay;
         public static void AutoHitMoleType(bool isHazard)
-        {   
+        {
             foreach (Mole mole in GetAllType<Mole>())
             {
                 int state = mole.randomMolePickedIndex;
@@ -1296,7 +1299,7 @@ namespace Seralyth.Mods
             }
         }
 
-        public static void SetBraceletState(bool enable, bool isLeftHand) => 
+        public static void SetBraceletState(bool enable, bool isLeftHand) =>
             GorillaTagger.Instance.myVRRig.SendRPC("EnableNonCosmeticHandItemRPC", RpcTarget.All, enable, isLeftHand);
 
         public static void GetBracelet(bool state)
@@ -1349,9 +1352,9 @@ namespace Seralyth.Mods
                 VRRig.LocalRig.nonCosmeticRightHandItem.EnableItem(true);
             }
             List<Color> rgbColors = new List<Color>();
-            for (int i=0; i<10; i++)
+            for (int i = 0; i < 10; i++)
                 rgbColors.Add(Color.HSVToRGB((Time.frameCount / 180f + i / 10f) % 1f, 1f, 1f));
-            
+
             VRRig.LocalRig.reliableState.isBraceletLeftHanded = false;
             VRRig.LocalRig.reliableState.braceletSelfIndex = 99;
             VRRig.LocalRig.reliableState.braceletBeadColors = rgbColors;
@@ -1528,7 +1531,7 @@ namespace Seralyth.Mods
             FPSPatch.spoofFPSValue = Random.Range(0, 255);
         }
 
-        
+
 
         public static void GrabIDCard()
         {
@@ -1974,7 +1977,7 @@ namespace Seralyth.Mods
                     VoiceManager.Get().OutputRate = samplingRate;
                 }
                 */
-                
+
                 if (NetworkSystem.Instance.VoiceSettings.SamplingRate != (SamplingRate)samplingRate)
                     NetworkSystem.Instance.VoiceSettings.SamplingRate = (SamplingRate)samplingRate;
 
@@ -1992,7 +1995,7 @@ namespace Seralyth.Mods
                     mic.RestartRecording();
                 }
 
-            }   
+            }
             else
             {
                 if (mic.SamplingRate == (SamplingRate)samplingRate && mic.Bitrate == bitrate)
@@ -2002,9 +2005,9 @@ namespace Seralyth.Mods
                 mic.Bitrate = bitrate;
 
                 CoroutineManager.instance.StartCoroutine(DelayReloadMicrophone());
-            }      
+            }
         }
-        
+
         public static void SetMicrophoneAmplification(bool amplify)
         {
             if (!PhotonNetwork.InRoom)
@@ -2040,7 +2043,7 @@ namespace Seralyth.Mods
 
                 CoroutineManager.instance.StartCoroutine(DelayReloadMicrophone());
             }
-                
+
         }
 
         public static void EchoMicrophone(bool status)
@@ -2143,7 +2146,7 @@ namespace Seralyth.Mods
                             }
                         }
                     };
-                } 
+                }
             }
             else
             {
@@ -2225,7 +2228,7 @@ namespace Seralyth.Mods
 
                 CoroutineManager.instance.StartCoroutine(DelayReloadMicrophone());
             }
-                
+
         }
 
         public static void SetDebugEchoMode(bool value)
@@ -2295,7 +2298,7 @@ namespace Seralyth.Mods
                                 CoroutineManager.instance.StartCoroutine(DelayReloadMicrophone());
                             }
                         }
-                            
+
                         NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = true;
                     }
                 }
@@ -2509,7 +2512,7 @@ namespace Seralyth.Mods
                 }
             }
         }
-        
+
         private static int pieceIdSet = -566818631;
         private static float blockDelay;
         public static void BlocksGun()
@@ -2623,7 +2626,7 @@ Piece Name: {gunTarget.name}";
                     {
                         buttonText = $"SelectBlock{i}",
                         overlapText = block.Value,
-                        method =() => SelectBlock(block.Key, block.Value),
+                        method = () => SelectBlock(block.Key, block.Value),
                         isTogglable = false,
                         toolTip = $"Selects the block \"{block.Value}\" to be used for the building mods."
                     }
@@ -3016,7 +3019,8 @@ Piece Name: {gunTarget.name}";
 
         public static void HoverboardScreenAll(Color color)
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 if (PhotonNetwork.InRoom)
                 {
                     MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
@@ -3166,7 +3170,8 @@ Piece Name: {gunTarget.name}";
             Transform head = GorillaTagger.Instance.headCollider.transform;
             VRRig targetRig = rigs
                 .Where(rig => rig != null)
-                .Select(rig => new {
+                .Select(rig => new
+                {
                     Rig = rig,
                     ToRig = (rig.transform.position - head.position).normalized,
                     Distance = Vector3.Distance(head.position, rig.transform.position)
@@ -3329,7 +3334,7 @@ Piece Name: {gunTarget.name}";
             {
                 if (bug.currentState != TransferrableObject.PositionState.Dropped && bug.currentState != TransferrableObject.PositionState.None)
                     return null;
-                
+
                 VRRig.LocalRig.enabled = true;
                 if (Vector3.SqrMagnitude(bugObject.transform.position - GorillaTagger.Instance.bodyCollider.transform.position) > 15f)
                 {
@@ -3415,7 +3420,7 @@ Piece Name: {gunTarget.name}";
                     bugSpamDelay = Time.time + 0.5f;
 
                     ThrowableBug targetBug = bugSpamToggle ? bug : firefly;
-                    
+
                     GameObject bugSpamObject = new GameObject("Seralyth_BugSpamObject");
                     bugSpamObject.transform.localScale = Vector3.one * 0.2f;
                     bugSpamObject.layer = 3;
@@ -3516,7 +3521,7 @@ Piece Name: {gunTarget.name}";
             ThrowableBug firefly = bug != null ? GetBug("Firefly") : bug;
 
             string projectileName = Projectiles.ProjectileObjectNames[Projectiles.projMode * 2];
-            
+
             if (rightGrab && Time.time > everythingSpamDelay)
             {
                 SnowballThrowable projectile = GetProjectile(projectileName);
@@ -3532,7 +3537,7 @@ Piece Name: {gunTarget.name}";
                 everythingSpamDelay = Time.time + 0.0625f;
 
                 objectIndex++;
-                objectIndex %= 8; 
+                objectIndex %= 8;
 
                 switch (objectIndex)
                 {
@@ -4008,7 +4013,8 @@ Piece Name: {gunTarget.name}";
                     grabbingCamera = true;
                     grabbingHand = canGrabLeft;
                 }
-            } else
+            }
+            else
             {
                 Transform targetTransform = grabbingHand ?
                     GorillaTagger.Instance.leftHandTransform :
@@ -4231,7 +4237,7 @@ Piece Name: {gunTarget.name}";
 
             DistancePatch.enabled = false;
             VRRig.LocalRig.enabled = true;
-            
+
             GameObject proj = VRRig.LocalRig.myBodyDockPositions.allObjects[index].gameObject;
             proj.SetActive(true);
 
@@ -4258,7 +4264,8 @@ Piece Name: {gunTarget.name}";
                 if (!cosmetic.canTryOn)
                 {
                     PromptSingle($"Looks like you don't own the cosmetic required for this mod ({ToTitleCase(cosmetic.overrideDisplayName)}), but this cosmetic is currently offsale. This mod will only work for people with cosmetic giving mods.", null, "Ok");
-                } else if (CosmeticsController.instance.CurrencyBalance >= cosmetic.cost)
+                }
+                else if (CosmeticsController.instance.CurrencyBalance >= cosmetic.cost)
                     Prompt($"Looks like you don't own the cosmetic required for this mod ({ToTitleCase(cosmetic.overrideDisplayName)}), meaning it will only work in city. Would you like to purchase the cosmetic? ({cosmetic.cost}SR)", () => PurchaseCosmetic(cosmetic.itemName));
                 else
                     PromptSingle($"Looks like you don't own the cosmetic required for this mod ({ToTitleCase(cosmetic.overrideDisplayName)}), meaning it will only work in city.", null, "Ok");
@@ -4710,7 +4717,7 @@ Piece Name: {gunTarget.name}";
             }
         }
 
-		public static void AtticFlingGun()
+        public static void AtticFlingGun()
         {
             if (GetGunInput(false))
             {
@@ -5065,7 +5072,7 @@ Piece Name: {gunTarget.name}";
             if (NetworkSystem.Instance.IsMasterClient)
             {
                 Networking.photonView.RPC("PieceGrabbedRPC", RpcTarget.All, Networking.CreateLocalCommandId(), piece.pieceId, isLefHand, BitPackUtils.PackHandPosRotForNetwork(localPosition, localRotation), PhotonNetwork.LocalPlayer);
-            } 
+            }
             else
                 Networking.RequestGrabPiece(piece, isLefHand, localPosition, localRotation);
         }
@@ -5093,7 +5100,7 @@ Piece Name: {gunTarget.name}";
             if (NetworkSystem.Instance.IsMasterClient)
             {
                 Networking.photonView.RPC("PieceDroppedRPC", RpcTarget.All, Networking.CreateLocalCommandId(), piece.pieceId, position, rotation, velocity, angVelocity, PhotonNetwork.LocalPlayer);
-            } 
+            }
             else
                 Networking.RequestDropPiece(piece, position, rotation, velocity, angVelocity);
         }
@@ -5366,7 +5373,7 @@ Piece Name: {gunTarget.name}";
                 }
                 else
                     glider.OnHover(null, null);
-                
+
                 index++;
             }
         }
@@ -5389,7 +5396,7 @@ Piece Name: {gunTarget.name}";
         public static void BecomeObject(string objectName)
         {
             ThrowableBug bug = GetBug(objectName);
-            
+
             if (bug != null)
             {
                 VRRig.LocalRig.enabled = false;
@@ -5397,7 +5404,8 @@ Piece Name: {gunTarget.name}";
 
                 bug.transform.position = GorillaTagger.Instance.bodyCollider.transform.position;
                 bug.transform.rotation = GorillaTagger.Instance.headCollider.transform.rotation;
-            } else
+            }
+            else
             {
                 if (lastWasNull)
                     VRRig.LocalRig.enabled = true;
@@ -5450,13 +5458,13 @@ Piece Name: {gunTarget.name}";
                 piece.SetColliderLayers(piece.colliders, BuilderTable.heldLayerLocal);
         }
 
-		public static void DisableNoclipBuilding()
-		{
-			foreach (BuilderPiece piece in GetAllType<BuilderPiece>().Where(block => block.gameObject.activeInHierarchy && !block.isBuiltIntoTable))
-				piece.SetColliderLayers(piece.colliders, piece.state == BuilderPiece.State.AttachedAndPlaced ? BuilderTable.placedLayer : BuilderTable.droppedLayer);
-		}
+        public static void DisableNoclipBuilding()
+        {
+            foreach (BuilderPiece piece in GetAllType<BuilderPiece>().Where(block => block.gameObject.activeInHierarchy && !block.isBuiltIntoTable))
+                piece.SetColliderLayers(piece.colliders, piece.state == BuilderPiece.State.AttachedAndPlaced ? BuilderTable.placedLayer : BuilderTable.droppedLayer);
+        }
 
-		public static void MultiGrab()
+        public static void MultiGrab()
         {
             BuilderPieceInteractor.instance.handState[1] = BuilderPieceInteractor.HandState.Empty;
             BuilderPieceInteractor.instance.heldPiece[1] = null;
@@ -5475,7 +5483,7 @@ Piece Name: {gunTarget.name}";
 
             while (pieceId < 0)
                 yield return null;
-            
+
             yield return null;
 
             pieceId = -1;
@@ -5501,7 +5509,7 @@ Piece Name: {gunTarget.name}";
 
             RequestGrabPiece(basea, false, Vector3.zero, Quaternion.identity);
             yield return null;
-            
+
             BuilderPieceInteractor.instance.handState[1] = BuilderPieceInteractor.HandState.Empty;
             BuilderPieceInteractor.instance.heldPiece[1] = null;
             yield return null;
@@ -5619,7 +5627,7 @@ Piece Name: {gunTarget.name}";
             BuilderPiece flatthinga = null;
 
             yield return CreateGetPiece(477262573, piece => flatthinga = piece);
-            while (flatthinga == null) 
+            while (flatthinga == null)
                 yield return null;
 
             RequestGrabPiece(flatthinga, false, Vector3.zero, Quaternion.identity);
@@ -5980,7 +5988,7 @@ Piece Name: {gunTarget.name}";
                 }
                 else
                     balloon.WorldShareableRequestOwnership();
-                
+
                 index++;
             }
         }
@@ -6089,9 +6097,9 @@ Piece Name: {gunTarget.name}";
 
         public static void GoldenNameTag(bool isGolden)
         {
-			VRRig.LocalRig.ShowGoldNameTag = isGolden;
+            VRRig.LocalRig.ShowGoldNameTag = isGolden;
             VRRig.LocalRig.playerText1.color = VRRig.LocalRig.ShowGoldNameTag ? SubscriptionManager.SUBSCRIBER_NAME_COLOR : Color.white;
-		}
+        }
 
         public static void FlashNameTag() =>
             GoldenNameTag((Time.time % 0.2f) > 0.1f);
@@ -6103,7 +6111,7 @@ Piece Name: {gunTarget.name}";
                 nameCycleIndex++;
                 if (nameCycleIndex > names.Length - 1)
                     nameCycleIndex = 0;
-                
+
                 ChangeName(names[nameCycleIndex]);
                 nameCycleDelay = Time.time + nameCycleDebounce;
             }
@@ -6118,7 +6126,7 @@ Piece Name: {gunTarget.name}";
             if (File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_CustomNameCycle.txt"))
                 names = File.ReadAllText($"{PluginInfo.BaseDirectory}/Seralyth_CustomNameCycle.txt").Split('\n');
             else
-                File.WriteAllText($"{PluginInfo.BaseDirectory}/Seralyth_CustomNameCycle.txt","YOUR\nTEXT\nHERE");
+                File.WriteAllText($"{PluginInfo.BaseDirectory}/Seralyth_CustomNameCycle.txt", "YOUR\nTEXT\nHERE");
         }
 
         public static string name;
@@ -6178,7 +6186,7 @@ Piece Name: {gunTarget.name}";
                 colorChangeType++;
                 if (colorChangeType > 3)
                     colorChangeType = 0;
-                
+
                 Color[] colors = {
                     Color.red,
                     Color.green,
@@ -6352,7 +6360,7 @@ Piece Name: {gunTarget.name}";
                 accessoryType++;
                 if (accessoryType > 4)
                     accessoryType = 1;
-                
+
                 switch (accessoryType)
                 {
                     case 1:
@@ -6391,7 +6399,7 @@ Piece Name: {gunTarget.name}";
             ownedArchive = new List<string>();
             foreach (var cosmeticItem in CosmeticsController.instance.allCosmetics.Where(cosmeticItem => VRRig.LocalRig._playerOwnedCosmetics.Contains(cosmeticItem.itemName)))
                 ownedArchive.Add(cosmeticItem.itemName);
-            
+
             return ownedArchive.ToArray();
         }
         private static List<string> tryOnCosmetics;
@@ -6410,7 +6418,7 @@ Piece Name: {gunTarget.name}";
             tryOnCosmetics = new List<string>();
             foreach (var cosmeticItem in CosmeticsController.instance.allCosmetics.Where(cosmeticItem => cosmeticItem.canTryOn && cosmeticItem.overrideDisplayName.ToLower().Contains("balloon")))
                 tryOnCosmetics.Add(cosmeticItem.itemName);
-            
+
             return tryOnCosmetics.ToArray();
         }
 
@@ -6439,7 +6447,7 @@ Piece Name: {gunTarget.name}";
                     List<string> randomCosmetics = new List<string>();
                     for (int i = 0; i <= amnt; i++)
                         randomCosmetics.Add(owned[Random.Range(0, owned.Length)]);
-                    
+
                     if (VRRig.LocalRig.inTryOnRoom)
                     {
                         CosmeticsController.instance.tryOnSet = new CosmeticsController.CosmeticSet(randomCosmetics.ToArray(), CosmeticsController.instance);
@@ -6811,7 +6819,7 @@ Piece Name: {gunTarget.name}";
                 }
             }
         }
-        
+
         public static void NarrateIDAll()
         {
             string ids = "";
@@ -6843,7 +6851,7 @@ Piece Name: {gunTarget.name}";
 
                 string ids = "";
                 foreach (VRRig vrrig in nearbyPlayers)
-                        ids += "Name: " + GetPlayerFromVRRig(vrrig).NickName + ". I D: " + string.Join(" ", GetPlayerFromVRRig(vrrig).UserId) + ". ";
+                    ids += "Name: " + GetPlayerFromVRRig(vrrig).NickName + ". I D: " + string.Join(" ", GetPlayerFromVRRig(vrrig).UserId) + ". ";
                 SpeakText(ids);
             }
         }
@@ -6929,7 +6937,7 @@ Piece Name: {gunTarget.name}";
 
                 string ids = "";
                 foreach (VRRig vrrig in nearbyPlayers)
-                        ids += "Name: " + GetPlayerFromVRRig(vrrig).NickName + ". I P  ADD DRESS: " + string.Join(" ", $"{Random.Range(1, 255)}.{Random.Range(1, 255)}.{Random.Range(1, 255)}") + ". ";
+                    ids += "Name: " + GetPlayerFromVRRig(vrrig).NickName + ". I P  ADD DRESS: " + string.Join(" ", $"{Random.Range(1, 255)}.{Random.Range(1, 255)}.{Random.Range(1, 255)}") + ". ";
                 SpeakText(ids);
             }
         }

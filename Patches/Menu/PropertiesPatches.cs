@@ -22,7 +22,7 @@
 using ExitGames.Client.Photon;
 using HarmonyLib;
 using Photon.Realtime;
-﻿using System.Linq;
+using System.Linq;
 
 namespace Seralyth.Patches.Menu
 {

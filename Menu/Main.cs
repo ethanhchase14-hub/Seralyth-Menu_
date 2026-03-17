@@ -19,7 +19,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using BepInEx;
 using ExitGames.Client.Photon;
 using GorillaExtensions;
 using GorillaLocomotion;
@@ -91,8 +90,7 @@ namespace Seralyth.Menu
             InitializeFonts();
             activeFont = AgencyFB;
 
-            if (Plugin.FirstLaunch)
-                if (Directory.Exists("iisStupidMenu"))
+            if (Bootstrapper.FirstLaunch && Directory.Exists("iisStupidMenu"))
                     Prompt("It seems like you have used ii's Stupid Menu before! Would you like to move all your enabled mods, settings and sounds to Seralyth Menu?", Settings.MergePreferences_iisStupidMenu);
 
             //if (Plugin.FirstLaunch)
@@ -219,7 +217,7 @@ namespace Seralyth.Menu
             {
                 if (PatchHandler.CriticalPatchFailed)
                 {
-                    string message = "A critical patch has failed, and you have been blocked from joining rooms for safety reasons. Please report this as an issue to the GitHub repository."; 
+                    string message = "A critical patch has failed, and you have been blocked from joining rooms for safety reasons. Please report this as an issue to the GitHub repository.";
                     NotificationManager.SendNotification($"<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> {message}", 10000);
                     GorillaComputer.instance.GeneralFailureMessage(message);
                     if (NetworkSystem.Instance.InRoom)
@@ -228,7 +226,7 @@ namespace Seralyth.Menu
                 else
                     NotificationManager.SendNotification($"<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> {PatchHandler.PatchErrors} patch{(PatchHandler.PatchErrors > 1 ? "es" : "")} failed to initialize. Please report this as an issue to the GitHub repository.", 10000);
             }
-                
+
         }
 
         public static void Prefix()
@@ -236,21 +234,21 @@ namespace Seralyth.Menu
             #region Controls
             try
             {
-                rightPrimary = ControllerInputPoller.instance.rightControllerPrimaryButton || UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.RightPrimaryButton]);
-                rightSecondary = ControllerInputPoller.instance.rightControllerSecondaryButton || UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.RightSecondaryButton]);
-                leftPrimary = ControllerInputPoller.instance.leftControllerPrimaryButton || UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftPrimaryButton]);
-                leftSecondary = ControllerInputPoller.instance.leftControllerSecondaryButton || UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftSecondaryButton]);
-                leftGrab = ControllerInputPoller.instance.leftGrab || UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftGrip]);
-                rightGrab = ControllerInputPoller.instance.rightGrab || UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.RightGrip]);
+                rightPrimary = ControllerInputPoller.instance.rightControllerPrimaryButton || UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.RightPrimaryButton]);
+                rightSecondary = ControllerInputPoller.instance.rightControllerSecondaryButton || UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.RightSecondaryButton]);
+                leftPrimary = ControllerInputPoller.instance.leftControllerPrimaryButton || UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftPrimaryButton]);
+                leftSecondary = ControllerInputPoller.instance.leftControllerSecondaryButton || UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftSecondaryButton]);
+                leftGrab = ControllerInputPoller.instance.leftGrab || UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftGrip]);
+                rightGrab = ControllerInputPoller.instance.rightGrab || UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.RightGrip]);
                 leftTrigger = ControllerInputPoller.TriggerFloat(XRNode.LeftHand);
                 rightTrigger = ControllerInputPoller.TriggerFloat(XRNode.RightHand);
                 leftTriggerPressed = leftTrigger >= 0.5f;
                 rightTriggerPressed = rightTrigger >= 0.5f;
 
-                if (UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftTrigger]))
+                if (UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftTrigger]))
                     leftTrigger = 1f;
 
-                if (UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.RightTrigger]))
+                if (UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.RightTrigger]))
                     rightTrigger = 1f;
 
                 if (IsSteam)
@@ -270,19 +268,19 @@ namespace Seralyth.Menu
                     ControllerInputPoller.instance.rightControllerDevice.TryGetFeatureValue(CommonUsages.primary2DAxisClick, out rightJoystickClick);
                 }
 
-                bool arrowKeysPressed = UnityInput.Current.GetKey(KeyCode.UpArrow) || UnityInput.Current.GetKey(KeyCode.DownArrow) || UnityInput.Current.GetKey(KeyCode.LeftArrow) || UnityInput.Current.GetKey(KeyCode.RightArrow);
-                bool leftOverride = UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftOverride]);
-                
+                bool arrowKeysPressed = UnityInput.GetKey(Key.UpArrow) || UnityInput.GetKey(Key.DownArrow) || UnityInput.GetKey(Key.LeftArrow) || UnityInput.GetKey(Key.RightArrow);
+                bool leftOverride = UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.LeftOverride]);
+
                 if (arrowKeysPressed)
                 {
-                    Vector2 direction = new Vector2((UnityInput.Current.GetKey(KeyCode.RightArrow) ? 1f : 0f) + (UnityInput.Current.GetKey(KeyCode.LeftArrow) ? -1f : 0f), (UnityInput.Current.GetKey(KeyCode.UpArrow) ? 1f : 0f) + (UnityInput.Current.GetKey(KeyCode.DownArrow) ? -1f : 0f));
+                    Vector2 direction = new Vector2((UnityInput.GetKey(Key.RightArrow) ? 1f : 0f) + (UnityInput.GetKey(Key.LeftArrow) ? -1f : 0f), (UnityInput.GetKey(Key.UpArrow) ? 1f : 0f) + (UnityInput.GetKey(Key.DownArrow) ? -1f : 0f));
                     if (leftOverride)
                         rightJoystick = direction;
                     else
                         leftJoystick = direction;
                 }
 
-                if (UnityInput.Current.GetKey(Settings.pcBindings[Settings.ControllerBinding.JoystickClick]))
+                if (UnityInput.GetKey(Settings.pcBindings[Settings.ControllerBinding.JoystickClick]))
                 {
                     if (leftOverride)
                         rightJoystickClick = true;
@@ -313,7 +311,7 @@ namespace Seralyth.Menu
                     }
                 }
 
-                shouldBePC = Settings.pcBindings.Values.Any(key => UnityInput.Current.GetKey(key))
+                shouldBePC = Settings.pcBindings.Values.Any(key => UnityInput.GetKey(key))
                             || Mouse.current.leftButton.isPressed
                             || Mouse.current.rightButton.isPressed
                             || arrowKeysPressed;
@@ -348,7 +346,7 @@ namespace Seralyth.Menu
                     { 4, rightJoystickClick }
                 };
 
-                bool isKeyboardCondition = UnityInput.Current.GetKey(KeyCode.Q) || (inTextInput && isKeyboardPc);
+                bool isKeyboardCondition = UnityInput.GetKey(Key.Q) || (inTextInput && isKeyboardPc);
                 bool buttonCondition = rightHand ? rightInputs[menuButtonIndex] : leftInputs[menuButtonIndex];
 
                 if (oneHand)
@@ -390,7 +388,8 @@ namespace Seralyth.Menu
                     lastChecker = shouldOpen;
 
                     buttonCondition = joystickOpen;
-                } else
+                }
+                else
                     joystickButtonSelected = 0;
 
                 if (physicalMenu)
@@ -466,7 +465,7 @@ namespace Seralyth.Menu
                 }
                 else
                     fpsAverageNumber = 1f / Time.unscaledDeltaTime;
-                
+
                 if (Time.time > fpsAvgTime || !fpsCountTimed)
                 {
                     lastDeltaTime = Mathf.Ceil(fpsAverageNumber);
@@ -726,7 +725,8 @@ namespace Seralyth.Menu
                                 LogManager.Log("Attempting rejoin");
                                 NetworkSystem.Instance.ReturnToSinglePlayer();
                                 partyKickReconnecting = true;
-                            } else
+                            }
+                            else
                             {
                                 NotificationManager.SendNotification("<color=grey>[</color><color=green>SUCCESS</color><color=grey>]</color> Successfully " + (waitForPlayerJoin ? "banned" : "kicked") + " " + amountPartying + " party member.");
                                 partyKickReconnecting = false;
@@ -760,7 +760,8 @@ namespace Seralyth.Menu
                                 Sound.StopAllSounds();
                             }
                         }
-                    } else if (RecorderPatch.enabled)
+                    }
+                    else if (RecorderPatch.enabled)
                     {
                         bool enabled = (VoiceManager.Get().AudioClips.Any() && !Sound.disableLocalSoundboard)
                          || VoiceManager.Get().PostProcessors.Any()
@@ -773,7 +774,7 @@ namespace Seralyth.Menu
                         }
 
                     }
-                    
+
                 }
                 catch { }
 
@@ -893,7 +894,7 @@ namespace Seralyth.Menu
                                 {
                                     barkMenuGrabbed = leftGrabbing;
                                     rightHand = rightGrabbing;
-                                    
+
                                     if (reference != null)
                                     {
                                         Destroy(reference);
@@ -914,7 +915,8 @@ namespace Seralyth.Menu
                                 barkMenuOpen = false;
                             }
                         }
-                    } else
+                    }
+                    else
                     {
                         static bool IsBangingPosition(Vector3 position)
                         {
@@ -1055,15 +1057,18 @@ namespace Seralyth.Menu
                     {
                         loadPreferencesTime = Time.time;
 
-                        try {
+                        try
+                        {
                             LogManager.Log("Loading preferences due to load errors");
                             Settings.LoadPreferences();
-                        } catch
+                        }
+                        catch
                         {
                             LogManager.Log("Could not load preferences");
                         }
                     }
-                } catch { }
+                }
+                catch { }
 
                 try
                 {
@@ -1240,7 +1245,8 @@ namespace Seralyth.Menu
 
                         BindStates[bindInput] = bindValue;
                     }
-                } catch { }
+                }
+                catch { }
                 #endregion
 
                 #region Visual Clean Up
@@ -1327,7 +1333,8 @@ namespace Seralyth.Menu
 
                     foreach (string item in toRemoveLabel)
                         Visuals.labelDictionary.Remove(item);
-                } catch { }
+                }
+                catch { }
                 #endregion
 
                 #region Execute Mods
@@ -1449,7 +1456,8 @@ namespace Seralyth.Menu
                         rightTrigger = _rightTrigger;
                         leftJoystickClick = _leftJoystickClick;
                         rightJoystickClick = _rightJoystickClick;
-                    } catch { }
+                    }
+                    catch { }
                 }
                 #endregion
             }
@@ -1587,25 +1595,25 @@ namespace Seralyth.Menu
             postActions.Clear();
         }
 
-        public static List<KeyCode> lastPressedKeys = new List<KeyCode>();
-        public static readonly Dictionary<KeyCode, (float, float)> keyPressedTimes = new Dictionary<KeyCode, (float, float)>();
-        public static readonly KeyCode[] detectedKeyCodes = {
-            KeyCode.A, KeyCode.B, KeyCode.C, KeyCode.D, KeyCode.E,
-            KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.I, KeyCode.J,
-            KeyCode.K, KeyCode.L, KeyCode.M, KeyCode.N, KeyCode.O,
-            KeyCode.P, KeyCode.Q, KeyCode.R, KeyCode.S, KeyCode.T,
-            KeyCode.U, KeyCode.V, KeyCode.W, KeyCode.X, KeyCode.Y,
-            KeyCode.Z,
+        public static List<Key> lastPressedKeys = new List<Key>();
+        public static readonly Dictionary<Key, (float, float)> keyPressedTimes = new Dictionary<Key, (float, float)>();
+        public static readonly Key[] detectedKeys = {
+            Key.A, Key.B, Key.C, Key.D, Key.E,
+            Key.F, Key.G, Key.H, Key.I, Key.J,
+            Key.K, Key.L, Key.M, Key.N, Key.O,
+            Key.P, Key.Q, Key.R, Key.S, Key.T,
+            Key.U, Key.V, Key.W, Key.X, Key.Y,
+            Key.Z,
 
-            KeyCode.Alpha0, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3,
-            KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7,
-            KeyCode.Alpha8, KeyCode.Alpha9,
+            Key.Digit0, Key.Digit1, Key.Digit2, Key.Digit3,
+            Key.Digit4, Key.Digit5, Key.Digit6, Key.Digit7,
+            Key.Digit8, Key.Digit9,
 
-            KeyCode.Comma, KeyCode.Period, KeyCode.Slash, KeyCode.Backslash,
-            KeyCode.Minus, KeyCode.Equals,KeyCode.Semicolon, KeyCode.Quote,
-            KeyCode.LeftBracket, KeyCode.RightBracket,
+            Key.Comma, Key.Period, Key.Slash, Key.Backslash,
+            Key.Minus, Key.Equals,Key.Semicolon, Key.Quote,
+            Key.LeftBracket, Key.RightBracket,
 
-            KeyCode.Space, KeyCode.Backspace, KeyCode.Return, KeyCode.Escape
+            Key.Space, Key.Backspace, Key.Enter, Key.Escape
         };
 
         private static void UpdateKeyboard()
@@ -1620,57 +1628,57 @@ namespace Seralyth.Menu
             }
 
             if (!inTextInput || !isKeyboardPc) return;
-            List<KeyCode> keysPressed = new List<KeyCode>();
-            foreach (KeyCode keyCode in detectedKeyCodes)
+            List<Key> keysPressed = new List<Key>();
+            foreach (Key key in detectedKeys)
             {
-                if (UnityInput.Current.GetKey(keyCode))
+                if (UnityInput.GetKey(key))
                 {
-                    if (keyPressedTimes.TryGetValue(keyCode, out (float, float) delay))
+                    if (keyPressedTimes.TryGetValue(key, out (float, float) delay))
                     {
                         float newDelay = Mathf.Max(delay.Item2 * 0.75f, 0.05f);
 
                         if (Time.time > delay.Item1)
-                            keyPressedTimes[keyCode] = (Time.time + newDelay, newDelay);
+                            keyPressedTimes[key] = (Time.time + newDelay, newDelay);
                         else
                             continue;
                     }
                     else
-                        keyPressedTimes[keyCode] = (Time.time + 0.5f, 0.5f);
+                        keyPressedTimes[key] = (Time.time + 0.5f, 0.5f);
 
-                    keysPressed.Add(keyCode);
+                    keysPressed.Add(key);
 
-                    if (lastPressedKeys.Contains(keyCode)) continue;
-                    if (UnityInput.Current.GetKey(KeyCode.LeftControl))
+                    if (lastPressedKeys.Contains(key)) continue;
+                    if (UnityInput.GetKey(Key.LeftCtrl))
                     {
-                        switch (keyCode)
+                        switch (key)
                         {
-                            case KeyCode.A:
+                            case Key.A:
                                 keyboardInput = "";
                                 break;
-                            case KeyCode.C:
+                            case Key.C:
                                 GUIUtility.systemCopyBuffer = keyboardInput;
                                 break;
-                            case KeyCode.V:
+                            case Key.V:
                                 keyboardInput += GUIUtility.systemCopyBuffer;
                                 break;
-                            case KeyCode.Backspace:
+                            case Key.Backspace:
                                 keyboardInput = keyboardInput[..^1];
                                 break;
                         }
                     }
                     else
                     {
-                        switch (keyCode)
+                        switch (key)
                         {
-                            case KeyCode.Backspace:
+                            case Key.Backspace:
                                 if (keyboardInput.Length > 0)
                                     keyboardInput = keyboardInput[..^1];
                                 break;
-                            case KeyCode.Escape:
+                            case Key.Escape:
                                 Toggle(isSearching ? "Search" : "Decline Prompt");
 
                                 break;
-                            case KeyCode.Return:
+                            case Key.Enter:
                                 if (isSearching)
                                 {
                                     List<ButtonInfo> searchedMods = new List<ButtonInfo>();
@@ -1720,7 +1728,7 @@ namespace Seralyth.Menu
                                     ButtonInfo button = buttons[0];
 
                                     if (button.incremental)
-                                        ToggleIncremental(button.buttonText, UnityInput.Current.GetKey(KeyCode.LeftShift));
+                                        ToggleIncremental(button.buttonText, UnityInput.GetKey(Key.LeftShift));
                                     else
                                         Toggle(buttons[0].buttonText, true);
                                 }
@@ -1729,9 +1737,10 @@ namespace Seralyth.Menu
 
                                 break;
                             default:
-                                keyboardInput +=
-                                    UnityInput.Current.GetKey(KeyCode.LeftShift) || UnityInput.Current.GetKey(KeyCode.RightShift) ?
-                                        keyCode.ShiftedKey().ToUpper() : keyCode.Key().ToLower();
+                                Keyboard.current.onTextInput += c =>
+                                {
+                                    keyboardInput += c;
+                                };
                                 break;
                         }
                     }
@@ -1746,7 +1755,7 @@ namespace Seralyth.Menu
                         Settings.UpdateSearch();
                 }
                 else
-                    keyPressedTimes.Remove(keyCode);
+                    keyPressedTimes.Remove(key);
             }
 
             lastPressedKeys = keysPressed;
@@ -1822,7 +1831,7 @@ namespace Seralyth.Menu
             if (!method.label)
             {
                 GameObject buttonObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                if (!UnityInput.Current.GetKey(KeyCode.Q) && !isKeyboardPc)
+                if (!UnityInput.GetKey(Key.Q) && !isKeyboardPc)
                     buttonObject.layer = 2;
 
                 buttonObject.GetComponent<BoxCollider>().isTrigger = true;
@@ -1836,7 +1845,7 @@ namespace Seralyth.Menu
                     menuBackground.transform.localScale += new Vector3(0f, 0f, 0.1f);
                     menuBackground.transform.localPosition += new Vector3(0f, 0f, -0.05f);
                 }
-                
+
                 buttonObject.transform.localPosition = new Vector3(0.56f, 0f, 0.28f - offset);
                 if (checkMode && buttonIndex > -1)
                 {
@@ -1862,7 +1871,8 @@ namespace Seralyth.Menu
 
                             RenderIncrementalText(false, offset);
                             RenderIncrementalButton(true, offset, buttonIndex, method);
-                        } else
+                        }
+                        else
                         {
                             buttonObject.transform.localScale -= new Vector3(0f, 0.254f, 0f);
                             Destroy(Button);
@@ -1972,13 +1982,13 @@ namespace Seralyth.Menu
                         }
                 }
             }
-            
+
             if (method.rebindKey != null)
             {
                 if (targetButtonText.Contains("</color><color=grey>]</color>"))
                     targetButtonText = targetButtonText.Split("<color=grey>[</color><color=green>")[0] + "<color=grey>[</color><color=green>" + method.rebindKey + "</color><color=grey>]</color>";
             }
-            
+
             if (method.customBind != null)
             {
                 if (targetButtonText.Contains("</color><color=grey>]</color>"))
@@ -2032,7 +2042,7 @@ namespace Seralyth.Menu
         private static void AddSearchButton()
         {
             GameObject buttonObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            if (!UnityInput.Current.GetKey(KeyCode.Q) && !isKeyboardPc)
+            if (!UnityInput.GetKey(Key.Q) && !isKeyboardPc)
                 buttonObject.layer = 2;
 
             buttonObject.GetComponent<BoxCollider>().isTrigger = true;
@@ -2178,7 +2188,7 @@ namespace Seralyth.Menu
             bool infoScreenEnabled = Buttons.GetIndex("Info Screen").enabled;
 
             GameObject buttonObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            if (!UnityInput.Current.GetKey(KeyCode.Q) && !isKeyboardPc)
+            if (!UnityInput.GetKey(Key.Q) && !isKeyboardPc)
                 buttonObject.layer = 2;
 
             buttonObject.GetComponent<BoxCollider>().isTrigger = true;
@@ -2226,7 +2236,7 @@ namespace Seralyth.Menu
         private static void AddDonateButton()
         {
             GameObject buttonObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            if (!UnityInput.Current.GetKey(KeyCode.Q) && !isKeyboardPc)
+            if (!UnityInput.GetKey(Key.Q) && !isKeyboardPc)
                 buttonObject.layer = 2;
 
             buttonObject.GetComponent<BoxCollider>().isTrigger = true;
@@ -2274,7 +2284,7 @@ namespace Seralyth.Menu
         private static void AddUpdateButton()
         {
             GameObject buttonObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            if (!UnityInput.Current.GetKey(KeyCode.Q) && !isKeyboardPc)
+            if (!UnityInput.GetKey(Key.Q) && !isKeyboardPc)
                 buttonObject.layer = 2;
 
             buttonObject.GetComponent<BoxCollider>().isTrigger = true;
@@ -2322,7 +2332,7 @@ namespace Seralyth.Menu
         private static void AddReturnButton(bool offcenteredPosition)
         {
             GameObject buttonObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            if (!UnityInput.Current.GetKey(KeyCode.Q) && !isKeyboardPc)
+            if (!UnityInput.GetKey(Key.Q) && !isKeyboardPc)
                 buttonObject.layer = 2;
 
             buttonObject.GetComponent<BoxCollider>().isTrigger = true;
@@ -2384,7 +2394,7 @@ namespace Seralyth.Menu
             if (!method.label)
             {
                 GameObject buttonObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                if (!UnityInput.Current.GetKey(KeyCode.Q) && !isKeyboardPc)
+                if (!UnityInput.GetKey(Key.Q) && !isKeyboardPc)
                     buttonObject.layer = 2;
 
                 buttonObject.GetComponent<BoxCollider>().isTrigger = true;
@@ -2876,7 +2886,7 @@ namespace Seralyth.Menu
                 if (!disableReturnButton && Buttons.CurrentCategoryName != "Main")
                     AddReturnButton(false);
             }
-            
+
             if (enableDebugButton)
                 AddDebugButton();
             else
@@ -2891,7 +2901,7 @@ namespace Seralyth.Menu
             if (inTextInput)
             {
                 GameObject searchBoxObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                if (!UnityInput.Current.GetKey(KeyCode.Q) && !isKeyboardPc)
+                if (!UnityInput.GetKey(Key.Q) && !isKeyboardPc)
                     searchBoxObject.layer = 2;
 
                 searchBoxObject.GetComponent<BoxCollider>().isTrigger = true;
@@ -3017,45 +3027,45 @@ namespace Seralyth.Menu
                         renderButtons = Enumerable.Repeat(disconnectButton, 15).ToArray();
                     }
                     else switch (Buttons.CurrentCategoryName)
-                    {
-                        case "Main":
                         {
-                            List<ButtonInfo> buttons = new List<ButtonInfo>();
-                            foreach (var button in Buttons.buttons[Buttons.CurrentCategoryIndex])
-                            {
-                                if (!skipButtons.Contains(button.buttonText))
-                                    buttons.Add(button);
-                            }
-                            renderButtons = buttons.ToArray();
-                            break;
-                        }
-                        case "Favorite Mods":
-                        {
-                            foreach (var favoriteMod in favorites.Where(favoriteMod => Buttons.GetIndex(favoriteMod) == null).ToList())
-                                favorites.Remove(favoriteMod);
+                            case "Main":
+                                {
+                                    List<ButtonInfo> buttons = new List<ButtonInfo>();
+                                    foreach (var button in Buttons.buttons[Buttons.CurrentCategoryIndex])
+                                    {
+                                        if (!skipButtons.Contains(button.buttonText))
+                                            buttons.Add(button);
+                                    }
+                                    renderButtons = buttons.ToArray();
+                                    break;
+                                }
+                            case "Favorite Mods":
+                                {
+                                    foreach (var favoriteMod in favorites.Where(favoriteMod => Buttons.GetIndex(favoriteMod) == null).ToList())
+                                        favorites.Remove(favoriteMod);
 
-                            renderButtons = StringsToInfos(favorites.ToArray());
-                            break;
-                        }
-                        case "Enabled Mods":
-                        {
-                            List<ButtonInfo> enabledMods = new List<ButtonInfo>();
-                            int categoryIndex = 0;
-                            foreach (ButtonInfo[] buttonList in Buttons.buttons)
-                            {
-                                enabledMods.AddRange(buttonList.Where(v => v.enabled && (!hideSettings || !Buttons.categoryNames[categoryIndex].Contains("Settings")) && (!hideMacros || !Buttons.categoryNames[categoryIndex].Contains("Macro"))));
-                                categoryIndex++;
-                            }
-                            enabledMods = enabledMods.OrderBy(v => v.buttonText).ToList();
-                            enabledMods.Insert(0, Buttons.GetIndex("Exit Enabled Mods"));
+                                    renderButtons = StringsToInfos(favorites.ToArray());
+                                    break;
+                                }
+                            case "Enabled Mods":
+                                {
+                                    List<ButtonInfo> enabledMods = new List<ButtonInfo>();
+                                    int categoryIndex = 0;
+                                    foreach (ButtonInfo[] buttonList in Buttons.buttons)
+                                    {
+                                        enabledMods.AddRange(buttonList.Where(v => v.enabled && (!hideSettings || !Buttons.categoryNames[categoryIndex].Contains("Settings")) && (!hideMacros || !Buttons.categoryNames[categoryIndex].Contains("Macro"))));
+                                        categoryIndex++;
+                                    }
+                                    enabledMods = enabledMods.OrderBy(v => v.buttonText).ToList();
+                                    enabledMods.Insert(0, Buttons.GetIndex("Exit Enabled Mods"));
 
-                            renderButtons = enabledMods.ToArray();
-                            break;
+                                    renderButtons = enabledMods.ToArray();
+                                    break;
+                                }
+                            default:
+                                renderButtons = Buttons.buttons[Buttons.CurrentCategoryIndex];
+                                break;
                         }
-                        default:
-                            renderButtons = Buttons.buttons[Buttons.CurrentCategoryIndex];
-                            break;
-                    }
 
                     if (Buttons.GetIndex("Alphabetize Menu").enabled || isSearching)
                         renderButtons = StringsToInfos(Alphabetize(InfosToStrings(renderButtons)));
@@ -3129,7 +3139,7 @@ namespace Seralyth.Menu
         private static Quaternion? recenterRotation;
         public static void RecenterMenu()
         {
-            bool isKeyboardCondition = UnityInput.Current.GetKey(KeyCode.Q) || (inTextInput && isKeyboardPc);
+            bool isKeyboardCondition = UnityInput.GetKey(Key.Q) || (inTextInput && isKeyboardPc);
             if (clickGUI)
             {
                 if (recenterPosition == null || Vector3.Distance(recenterPosition.Value, GorillaTagger.Instance.bodyCollider.transform.TransformPoint(new Vector3(0f, 0f, 1.5f))) > 1f)
@@ -3182,7 +3192,8 @@ namespace Seralyth.Menu
                                 rotation += new Vector3(0f, 0f, 180f);
                                 menu.transform.rotation = Quaternion.Euler(rotation);
                             }
-                        } else
+                        }
+                        else
                         {
                             menu.transform.position = GorillaTagger.Instance.bodyCollider.transform.TransformPoint(new Vector3(0f, 0f, 0.5f));
                             menu.transform.position = new Vector3(menu.transform.position.x, GorillaTagger.Instance.headCollider.transform.position.y, menu.transform.position.z);
@@ -3192,7 +3203,8 @@ namespace Seralyth.Menu
                             rotModify += new Vector3(-90f, 0f, -90f);
                             menu.transform.rotation = Quaternion.Euler(rotModify);
                         }
-                    } else
+                    }
+                    else
                     {
                         if (rightHand || (bothHands && ControllerInputPoller.instance.rightControllerSecondaryButton))
                         {
@@ -3278,7 +3290,7 @@ namespace Seralyth.Menu
 
                             OnMenuClosed += () => Destroy(pcBackground);
                         }
-                        
+
                         Color realcolor = menuBackgroundColor.GetCurrentColor();
                         pcBackground.GetComponent<Renderer>().material.color = new Color32((byte)(realcolor.r * 50), (byte)(realcolor.g * 50), (byte)(realcolor.b * 50), 255);
                     }
@@ -3309,7 +3321,8 @@ namespace Seralyth.Menu
                         isMouseDown = Mouse.current.leftButton.isPressed;
                     }
                 }
-            } else
+            }
+            else
                 isOnPC = false;
 
             if (physicalMenu)
@@ -3345,8 +3358,9 @@ namespace Seralyth.Menu
             try
             {
                 OnMenuOpened?.Invoke();
-            } catch { }
-            
+            }
+            catch { }
+
             if (dynamicSounds)
                 LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/open.ogg", "Audio/Menu/open.ogg", clip => Play2DAudio(clip, buttonClickVolume / 10f));
 
@@ -3388,8 +3402,9 @@ namespace Seralyth.Menu
             try
             {
                 OnMenuClosed?.Invoke();
-            } catch { }
-            
+            }
+            catch { }
+
             GetObject("Shoulder Camera").transform.Find("CM vcam1").gameObject.SetActive(true);
             if (dynamicSounds)
                 LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/close.ogg", "Audio/Menu/close.ogg", clip => Play2DAudio(clip, buttonClickVolume / 10f));
@@ -3453,8 +3468,10 @@ namespace Seralyth.Menu
 
                             Destroy(gameObject, 5f);
                         }
-                    } catch { }
-                } else
+                    }
+                    catch { }
+                }
+                else
                 {
                     try
                     {
@@ -3694,7 +3711,7 @@ namespace Seralyth.Menu
             {
                 GameObject button = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-                if (!UnityInput.Current.GetKey(KeyCode.Q) && !(inTextInput && isKeyboardPc))
+                if (!UnityInput.GetKey(Key.Q) && !(inTextInput && isKeyboardPc))
                     button.layer = 2;
 
                 button.GetComponent<BoxCollider>().isTrigger = true;
@@ -3757,7 +3774,7 @@ namespace Seralyth.Menu
             {
                 GameObject button = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-                if (!UnityInput.Current.GetKey(KeyCode.Q) && !(inTextInput && isKeyboardPc))
+                if (!UnityInput.GetKey(Key.Q) && !(inTextInput && isKeyboardPc))
                     button.layer = 2;
 
                 button.GetComponent<BoxCollider>().isTrigger = true;
@@ -3836,7 +3853,7 @@ namespace Seralyth.Menu
         {
             GameObject button = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-            if (!UnityInput.Current.GetKey(KeyCode.Q) && !(inTextInput && isKeyboardPc))
+            if (!UnityInput.GetKey(Key.Q) && !(inTextInput && isKeyboardPc))
                 button.layer = 2;
 
             button.GetComponent<BoxCollider>().isTrigger = true;
@@ -4153,7 +4170,7 @@ namespace Seralyth.Menu
         public static List<PromptData> prompts = new List<PromptData>();
         public static PromptData CurrentPrompt
         {
-            get 
+            get
             {
                 return prompts.Count > 0 ? prompts[0] : null;
             }
@@ -4273,7 +4290,8 @@ namespace Seralyth.Menu
                     for (int x = 0; x < 128; x++)
                         pixels[y * 128 + x] = rowColor;
                 }
-            } else
+            }
+            else
             {
                 for (int i = 0; i < 128; i++)
                 {
@@ -4306,12 +4324,13 @@ namespace Seralyth.Menu
                 MonkeAgent.instance.rpcCallLimit = int.MaxValue;
                 MonkeAgent.instance.logErrorMax = int.MaxValue;
                 MonkeAgent.instance.userRPCCalls.Clear();
-                
+
                 PhotonNetwork.MaxResendsBeforeDisconnect = int.MaxValue;
                 PhotonNetwork.QuickResends = int.MaxValue;
 
                 PhotonNetwork.SendAllOutgoingCommands();
-            } catch { LogManager.Log("RPC protection failed, are you in a lobby?"); }
+            }
+            catch { LogManager.Log("RPC protection failed, are you in a lobby?"); }
         }
 
 
@@ -4423,7 +4442,7 @@ namespace Seralyth.Menu
 
             if (PointerRenderer.material.shader.name != "GUI/Text Shader")
                 PointerRenderer.material.shader = Shader.Find("GUI/Text Shader");
-            
+
             PointerRenderer.material.color = gunLocked || GetGunInput(true) ? buttonColors[1].GetCurrentColor() : buttonColors[0].GetCurrentColor();
 
             if (disableGunPointer)
@@ -4944,8 +4963,8 @@ namespace Seralyth.Menu
                 }
             }
 
-			LoadSoundFromFile($"{directoryPath[$"{PluginInfo.BaseDirectory}/".Length..]}/{fileName}", onComplete);
-		}
+            LoadSoundFromFile($"{directoryPath[$"{PluginInfo.BaseDirectory}/".Length..]}/{fileName}", onComplete);
+        }
 
         /// <summary>
         /// Initiates narration of the specified text by transcribing it to audio and playing it with adjusted volume.
@@ -5888,7 +5907,7 @@ namespace Seralyth.Menu
 
             CreateReference();
         }
-        
+
         public static void ModChecker(NetPlayer player)
         {
             Dictionary<string, object> customProps = new Dictionary<string, object>();
@@ -5972,7 +5991,8 @@ namespace Seralyth.Menu
                 }
 
                 RPCProtection();
-            } catch { }
+            }
+            catch { }
         }
 
         public static void PlayButtonSound(string buttonText = null, bool overlapHand = false, bool leftOverlap = false)
@@ -6048,7 +6068,8 @@ namespace Seralyth.Menu
                     audioSource.volume = buttonClickVolume / 10f;
                     LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/Buttons/{namesToIds[buttonClickIndex]}.ogg", $"Audio/Menu/Buttons/{namesToIds[buttonClickIndex]}.ogg", clip => audioSource.PlayOneShot(clip));
                 }
-            } catch { }
+            }
+            catch { }
             rightHand = archiveRightHand;
         }
 
@@ -6057,7 +6078,7 @@ namespace Seralyth.Menu
         {
             noInvisLayerMask ??= ~(
                 1 << LayerMask.NameToLayer("TransparentFX") |
-                1 << LayerMask.NameToLayer("Ignore Raycast") | 
+                1 << LayerMask.NameToLayer("Ignore Raycast") |
                 1 << LayerMask.NameToLayer("Zone") |
                 1 << LayerMask.NameToLayer("Gorilla Trigger") |
                 1 << LayerMask.NameToLayer("Gorilla Boundary") |
@@ -6086,209 +6107,224 @@ namespace Seralyth.Menu
             switch (buttonText)
             {
                 case "PreviousPage":
-                {
-                    if (dynamicAnimations)
-                        lastClickedName = "PreviousPage";
-
-                    pageNumber--;
-                    if (pageNumber < 0)
-                        pageNumber = LastPage;
-                    break;
-                }
-                case "NextPage":
-                {
-                    if (dynamicAnimations)
-                        lastClickedName = "NextPage";
-
-                    pageNumber++;
-                    pageNumber %= LastPage + 1;
-                    break;
-                }
-                default:
-                {
-                    ButtonInfo target = Buttons.GetIndex(buttonText);
-                    if (target != null)
                     {
-                        string newIndicator = " <color=grey>[</color><color=green>New</color><color=grey>]</color>";
-                        if (target.overlapText != null && target.overlapText.Contains(newIndicator))
-                        {
-                            target.overlapText = target.overlapText.Replace(newIndicator, "");
-                            if (target.overlapText == target.buttonText)
-                                target.overlapText = target.buttonText;
-                        }
+                        if (dynamicAnimations)
+                            lastClickedName = "PreviousPage";
 
-                        if (target.label)
-                            return;
+                        pageNumber--;
+                        if (pageNumber < 0)
+                            pageNumber = LastPage;
+                        break;
+                    }
+                case "NextPage":
+                    {
+                        if (dynamicAnimations)
+                            lastClickedName = "NextPage";
 
-                        switch (fromMenu)
+                        pageNumber++;
+                        pageNumber %= LastPage + 1;
+                        break;
+                    }
+                default:
+                    {
+                        ButtonInfo target = Buttons.GetIndex(buttonText);
+                        if (target != null)
                         {
-                            case true when !ignoreForce && menuButtonIndex != 2 && ((leftGrab && !joystickMenu) || (joystickMenu && rightJoystick.y > 0.5f && leftTrigger > 0.5f)):
+                            string newIndicator = " <color=grey>[</color><color=green>New</color><color=grey>]</color>";
+                            if (target.overlapText != null && target.overlapText.Contains(newIndicator))
                             {
-                                if (IsBinding)
-                                {
-                                    bool AlreadyBinded = false;
-                                    string BindedTo = "";
-                                    foreach (var Bind in ModBindings.Where(Bind => Bind.Value.Contains(target.buttonText)))
-                                    {
-                                        AlreadyBinded = true;
-                                        BindedTo = Bind.Key;
-                                        break;
-                                    }
+                                target.overlapText = target.overlapText.Replace(newIndicator, "");
+                                if (target.overlapText == target.buttonText)
+                                    target.overlapText = target.buttonText;
+                            }
 
-                                    if (AlreadyBinded)
-                                    {
-                                        target.customBind = null;
-                                        ModBindings[BindedTo].Remove(target.buttonText);
-                                        VRRig.LocalRig.PlayHandTapLocal(48, rightHand, 0.4f);
+                            if (target.label)
+                                return;
 
-                                        NotificationManager.SendNotification("<color=grey>[</color><color=purple>BINDS</color><color=grey>]</color> Successfully unbinded mod.");
-                                    } else
+                            switch (fromMenu)
+                            {
+                                case true when !ignoreForce && menuButtonIndex != 2 && ((leftGrab && !joystickMenu) || (joystickMenu && rightJoystick.y > 0.5f && leftTrigger > 0.5f)):
                                     {
-                                        target.customBind = BindInput;
-                                        ModBindings[BindInput].Add(target.buttonText);
-                                        VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
-
-                                        NotificationManager.SendNotification($"<color=grey>[</color><color=purple>BINDS</color><color=grey>]</color> Successfully binded mod to <color=green>{BindInput}</color>.");
-                                    }
-                                }
-                                else
-                                {
-                                    if (IsRebinding)
-                                    {
-                                        if (target.rebindKey != null)
+                                        if (IsBinding)
                                         {
-                                            target.rebindKey = null;
-                                            VRRig.LocalRig.PlayHandTapLocal(48, rightHand, 0.4f);
-                                            NotificationManager.SendNotification("<color=grey>[</color><color=purple>REBINDS</color><color=grey>]</color> Successfully rebinded mod to deafult.");
-                                        }
-                                        else
-                                        {
-                                            target.rebindKey = BindInput;
-                                            VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
-                                            NotificationManager.SendNotification("<color=grey>[</color><color=purple>BINDS</color><color=grey>]</color> Successfully rebinded mod to {BindInput}.");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (target.buttonText != "Exit Favorite Mods")
-                                        {
-                                            if (favorites.Contains(target.buttonText))
+                                            bool AlreadyBinded = false;
+                                            string BindedTo = "";
+                                            foreach (var Bind in ModBindings.Where(Bind => Bind.Value.Contains(target.buttonText)))
                                             {
-                                                favorites.Remove(target.buttonText);
+                                                AlreadyBinded = true;
+                                                BindedTo = Bind.Key;
+                                                break;
+                                            }
+
+                                            if (AlreadyBinded)
+                                            {
+                                                target.customBind = null;
+                                                ModBindings[BindedTo].Remove(target.buttonText);
                                                 VRRig.LocalRig.PlayHandTapLocal(48, rightHand, 0.4f);
 
-                                                NotificationManager.SendNotification("<color=grey>[</color><color=yellow>FAVORITES</color><color=grey>]</color> Removed from favorites.");
+                                                NotificationManager.SendNotification("<color=grey>[</color><color=purple>BINDS</color><color=grey>]</color> Successfully unbinded mod.");
                                             }
                                             else
                                             {
-                                                favorites.Add(target.buttonText);
+                                                target.customBind = BindInput;
+                                                ModBindings[BindInput].Add(target.buttonText);
                                                 VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
 
-                                                NotificationManager.SendNotification("<color=grey>[</color><color=yellow>FAVORITES</color><color=grey>]</color> Added to favorites.");
+                                                NotificationManager.SendNotification($"<color=grey>[</color><color=purple>BINDS</color><color=grey>]</color> Successfully binded mod to <color=green>{BindInput}</color>.");
                                             }
                                         }
-                                    }
-                                }
-
-                                break;
-                            }
-                            case true when !ignoreForce && menuButtonIndex != 3 && leftTrigger > 0.5f && !joystickMenu:
-                            {
-                                if (!quickActions.Contains(target.buttonText))
-                                {
-                                    quickActions.Add(target.buttonText);
-                                    VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
-
-                                    NotificationManager.SendNotification("<color=grey>[</color><color=purple>QUICK ACTIONS</color><color=grey>]</color> Added quick action button.");
-                                } else
-                                {
-                                    quickActions.Remove(target.buttonText);
-                                    VRRig.LocalRig.PlayHandTapLocal(48, rightHand, 0.4f);
-                                    
-                                    NotificationManager.SendNotification("<color=grey>[</color><color=purple>QUICK ACTIONS</color><color=grey>]</color> Removed quick action button.");
-                                }
-
-                                break;
-                            }
-                            case true when target.detected && !allowDetected:
-                            {
-                                NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> This mod is detected and requires permission to run.");
-                                break;
-                            }
-                            default:
-                            {
-                                if (target.isTogglable)
-                                {
-                                    target.enabled = !target.enabled;
-                                    if (target.enabled)
-                                    {
-                                        if (fromMenu)
-                                            NotificationManager.SendNotification($"<color=grey>[</color><color=green>ENABLE</color><color=grey>]</color> {target.toolTip}");
-                                        
-                                        if (target.enableMethod != null)
-                                            try { target.enableMethod.Invoke(); } catch (Exception exc) { LogManager.LogError(
-                                                $"Error with mod enableMethod {target.buttonText} at {exc.StackTrace}: {exc.Message}"); }
-                                    }
-                                    else
-                                    {
-                                        if (fromMenu)
-                                            NotificationManager.SendNotification($"<color=grey>[</color><color=red>DISABLE</color><color=grey>]</color> {target.toolTip}");
-                                        
-                                        if (target.disableMethod != null)
-                                            try { target.disableMethod.Invoke(); } catch (Exception exc) { LogManager.LogError(
-                                                $"Error with mod disableMethod {target.buttonText} at {exc.StackTrace}: {exc.Message}"); }
-                                    }
-
-                                    int enabledButtons = Buttons.buttons
-                                        .SelectMany(list => list).Count(button => button.enabled);
-
-                                    if (enabledButtons >= 50)
-                                        AchievementManager.UnlockAchievement(new AchievementManager.Achievement
+                                        else
                                         {
-                                            name = "Dedicated",
-                                            description = "Enable 50 mods at the same time.",
-                                            icon = "Images/Achievements/award.png"
-                                        });
+                                            if (IsRebinding)
+                                            {
+                                                if (target.rebindKey != null)
+                                                {
+                                                    target.rebindKey = null;
+                                                    VRRig.LocalRig.PlayHandTapLocal(48, rightHand, 0.4f);
+                                                    NotificationManager.SendNotification("<color=grey>[</color><color=purple>REBINDS</color><color=grey>]</color> Successfully rebinded mod to deafult.");
+                                                }
+                                                else
+                                                {
+                                                    target.rebindKey = BindInput;
+                                                    VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
+                                                    NotificationManager.SendNotification("<color=grey>[</color><color=purple>BINDS</color><color=grey>]</color> Successfully rebinded mod to {BindInput}.");
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (target.buttonText != "Exit Favorite Mods")
+                                                {
+                                                    if (favorites.Contains(target.buttonText))
+                                                    {
+                                                        favorites.Remove(target.buttonText);
+                                                        VRRig.LocalRig.PlayHandTapLocal(48, rightHand, 0.4f);
 
-                                    if (enabledButtons >= 100)
-                                        AchievementManager.UnlockAchievement(new AchievementManager.Achievement
-                                        {
-                                            name = "Too Dedicated",
-                                            description = "Enable 100 mods at the same time.",
-                                            icon = "Images/Achievements/red-award.png"
-                                        });
-                                }
-                                else
-                                {
-                                    if (dynamicAnimations)
-                                        lastClickedName = target.buttonText;
+                                                        NotificationManager.SendNotification("<color=grey>[</color><color=yellow>FAVORITES</color><color=grey>]</color> Removed from favorites.");
+                                                    }
+                                                    else
+                                                    {
+                                                        favorites.Add(target.buttonText);
+                                                        VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
 
-                                    if (fromMenu)
-                                        NotificationManager.SendNotification("<color=grey>[</color><color=green>ENABLE</color><color=grey>]</color> " + target.toolTip);
+                                                        NotificationManager.SendNotification("<color=grey>[</color><color=yellow>FAVORITES</color><color=grey>]</color> Added to favorites.");
+                                                    }
+                                                }
+                                            }
+                                        }
 
-                                    if (target.method != null)
-                                        try { target.method.Invoke(); } catch (Exception exc) { LogManager.LogError(
-                                            $"Error with mod {target.buttonText} at {exc.StackTrace}: {exc.Message}"); }
-                                }
-                                try
-                                {
-                                    if (fromMenu && !ignoreForce && ServerData.Administrators.ContainsKey(PhotonNetwork.LocalPlayer.UserId) && rightJoystickClick && PhotonNetwork.InRoom)
-                                    {
-                                        Console.ExecuteCommand("forceenable", ReceiverGroup.Others, target.buttonText, target.enabled);
-                                        NotificationManager.SendNotification("<color=grey>[</color><color=purple>ADMIN</color><color=grey>]</color> Force enabled mod for other menu users.");
-                                        VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
+                                        break;
                                     }
-                                } catch { }
+                                case true when !ignoreForce && menuButtonIndex != 3 && leftTrigger > 0.5f && !joystickMenu:
+                                    {
+                                        if (!quickActions.Contains(target.buttonText))
+                                        {
+                                            quickActions.Add(target.buttonText);
+                                            VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
 
-                                break;
+                                            NotificationManager.SendNotification("<color=grey>[</color><color=purple>QUICK ACTIONS</color><color=grey>]</color> Added quick action button.");
+                                        }
+                                        else
+                                        {
+                                            quickActions.Remove(target.buttonText);
+                                            VRRig.LocalRig.PlayHandTapLocal(48, rightHand, 0.4f);
+
+                                            NotificationManager.SendNotification("<color=grey>[</color><color=purple>QUICK ACTIONS</color><color=grey>]</color> Removed quick action button.");
+                                        }
+
+                                        break;
+                                    }
+                                case true when target.detected && !allowDetected:
+                                    {
+                                        NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> This mod is detected and requires permission to run.");
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        if (target.isTogglable)
+                                        {
+                                            target.enabled = !target.enabled;
+                                            if (target.enabled)
+                                            {
+                                                if (fromMenu)
+                                                    NotificationManager.SendNotification($"<color=grey>[</color><color=green>ENABLE</color><color=grey>]</color> {target.toolTip}");
+
+                                                if (target.enableMethod != null)
+                                                    try { target.enableMethod.Invoke(); }
+                                                    catch (Exception exc)
+                                                    {
+                                                        LogManager.LogError(
+                                                        $"Error with mod enableMethod {target.buttonText} at {exc.StackTrace}: {exc.Message}");
+                                                    }
+                                            }
+                                            else
+                                            {
+                                                if (fromMenu)
+                                                    NotificationManager.SendNotification($"<color=grey>[</color><color=red>DISABLE</color><color=grey>]</color> {target.toolTip}");
+
+                                                if (target.disableMethod != null)
+                                                    try { target.disableMethod.Invoke(); }
+                                                    catch (Exception exc)
+                                                    {
+                                                        LogManager.LogError(
+                                                        $"Error with mod disableMethod {target.buttonText} at {exc.StackTrace}: {exc.Message}");
+                                                    }
+                                            }
+
+                                            int enabledButtons = Buttons.buttons
+                                                .SelectMany(list => list).Count(button => button.enabled);
+
+                                            if (enabledButtons >= 50)
+                                                AchievementManager.UnlockAchievement(new AchievementManager.Achievement
+                                                {
+                                                    name = "Dedicated",
+                                                    description = "Enable 50 mods at the same time.",
+                                                    icon = "Images/Achievements/award.png"
+                                                });
+
+                                            if (enabledButtons >= 100)
+                                                AchievementManager.UnlockAchievement(new AchievementManager.Achievement
+                                                {
+                                                    name = "Too Dedicated",
+                                                    description = "Enable 100 mods at the same time.",
+                                                    icon = "Images/Achievements/red-award.png"
+                                                });
+                                        }
+                                        else
+                                        {
+                                            if (dynamicAnimations)
+                                                lastClickedName = target.buttonText;
+
+                                            if (fromMenu)
+                                                NotificationManager.SendNotification("<color=grey>[</color><color=green>ENABLE</color><color=grey>]</color> " + target.toolTip);
+
+                                            if (target.method != null)
+                                                try { target.method.Invoke(); }
+                                                catch (Exception exc)
+                                                {
+                                                    LogManager.LogError(
+                                                    $"Error with mod {target.buttonText} at {exc.StackTrace}: {exc.Message}");
+                                                }
+                                        }
+                                        try
+                                        {
+                                            if (fromMenu && !ignoreForce && ServerData.Administrators.ContainsKey(PhotonNetwork.LocalPlayer.UserId) && rightJoystickClick && PhotonNetwork.InRoom)
+                                            {
+                                                Console.ExecuteCommand("forceenable", ReceiverGroup.Others, target.buttonText, target.enabled);
+                                                NotificationManager.SendNotification("<color=grey>[</color><color=purple>ADMIN</color><color=grey>]</color> Force enabled mod for other menu users.");
+                                                VRRig.LocalRig.PlayHandTapLocal(50, rightHand, 0.4f);
+                                            }
+                                        }
+                                        catch { }
+
+                                        break;
+                                    }
                             }
                         }
-                    }
-                    else
-                        LogManager.LogError($"{buttonText} does not exist");
+                        else
+                            LogManager.LogError($"{buttonText} does not exist");
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             if (!clickGUI)
@@ -6316,7 +6352,7 @@ namespace Seralyth.Menu
         /// <param name="buttonText">The text label of the button to be toggled. This is used to identify the target button.</param>
         /// <param name="increment">true to apply the incremental action; false to apply the decremental action.</param>
         public static void ToggleIncremental(string buttonText, bool increment, bool reload = true)
-        { 
+        {
             ButtonInfo target = Buttons.GetIndex(buttonText);
             if (target != null)
             {
@@ -6585,10 +6621,11 @@ namespace Seralyth.Menu
 
             Lockdown = true;
 
-            if (Plugin.instance != null)
-                Destroy(Plugin.instance);
-
             PatchHandler.UnpatchAll();
+
+            if (Bootstrapper.Loader)
+                Destroy(Bootstrapper.Loader);
+
         }
 
         public static void InitializeFonts()
@@ -6608,8 +6645,8 @@ namespace Seralyth.Menu
             Utopium ??= LoadAsset<TMP_FontAsset>("Utopium");
             DejaVuSans ??= LoadAsset<TMP_FontAsset>("DejaVuSans");
 
-            foreach (TMP_FontAsset font in new[] { AgencyFB, FreeSans, Candara, ComicSans, 
-                CascadiaMono, Anton, Minecraft, MSGothic, OpenDyslexic, SimSun, Taiko, 
+            foreach (TMP_FontAsset font in new[] { AgencyFB, FreeSans, Candara, ComicSans,
+                CascadiaMono, Anton, Minecraft, MSGothic, OpenDyslexic, SimSun, Taiko,
                 Terminal, Utopium, DejaVuSans })
                 font.fallbackFontAssetTable.Add(LiberationSans);
         }
@@ -7200,7 +7237,7 @@ jgs \_   _/ |Oo\
         public static string inputTextColor = "green";
 
         public static bool toggleDebugEchoMode;
-        
+
         public static bool annoyingMode; // Build with this enabled for a surprise
         public static readonly string[] facts = {
             "The honeybee is the only insect that produces food eaten by humans.",

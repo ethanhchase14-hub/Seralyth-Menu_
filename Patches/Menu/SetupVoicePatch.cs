@@ -31,6 +31,6 @@ namespace Seralyth.Patches.Menu
         {
             if (Buttons.GetIndex("High Quality Microphone").enabled)
                 Buttons.GetIndex("High Quality Microphone").enableMethod.Invoke();
-        }     
+        }
     }
 }

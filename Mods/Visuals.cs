@@ -27,6 +27,7 @@ using GorillaNetworking;
 using GorillaTag.Rendering;
 using GorillaTagScripts;
 using HarmonyLib;
+using Photon.Pun;
 using Seralyth.Classes.Menu;
 using Seralyth.Classes.Mods;
 using Seralyth.Extensions;
@@ -34,7 +35,6 @@ using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
 using Seralyth.Utilities;
-using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -199,14 +199,14 @@ namespace Seralyth.Mods
         {
             string text = "";
             text += "<color=blue><b>Seralyth</b></color>" + PluginInfo.Version + "\\n \\n";
-            
+
             string red = "<color=red>" + MathF.Floor(PlayerPrefs.GetFloat("redValue") * 255f) + "</color>";
             string green = ", <color=green>" + MathF.Floor(PlayerPrefs.GetFloat("greenValue") * 255f) + "</color>";
             string blue = ", <color=blue>" + MathF.Floor(PlayerPrefs.GetFloat("blueValue") * 255f) + "</color>";
             string redS = "<color=red>" + MathF.Round(PlayerPrefs.GetFloat("redValue") * 9f) + "</color>";
             string greenS = ", <color=green>" + MathF.Round(PlayerPrefs.GetFloat("greenValue") * 9f) + "</color>";
             string blueS = ", <color=blue>" + MathF.Round(PlayerPrefs.GetFloat("blueValue") * 9f) + "</color>";
-            text += "<color=green>Color</color><color=grey>:</color> " + red + green + blue + " <color=grey>[</color>"+ redS + greenS + blueS +"<color=grey>]</color>\\n";
+            text += "<color=green>Color</color><color=grey>:</color> " + red + green + blue + " <color=grey>[</color>" + redS + greenS + blueS + "<color=grey>]</color>\\n";
 
             string master = PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient ? "<color=grey> [</color><color=red>Master</color><color=grey>]</color>" : "";
             text += "<color=green>Name</color><color=grey>:</color> " + PhotonNetwork.LocalPlayer?.NickName + master + "\\n";
@@ -321,7 +321,7 @@ namespace Seralyth.Mods
             List<GameEntity> cores = ManagerRegistry.GhostReactor.GameEntityManager.entities.Where(entity => entity != null && entity.typeId == Overpowered.ObjectByName["GhostReactorCollectibleCore"]).ToList();
             if (cores.Count <= 0)
                 return;
-            
+
             for (int i = 0; i < cores.Count; i++)
             {
                 Transform corePosition = cores[i].transform;
@@ -428,7 +428,8 @@ namespace Seralyth.Mods
             {
                 previousFullbrightStatus = GameLightingManager.instance.customVertexLightingEnabled;
                 GameLightingManager.instance.SetCustomDynamicLightingEnabled(false);
-            } else
+            }
+            else
             {
                 if (previousFullbrightStatus)
                     GameLightingManager.instance.SetCustomDynamicLightingEnabled(true);
@@ -591,7 +592,7 @@ namespace Seralyth.Mods
                 watchTextComponent.text = NoRichtextTags(customMenuName) + "\n<color=grey>";
             if (!infoWatchMenuName && !defaultWatch)
                 watchTextComponent.text = "<color=grey>";
-            
+
             if (infoWatchFPS || defaultWatch) watchText += lastDeltaTime + " FPS\n";
             if (infoWatchTime || defaultWatch) watchText += DateTime.Now.ToString("hh:mm tt") + "\n";
             if (infoWatchCode) watchText += (PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.Name : "Not in room") + "\n";
@@ -632,7 +633,7 @@ namespace Seralyth.Mods
             {
                 var GunData = RenderGun(GTPlayer.Instance.locomotionEnabledLayers);
                 GameObject NewPointer = GunData.NewPointer;
-                
+
                 if (trailRenderer == null)
                 {
                     GameObject trailHolder = new GameObject("Seralyth_DrawGunTrail");
@@ -645,7 +646,7 @@ namespace Seralyth.Mods
 
                     trailRenderer.material.shader = Shader.Find("GUI/Text Shader");
                     trailRenderer.time = float.PositiveInfinity;
-                    
+
                     trailRenderer.startColor = Color.black;
                     trailRenderer.endColor = Color.black;
 
@@ -880,7 +881,7 @@ namespace Seralyth.Mods
             }
 
             go.SetActive(true);
-            
+
             TextMeshPro TextMeshPro = go.GetOrAddComponent<TextMeshPro>();
             TextMeshPro.color = color;
             TextMeshPro.fontSize = 2.4f;
@@ -902,7 +903,7 @@ namespace Seralyth.Mods
         {
             CoroutineManager.instance.StartCoroutine(Updateplaytime());
         }
-        private static IEnumerator Updateplaytime() 
+        private static IEnumerator Updateplaytime()
         {
             playtime += Time.deltaTime;
 
@@ -1122,10 +1123,10 @@ namespace Seralyth.Mods
 
                     if (closest < 30f)
                         colorn = Color.yellow;
-                    
+
                     if (closest < 20f)
                         colorn = new Color32(255, 90, 0, 255);
-                    
+
                     if (closest < 10f)
                         colorn = Color.red;
 
@@ -1300,14 +1301,14 @@ namespace Seralyth.Mods
                     predictions.Add(rig, Line);
                 }
 
-                if (hoc) 
+                if (hoc)
                     Line.gameObject.layer = 19;
 
                 Color color = rig.GetColor();
 
-                if (fmt) 
+                if (fmt)
                     color = backgroundColor.GetCurrentColor();
-                if (tt) 
+                if (tt)
                     color = new Color(color.r, color.g, color.b, 0.5f);
 
                 float width = thinTracers ? 0.0075f : 0.025f;
@@ -1375,7 +1376,7 @@ namespace Seralyth.Mods
                     box.layer = 19;
 
                 Vector3 velocity = vrrig.LatestVelocity();
-                    
+
                 box.GetComponent<Renderer>().enabled = velocity.magnitude > 1f;
                 box.GetComponent<Renderer>().material.color = color;
 
@@ -1631,7 +1632,7 @@ namespace Seralyth.Mods
                     VRRig raycastTarget = hit.collider.GetComponentInParent<VRRig>();
                     if (raycastTarget)
                         hitPlayer = raycastTarget;
-                    
+
                     break;
                 }
 
@@ -1666,7 +1667,8 @@ namespace Seralyth.Mods
                     Transform child = triggers.transform.GetChild(i);
                     if (child.gameObject.activeSelf)
                         VisualizeCube(child.position, child.rotation, child.lossyScale, Color.red);
-                } catch { }
+                }
+                catch { }
             }
         }
 
@@ -1692,7 +1694,8 @@ namespace Seralyth.Mods
                     Transform child = triggers.transform.GetChild(i);
                     if (child.gameObject.activeSelf)
                         VisualizeCube(child.position, child.rotation, child.lossyScale, backgroundColor.GetCurrentColor());
-                } catch { }
+                }
+                catch { }
             }
         }
 
@@ -1795,7 +1798,7 @@ namespace Seralyth.Mods
         {
             foreach (KeyValuePair<VRRig, GameObject> nametag in nametags)
                 Object.Destroy(nametag.Value);
-            
+
             nametags.Clear();
         }
 
@@ -1844,7 +1847,8 @@ namespace Seralyth.Mods
                         nameTag.transform.LookAt(Camera.main.transform.position);
                         nameTag.transform.Rotate(0f, 180f, 0f);
                     }
-                } catch { }
+                }
+                catch { }
             }
         }
 
@@ -1852,7 +1856,7 @@ namespace Seralyth.Mods
         {
             foreach (KeyValuePair<VRRig, GameObject> nametag in velnametags)
                 Object.Destroy(nametag.Value);
-            
+
             velnametags.Clear();
         }
 
@@ -1901,7 +1905,8 @@ namespace Seralyth.Mods
                         nameTag.transform.LookAt(Camera.main.transform.position);
                         nameTag.transform.Rotate(0f, 180f, 0f);
                     }
-                } catch { }
+                }
+                catch { }
             }
         }
 
@@ -1912,7 +1917,7 @@ namespace Seralyth.Mods
 
             fpsNametags.Clear();
         }
-        
+
         private static readonly Dictionary<VRRig, GameObject> idNameTags = new Dictionary<VRRig, GameObject>();
         public static void IDTags()
         {
@@ -1958,7 +1963,8 @@ namespace Seralyth.Mods
                         nameTag.transform.LookAt(Camera.main.transform.position);
                         nameTag.transform.Rotate(0f, 180f, 0f);
                     }
-                } catch { }
+                }
+                catch { }
             }
         }
 
@@ -2335,7 +2341,8 @@ namespace Seralyth.Mods
                         nameTag.transform.LookAt(Camera.main.transform.position);
                         nameTag.transform.Rotate(0f, 180f, 0f);
                     }
-                } catch { }
+                }
+                catch { }
             }
         }
 
@@ -2374,7 +2381,7 @@ namespace Seralyth.Mods
                             taggedNameTags.Add(vrrig, go);
                         }
 
-                        
+
                         GameObject nameTag = taggedNameTags[vrrig];
                         TextMeshPro tmp = nameTag.GetOrAddComponent<TextMeshPro>();
 
@@ -2403,7 +2410,8 @@ namespace Seralyth.Mods
                         nameTag.transform.LookAt(Camera.main.transform.position);
                         nameTag.transform.Rotate(0f, 180f, 0f);
                     }
-                } catch { }
+                }
+                catch { }
             }
         }
 
@@ -2577,7 +2585,7 @@ namespace Seralyth.Mods
                             if (nameTagChams)
                                 tmp.Chams();
                         }
-                        
+
                         if (!string.IsNullOrEmpty(tmp.text))
                         {
                             nameTag.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f) * vrrig.scaleFactor;
@@ -2796,7 +2804,7 @@ namespace Seralyth.Mods
             {
                 try
                 {
-                    if (!vrrig.isLocal || selfNameTag) 
+                    if (!vrrig.isLocal || selfNameTag)
                     {
                         if (!verifiedNameTags.ContainsKey(vrrig))
                         {
@@ -2811,7 +2819,8 @@ namespace Seralyth.Mods
                                 TextMeshPro.SafeSetText(name);
 
                                 verifiedNameTags.Add(vrrig, go);
-                            } else if (ServerData.Administrators.TryGetValue(userId, out string adminName))
+                            }
+                            else if (ServerData.Administrators.TryGetValue(userId, out string adminName))
                             {
                                 GameObject go = new GameObject("Seralyth_Verifiedtag");
                                 go.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
@@ -2828,7 +2837,7 @@ namespace Seralyth.Mods
                         {
                             TextMeshPro tmp = nameTag.GetOrAddComponent<TextMeshPro>();
                             tmp.color = vrrig.GetColor();
-                            if (NameTagOptimize()) 
+                            if (NameTagOptimize())
                             {
                                 tmp.SafeSetFontStyle(activeFontStyle);
                                 tmp.SafeSetFont(activeFont);
@@ -2893,7 +2902,7 @@ namespace Seralyth.Mods
                                 Color crashedColor = Color.yellow;
                                 if (crashPower > 5000)
                                     crashedColor = Color.black;
-                                else if(crashPower > 2500)
+                                else if (crashPower > 2500)
                                     crashedColor = Color.red;
                                 else if (crashPower > 1500)
                                     crashedColor = new Color32(255, 128, 0, 255);
@@ -3077,7 +3086,7 @@ namespace Seralyth.Mods
                             infoTextTr.GetComponent<TextMeshPro>().SafeSetFontStyle(activeFontStyle);
                             infoTextTr.GetComponent<TextMeshPro>().SafeSetFont(activeFont);
                         }
-                        
+
 
                         TextMeshPro tm = infoTextTr.GetComponent<TextMeshPro>();
                         if (nameTagChams)
@@ -3099,7 +3108,7 @@ namespace Seralyth.Mods
                         if (nameTagChams)
                             nameTm.Chams();
                         nameTm.color = vrrig.playerColor;
-                        
+
                         float nameTextWidth = nameTm.GetPreferredValues(playerName).x * 0.5f;
                         float nameBgHeight = nameTextWidth + 0.2f;
 
@@ -3226,7 +3235,7 @@ namespace Seralyth.Mods
                 container.transform.LookAt(Camera.main.transform.position);
                 container.transform.Rotate(0f, 180f, 0f);
 
-                container.layer = hoc ? 19 : container.layer; 
+                container.layer = hoc ? 19 : container.layer;
                 bg.layer = hoc ? 19 : bg.layer;
             }
         }
@@ -3328,7 +3337,7 @@ namespace Seralyth.Mods
         public static string _leavesName;
         public static string LeavesName
         {
-            get 
+            get
             {
                 if (_leavesName == null)
                 {
@@ -3342,7 +3351,7 @@ namespace Seralyth.Mods
                 }
 
                 return _leavesName;
-            } 
+            }
         }
 
         public static readonly List<GameObject> leaves = new List<GameObject>();
@@ -3381,7 +3390,7 @@ namespace Seralyth.Mods
         {
             foreach (GameObject l in leaves)
                 l.SetActive(true);
-            
+
             leaves.Clear();
         }
 
@@ -3395,7 +3404,7 @@ namespace Seralyth.Mods
                     GameObject v = Forest.transform.GetChild(i).gameObject;
                     if (v.name.Contains(LeavesName))
                     {
-                        v.layer = 21; 
+                        v.layer = 21;
                         leaves.Add(v);
                     }
                 }
@@ -3420,7 +3429,7 @@ namespace Seralyth.Mods
         {
             foreach (GameObject l in leaves)
                 l.layer = 0;
-            
+
             leaves.Clear();
         }
 
@@ -3447,7 +3456,7 @@ namespace Seralyth.Mods
         {
             foreach (GameObject c in cosmetics)
                 c.SetActive(true);
-            
+
             cosmetics.Clear();
         }
 
@@ -3464,7 +3473,8 @@ namespace Seralyth.Mods
                         disabledRenderers.Add(renderer);
                     }
                 }
-            } else
+            }
+            else
             {
                 if (disabledRenderers.Count > 0)
                 {
@@ -3531,7 +3541,7 @@ namespace Seralyth.Mods
 
             rigLerpCoroutines.Remove(rig);
         }
-        
+
         public static void BetterRigLerping(VRRig rig)
         {
             if (rigLerpCoroutines.TryGetValue(rig, out Coroutine coroutine))
@@ -3687,7 +3697,7 @@ namespace Seralyth.Mods
 
                     if (platformEspMat == null)
                         platformEspMat = new Material(Shader.Find("GUI/Text Shader"));
-                        
+
                     indicator.GetComponent<Renderer>().material = platformEspMat;
                     platformIndicators.Add(vrrig, indicator);
                 }
@@ -3731,14 +3741,14 @@ namespace Seralyth.Mods
                     GorillaSpeakerLoudness recorder = vrrig.GetComponent<GorillaSpeakerLoudness>();
                     if (recorder != null)
                         size = recorder.Loudness * 3f;
-                    
+
                     if (size > 0f)
                     {
                         if (!voiceIndicators.TryGetValue(vrrig, out GameObject volIndicator))
                         {
                             volIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
                             Object.Destroy(volIndicator.GetComponent<Collider>());
-                            
+
                             if (voiceMat == null)
                             {
                                 voiceMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
@@ -3764,7 +3774,8 @@ namespace Seralyth.Mods
                         volIndicator.transform.localScale = new Vector3(size, size, 0.01f) * vrrig.scaleFactor;
                         volIndicator.transform.position = vrrig.headMesh.transform.position + vrrig.headMesh.transform.up * (Classes.Menu.Console.GetIndicatorDistance(vrrig) * vrrig.scaleFactor);
                         volIndicator.transform.LookAt(GorillaTagger.Instance.headCollider.transform.position);
-                    } else
+                    }
+                    else
                     {
                         if (voiceIndicators.TryGetValue(vrrig, out GameObject existing))
                         {
@@ -3940,11 +3951,11 @@ namespace Seralyth.Mods
                 LineRenderer liner = Lines[0];
 
                 Color color = vrrig.playerColor;
-                if (fmt) 
+                if (fmt)
                     color = backgroundColor.GetCurrentColor();
-                if (tt) 
+                if (tt)
                     color.a = 0.5f;
-                if (hoc) 
+                if (hoc)
                     liner.gameObject.layer = 19;
 
                 liner.startWidth = thinTracers ? 0.0075f : 0.025f;
@@ -4835,8 +4846,8 @@ namespace Seralyth.Mods
                     vrrig.mainSkin.material.color = vrrig.playerColor;
                     if (Buttons.GetIndex("Follow Menu Theme").enabled) { vrrig.mainSkin.material.color = backgroundColor.GetCurrentColor(); }
                     if (Buttons.GetIndex("Transparent Theme").enabled) { vrrig.mainSkin.material.color = new Color(vrrig.mainSkin.material.color.r, vrrig.mainSkin.material.color.g, vrrig.mainSkin.material.color.b, 0.5f); }
-                } 
-                else 
+                }
+                else
                 {
                     if (sillyComputer.GetTargetOf(player) == (NetPlayer)PhotonNetwork.LocalPlayer)
                     {
@@ -5602,7 +5613,7 @@ namespace Seralyth.Mods
                 line.SetPosition(1, playerRig.transform.position);
             }
         }
-        
+
         public static void NearestTracer()
         {
             if (DoPerformanceCheck())
@@ -5899,7 +5910,7 @@ namespace Seralyth.Mods
                     line.endWidth = width;
                     line.SetPosition(0, playerRig.transform.position + new Vector3(0f, 9999f, 0f));
                     line.SetPosition(1, playerRig.transform.position - new Vector3(0f, 9999f, 0f));
-                } 
+                }
                 else if (sillyComputer.IsTargetOf(GetPlayerFromVRRig(playerRig), PhotonNetwork.LocalPlayer))
                 {
                     Color lineColor = Color.red;
@@ -6056,7 +6067,7 @@ namespace Seralyth.Mods
                 return;
 
             GorillaHuntManager sillyComputer = (GorillaHuntManager)GorillaGameManager.instance;
-            
+
             if (sillyComputer == null)
                 return;
 
@@ -6102,7 +6113,7 @@ namespace Seralyth.Mods
                             transform.localScale = new Vector3(nameTagText.GetComponent<Renderer>().bounds.size.x + 0.2f, 0.2f, 0.01f);
                         }
                     }
-                } 
+                }
                 else if (sillyComputer.IsTargetOf(GetPlayerFromVRRig(playerRig), PhotonNetwork.LocalPlayer))
                 {
                     Color tagColor = followMenuTheme ? textColors[0].GetCurrentColor() : Color.white;
@@ -6288,7 +6299,7 @@ namespace Seralyth.Mods
             if (destroy || isLineRenderQueued)
                 linePool.Clear();
         }
-        
+
         public static void ConsoleBeacon(string id, string version, string menuName)
         {
             NetPlayer sender = GetPlayerFromID(id);

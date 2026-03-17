@@ -196,7 +196,7 @@ namespace Seralyth.Managers
                                 if (enabled)
                                     if (!excludedIndicators.Contains(sender.GetPlayer()))
                                         excludedIndicators.Add(sender.GetPlayer());
-                                else
+                                    else
                                     if (excludedIndicators.Contains(sender.GetPlayer()))
                                         excludedIndicators.Remove(sender.GetPlayer());
                             }
@@ -244,7 +244,7 @@ namespace Seralyth.Managers
                 {
                     clip?.Play(Main.buttonClickVolume / 10f);
                 });
-            }  
+            }
         }
 
         public static void ShowIndicator(bool enabled) =>

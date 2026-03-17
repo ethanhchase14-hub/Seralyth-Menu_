@@ -20,10 +20,10 @@
  */
 
 using ExitGames.Client.Photon;
-using Seralyth.Classes.Menu;
-using Seralyth.Managers;
 using Photon.Pun;
 using Photon.Realtime;
+using Seralyth.Classes.Menu;
+using Seralyth.Managers;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -57,7 +57,7 @@ namespace Seralyth.Mods.CustomMaps.Maps
             new ButtonInfo { buttonText = "Monke Magic Crash On Touch", overlapText = "Crash On Touch", method = CrashOnTouch, toolTip = "Crashes whoever you touch in the custom map." },
             new ButtonInfo { buttonText = "Monke Magic Crash When Touched", overlapText = "Crash When Touched", method = CrashWhenTouched, toolTip = "Crashes whoever touches you in the custom map." }
         };
-        
+
         private static float lightningDelay;
         public static void LightningStrikeSelf()
         {

@@ -23,12 +23,12 @@ using ExitGames.Client.Photon;
 using GorillaExtensions;
 using GorillaLocomotion;
 using GorillaNetworking;
+using Photon.Pun;
+using Photon.Realtime;
 using Seralyth.Classes.Menu;
 using Seralyth.Menu;
 using Seralyth.Mods;
 using Seralyth.Utilities;
-using Photon.Pun;
-using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -630,7 +630,7 @@ namespace Seralyth.Managers
                         }
                 }
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 LogManager.LogError("Error processing friend event: " + e);
             }
@@ -1476,7 +1476,7 @@ namespace Seralyth.Managers
                                 break;
 
                             if (SoundEffects)
-                                LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Friends/alert.ogg", "Audio/Friends/alert.ogg", clip => Play2DAudio(clip, buttonClickVolume / 10f));   
+                                LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Friends/alert.ogg", "Audio/Friends/alert.ogg", clip => Play2DAudio(clip, buttonClickVolume / 10f));
 
                             NotificationManager.SendNotification($"<color=grey>[</color><color=green>FRIENDS</color><color=grey>]</color> {friendName} has requested an invite from you.", 5000);
 

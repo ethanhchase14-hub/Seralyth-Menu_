@@ -20,9 +20,9 @@
  */
 
 using HarmonyLib;
-using Seralyth.Managers;
 using Photon.Pun;
 using Photon.Realtime;
+using Seralyth.Managers;
 using System;
 using System.Collections.Generic;
 
@@ -45,7 +45,8 @@ namespace Seralyth.Patches.Menu
             {
                 if (FilteredRPCs.TryGetValue(methodName, out var function))
                     return function?.Invoke() ?? true;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 LogManager.LogError($"Error in RPCFilter.FilteredRPCs.{methodName}: {e}");
             }

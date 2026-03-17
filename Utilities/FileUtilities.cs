@@ -19,6 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -78,7 +79,7 @@ namespace Seralyth.Utilities
         }
 
         public static string GetGamePath() =>
-            Assembly.GetExecutingAssembly().Location.Replace("\\", "/").Split("/BepInEx")[0];
+            AppContext.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
 
         public static string SanitizeFileName(string input)
         {

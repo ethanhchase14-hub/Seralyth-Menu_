@@ -23,15 +23,15 @@ using ExitGames.Client.Photon;
 using GorillaLocomotion;
 using GorillaNetworking;
 using GorillaTagScripts;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon.Voice.Unity;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
 using Seralyth.Patches.Safety;
 using Seralyth.Utilities;
-using Photon.Pun;
-using Photon.Realtime;
-using Photon.Voice.Unity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -285,7 +285,7 @@ namespace Seralyth.Mods
 
         public static bool antiMute;
 
-		public static VRRig reportRig;
+        public static VRRig reportRig;
         public static void AntiReport(Action<VRRig, Vector3> onReport)
         {
             if (!NetworkSystem.Instance.InRoom) return;
@@ -301,8 +301,8 @@ namespace Seralyth.Mods
                     icon = "Images/Achievements/troublemaker.png"
                 });
                 return;
-			}
-            
+            }
+
             foreach (GorillaPlayerScoreboardLine line in GorillaScoreboardTotalUpdater.allScoreboardLines)
             {
                 if (line.linePlayer != NetworkSystem.Instance.LocalPlayer) continue;
@@ -345,7 +345,7 @@ namespace Seralyth.Mods
             AntiReport((vrrig, position) =>
             {
                 if (!(Time.time > antiReportDelay)) return;
-                
+
                 Important.JoinRandom();
                 RPCProtection();
 
@@ -383,7 +383,7 @@ namespace Seralyth.Mods
         public static void AntiReportNotify()
         {
             if (!(Time.time > antiReportNotifyDelay)) return;
-            
+
             string notifyText = "";
             AntiReport((vrrig, position) =>
             {
@@ -430,7 +430,7 @@ namespace Seralyth.Mods
         public static void AntiReportFRT(Player subject) =>
             reportRig = subject.VRRig();
 
-		public static void AntiModerator()
+        public static void AntiModerator()
         {
             foreach (var vrrig in VRRigCache.ActiveRigs.Where(vrrig => !vrrig.isOfflineVRRig && vrrig.Cosmetics().Contains("LBAAK") || vrrig.Cosmetics().Contains("LBAAD") || vrrig.Cosmetics().Contains("LMAPY")))
             {
@@ -447,7 +447,7 @@ namespace Seralyth.Mods
                         float b = 0f;
                         try
                         {
-                                
+
                             r = plr.playerColor.r * 255;
                             g = plr.playerColor.r * 255;
                             b = plr.playerColor.r * 255;
@@ -688,7 +688,8 @@ namespace Seralyth.Mods
                 string[] data = File.ReadAllText(fileName).Split("\n");
                 names = data[0].Split(";");
                 colors = data[1].Split(";").Select(HexToColor).ToArray();
-            } else
+            }
+            else
                 File.WriteAllText(fileName, "seralyth;me\n9b59b6;ffffff");
 
             string name = names[Random.Range(0, names.Length)];
@@ -703,7 +704,7 @@ namespace Seralyth.Mods
         {
             if (!PhotonNetwork.InRoom && previouslyInLobby)
                 identityType?.Invoke();
-            
+
             previouslyInLobby = PhotonNetwork.InRoom;
         }
 
@@ -818,7 +819,7 @@ namespace Seralyth.Mods
             "GT", "VR", "LOL", "GTVR", "FAN", "XD", "LOL", "MONK", "YT", "NOT", "FR"
         };
         public static readonly string[] names = {
-            "0", "SHIBA", "PBBV", "J3VU", "BEES", "NAMO", "MANGO", "FROSTY", "FRISH", "LEMMING", 
+            "0", "SHIBA", "PBBV", "J3VU", "BEES", "NAMO", "MANGO", "FROSTY", "FRISH", "LEMMING",
             "BILLY", "TIMMY", "MINIGAMES", "JMANCURLY", "VMT", "ELLIOT", "POLAR", "3CLIPCE", "DAISY09",
             "SHARKPUPPET", "DUCKY", "EDDIE", "EDDY", "RAKZZ", "CASEOH", "SKETCH", "SKY", "RETURN",
             "WATERMELON", "CRAZY", "MONK", "MONKE", "MONKI", "MONKEY", "MONKIY", "GORILL", "GOORILA", "GORILLA",

@@ -21,7 +21,7 @@
 
 using Seralyth.Extensions;
 using Seralyth.Menu;
-﻿using System;
+using System;
 using System.Linq;
 using UnityEngine;
 using static Seralyth.Utilities.RandomUtilities;
@@ -77,7 +77,8 @@ namespace Seralyth.Classes.Menu
             {
                 colors[0].color = color;
                 colors[^1].color = color;
-            } else
+            }
+            else
                 colors[index].color = color;
         }
 

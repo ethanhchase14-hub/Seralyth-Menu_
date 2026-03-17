@@ -38,7 +38,7 @@ namespace Seralyth.Utilities
                 get => GameEntityManager.GetManagerForZone(global::GhostReactor.instance.zone);
             }
         }
-        
+
         public class SuperInfection
         {
             public static SuperInfectionManager SuperInfectionManager

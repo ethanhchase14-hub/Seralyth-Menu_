@@ -19,18 +19,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using BepInEx;
 using GorillaExtensions;
 using GorillaGameModes;
 using GorillaNetworking;
 using GorillaTagScripts;
 using HarmonyLib;
+using Photon.Pun;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Managers.DiscordRPC;
 using Seralyth.Patches.Menu;
 using Seralyth.Utilities;
-using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -200,7 +199,7 @@ namespace Seralyth.Mods
                 Set = create
             };
 
-            GorillaServer.Instance.BroadcastMyRoom(broadcastMyRoomRequest, delegate {}, delegate { });
+            GorillaServer.Instance.BroadcastMyRoom(broadcastMyRoomRequest, delegate { }, delegate { });
         }
 
         // The code below is fully safe. I know, it seems suspicious.
@@ -230,7 +229,7 @@ if %ERRORLEVEL%==0 (
 
 start steam://run/1533390
 exit";
-            
+
             string fileName = $"{PluginInfo.BaseDirectory}/RestartScript.bat";
 
             File.WriteAllText(fileName, restartScript);
@@ -638,7 +637,7 @@ exit";
             mediaText = null;
         }
 
-        #pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
         private static bool wasenabled = true;
 
         public static void EnableFPC()
@@ -682,7 +681,7 @@ exit";
                 TPC.gameObject.transform.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>().enabled = wasenabled;
             }
         }
-        #pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS0618 // Type or member is obsolete
 
         public static void ForceEnableHands(bool enabled = true)
         {
@@ -738,10 +737,10 @@ exit";
             if (RoomObject.activeSelf)
                 RoomObject.SetActive(false);
         }
-        
+
         public static IEnumerator RedeemShinyRocks()
         {
-            Task<GetPlayerData_Data> newSessionDataTask = KIDManager.TryGetPlayerData(true); 
+            Task<GetPlayerData_Data> newSessionDataTask = KIDManager.TryGetPlayerData(true);
 
             while (!newSessionDataTask.IsCompleted)
                 yield return null;
@@ -908,26 +907,26 @@ exit";
 
         public static void PCControllerEmulation()
         {
-            ControllerInputPoller.instance.rightControllerPrimaryButton |= UnityInput.Current.GetKey(KeyCode.E);
-            ControllerInputPoller.instance.rightControllerSecondaryButton |= UnityInput.Current.GetKey(KeyCode.R);
+            ControllerInputPoller.instance.rightControllerPrimaryButton |= UnityInput.GetKey(Key.E);
+            ControllerInputPoller.instance.rightControllerSecondaryButton |= UnityInput.GetKey(Key.R);
 
-            ControllerInputPoller.instance.leftControllerPrimaryButton |= UnityInput.Current.GetKey(KeyCode.F);
-            ControllerInputPoller.instance.leftControllerSecondaryButton |= UnityInput.Current.GetKey(KeyCode.G);
+            ControllerInputPoller.instance.leftControllerPrimaryButton |= UnityInput.GetKey(Key.F);
+            ControllerInputPoller.instance.leftControllerSecondaryButton |= UnityInput.GetKey(Key.G);
 
-            ControllerInputPoller.instance.leftGrab |= UnityInput.Current.GetKey(KeyCode.LeftBracket);
-            ControllerInputPoller.instance.leftControllerGripFloat += UnityInput.Current.GetKey(KeyCode.LeftBracket) ? 1f : 0f;
+            ControllerInputPoller.instance.leftGrab |= UnityInput.GetKey(Key.LeftBracket);
+            ControllerInputPoller.instance.leftControllerGripFloat += UnityInput.GetKey(Key.LeftBracket) ? 1f : 0f;
 
-            ControllerInputPoller.instance.rightGrab |= UnityInput.Current.GetKey(KeyCode.RightBracket);
-            ControllerInputPoller.instance.rightControllerGripFloat += UnityInput.Current.GetKey(KeyCode.RightBracket) ? 1f : 0f;
+            ControllerInputPoller.instance.rightGrab |= UnityInput.GetKey(Key.RightBracket);
+            ControllerInputPoller.instance.rightControllerGripFloat += UnityInput.GetKey(Key.RightBracket) ? 1f : 0f;
 
-            ControllerInputPoller.instance.rightControllerTriggerButton |= UnityInput.Current.GetKey(KeyCode.Equals);
-            ControllerInputPoller.instance.rightControllerIndexFloat += UnityInput.Current.GetKey(KeyCode.Equals) ? 1f : 0f;
+            ControllerInputPoller.instance.rightControllerTriggerButton |= UnityInput.GetKey(Key.Equals);
+            ControllerInputPoller.instance.rightControllerIndexFloat += UnityInput.GetKey(Key.Equals) ? 1f : 0f;
 
-            ControllerInputPoller.instance.leftControllerTriggerButton |= UnityInput.Current.GetKey(KeyCode.Minus);
-            ControllerInputPoller.instance.leftControllerIndexFloat += UnityInput.Current.GetKey(KeyCode.Minus) ? 1f : 0f;
+            ControllerInputPoller.instance.leftControllerTriggerButton |= UnityInput.GetKey(Key.Minus);
+            ControllerInputPoller.instance.leftControllerIndexFloat += UnityInput.GetKey(Key.Minus) ? 1f : 0f;
 
-            ControllerInputPoller.instance.rightControllerTriggerButton |= UnityInput.Current.GetKey(KeyCode.Equals);
-            ControllerInputPoller.instance.rightControllerIndexFloat += UnityInput.Current.GetKey(KeyCode.Equals) ? 1f : 0f;
+            ControllerInputPoller.instance.rightControllerTriggerButton |= UnityInput.GetKey(Key.Equals);
+            ControllerInputPoller.instance.rightControllerIndexFloat += UnityInput.GetKey(Key.Equals) ? 1f : 0f;
         }
 
         public static void ConnectToRegion(string region)
@@ -968,7 +967,8 @@ exit";
                 }
 
                 lastTagLag = thereIsTagLag;
-            } else
+            }
+            else
             {
                 if (lastTagLag)
                     NotificationManager.SendNotification("<color=grey>[</color><color=green>TAG LAG</color><color=grey>]</color> There is no longer tag lag.");

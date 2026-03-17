@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-﻿using GorillaLocomotion;
+using GorillaLocomotion;
 using HarmonyLib;
-using Seralyth.Menu;
 using Photon.Pun;
+using Seralyth.Menu;
 using UnityEngine;
 
 namespace Seralyth.Patches.Menu

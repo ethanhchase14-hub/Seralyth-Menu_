@@ -20,9 +20,9 @@
  */
 
 using GorillaGameModes;
+using Photon.Pun;
 using Seralyth.Menu;
 using Seralyth.Utilities;
-using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,7 +114,7 @@ namespace Seralyth.Extensions
 
         public static float Distance(this VRRig rig, VRRig otherRig) =>
             rig.Distance(otherRig.transform.position);
-        
+
         public static float Distance(this VRRig rig) =>
             rig.Distance(GorillaTagger.Instance.bodyCollider.transform.position);
 

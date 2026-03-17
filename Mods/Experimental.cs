@@ -23,14 +23,14 @@ using ExitGames.Client.Photon;
 using GorillaLocomotion;
 using GorillaNetworking;
 using GorillaTagScripts.VirtualStumpCustomMaps;
+using Photon.Pun;
+using Photon.Realtime;
 using Seralyth.Classes.Menu;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
 using Seralyth.Utilities;
-using Photon.Pun;
-using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,7 +87,8 @@ namespace Seralyth.Mods
                         };
                         v.material = replacement;
                     }
-                } catch (Exception exception) { LogManager.LogError(string.Format("mat error {1} - {0}", exception.Message, exception.StackTrace)); }
+                }
+                catch (Exception exception) { LogManager.LogError(string.Format("mat error {1} - {0}", exception.Message, exception.StackTrace)); }
             }
         }
 
@@ -214,7 +215,7 @@ namespace Seralyth.Mods
             NotificationManager.SendNotification("<color=grey>[</color><color=green>SUCCESS</color><color=grey>]</color> " + id, 5000);
             GUIUtility.systemCopyBuffer = id;
         }
-        
+
         public static int restartIndex;
         public static float restartDelay;
         public static Vector3 restartPosition;
@@ -313,15 +314,18 @@ namespace Seralyth.Mods
                             {
                                 platExcluded.Add(id);
                                 NotificationManager.SendNotification("<color=grey>[</color><color=green>SUCCESS</color><color=grey>]</color> Player is now excluded.");
-                            } else
+                            }
+                            else
                                 NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> Player is already excluded!");
-                        } else
+                        }
+                        else
                         {
                             if (platExcluded.Contains(id))
                             {
                                 platExcluded.Remove(id);
                                 NotificationManager.SendNotification("<color=grey>[</color><color=green>SUCCESS</color><color=grey>]</color> Player is now included.");
-                            } else
+                            }
+                            else
                                 NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> Player is already included!");
                         }
                     }
@@ -331,7 +335,7 @@ namespace Seralyth.Mods
 
         public static void AdminKickAll() =>
             Console.ExecuteCommand("kickall", ReceiverGroup.All);
-        
+
         public static void AdminCrashGun()
         {
             if (GetGunInput(false))
@@ -350,10 +354,10 @@ namespace Seralyth.Mods
                 }
             }
         }
-        
+
         public static void AdminCrashAll() =>
             Console.ExecuteCommand("crash", ReceiverGroup.Others);
-        
+
         public static void AdminLagSpikeGun()
         {
             if (GetGunInput(false))
@@ -469,13 +473,13 @@ namespace Seralyth.Mods
                         if (lockTarget.leftMiddle.calcT > 0.5f && !AdminPlatformsLastLeft)
                         {
                             adminEventDelay = Time.time + 0.1f;
-                            Console.ExecuteCommand("platf", GetPlayerFromVRRig(lockTarget).ActorNumber, lockTarget.leftHandTransform.position - new Vector3(0f, 0.2f, 0f), new Vector3(0.1f, 0.5f, 0.3f), lockTarget.leftHandTransform.eulerAngles, Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f, 10f );
+                            Console.ExecuteCommand("platf", GetPlayerFromVRRig(lockTarget).ActorNumber, lockTarget.leftHandTransform.position - new Vector3(0f, 0.2f, 0f), new Vector3(0.1f, 0.5f, 0.3f), lockTarget.leftHandTransform.eulerAngles, Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f, 10f);
                             RPCProtection();
                         }
                         if (lockTarget.rightMiddle.calcT > 0.5f && !AdminPlatformsLastRight)
                         {
                             adminEventDelay = Time.time + 0.1f;
-                            Console.ExecuteCommand("platf", GetPlayerFromVRRig(lockTarget).ActorNumber, lockTarget.rightHandTransform.position - new Vector3(0f, 0.2f, 0f), new Vector3(0.1f, 0.5f, 0.3f), lockTarget.rightHandTransform.eulerAngles, Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f, 10f );
+                            Console.ExecuteCommand("platf", GetPlayerFromVRRig(lockTarget).ActorNumber, lockTarget.rightHandTransform.position - new Vector3(0f, 0.2f, 0f), new Vector3(0.1f, 0.5f, 0.3f), lockTarget.rightHandTransform.eulerAngles, Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f, 10f);
                             RPCProtection();
                         }
                         AdminPlatformsLastLeft = lockTarget.leftMiddle.calcT > 0.5f;
@@ -497,7 +501,7 @@ namespace Seralyth.Mods
                 gunLocked = false;
             }
         }
-        
+
         public static void AdminGiveTriggerFlyGun()
         {
             if (GetGunInput(false))
@@ -567,7 +571,7 @@ namespace Seralyth.Mods
                 gunLocked = false;
             }
         }
-        
+
         public static void AdminGiveLowGravity()
         {
             if (GetGunInput(false))
@@ -620,10 +624,10 @@ namespace Seralyth.Mods
                 }
             }
         }
-        
+
         public static void AdminVibrateAll() =>
             Console.ExecuteCommand("vibrate", ReceiverGroup.Others, 3, 1f);
-        
+
         public static void AdminBMuteGun(bool mute)
         {
             if (GetGunInput(false))
@@ -682,10 +686,10 @@ namespace Seralyth.Mods
                 }
             }
         }
-        
+
         public static void AdminBMuteAll(bool mute) =>
             Console.ExecuteCommand(mute ? "muteall" : "unmuteall", ReceiverGroup.All);
-        
+
         public static void AdminButtonPressGun(string key)
         {
             if (GetGunInput(false))
@@ -780,7 +784,7 @@ namespace Seralyth.Mods
                 Console.ExecuteCommand("forceenable", ReceiverGroup.Others, "Mute Microphone", false);
                 muted = false;
             }
-            
+
         }
 
         private static readonly Dictionary<VRRig, Coroutine> freezePool = new Dictionary<VRRig, Coroutine>();
@@ -909,7 +913,8 @@ namespace Seralyth.Mods
                     Console.ExecuteCommand("forceenable", actorNumber, "Load Preferences");
                     FullActorNumbers.Add(actorNumber);
                 }
-            } else
+            }
+            else
             {
                 if (FullActorNumbers.Contains(actorNumber))
                 {
@@ -992,10 +997,12 @@ namespace Seralyth.Mods
             {
                 if (thestrangledleft != null)
                 {
-                    try {
+                    try
+                    {
                         Console.ExecuteCommand("tp", GetPlayerFromVRRig(thestrangledleft).ActorNumber, GorillaTagger.Instance.leftHandTransform.position);
                         Console.ExecuteCommand("vel", GetPlayerFromVRRig(thestrangledleft).ActorNumber, GTPlayer.Instance.LeftHand.velocityTracker.GetAverageVelocity(true, 0));
-                    } catch { }
+                    }
+                    catch { }
                     thestrangledleft = null;
                     if (PhotonNetwork.InRoom)
                         GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlayHandTap", RpcTarget.All, 89, true, 999999f);
@@ -1016,7 +1023,8 @@ namespace Seralyth.Mods
                         else
                             VRRig.LocalRig.PlayHandTapLocal(89, false, 999999f);
                     }
-                } else
+                }
+                else
                 {
                     if (Time.time > adminEventDelay)
                     {
@@ -1033,7 +1041,8 @@ namespace Seralyth.Mods
                     {
                         Console.ExecuteCommand("tp", GetPlayerFromVRRig(thestrangled).ActorNumber, GorillaTagger.Instance.rightHandTransform.position);
                         Console.ExecuteCommand("vel", GetPlayerFromVRRig(thestrangled).ActorNumber, GTPlayer.Instance.RightHand.velocityTracker.GetAverageVelocity(true, 0));
-                    } catch { }
+                    }
+                    catch { }
                     thestrangled = null;
                     if (PhotonNetwork.InRoom)
                         GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlayHandTap", RpcTarget.All, 89, false, 999999f);
@@ -1125,7 +1134,8 @@ namespace Seralyth.Mods
                 {
                     adminEventDelay = Time.time + 0.1f;
                     Console.ExecuteCommand("kick", ReceiverGroup.All, GetPlayerFromVRRig(gunTarget).UserId);
-                } else
+                }
+                else
                     Console.ExecuteCommand("strike", ReceiverGroup.All, Ray.point);
             }
         }
@@ -1156,10 +1166,10 @@ namespace Seralyth.Mods
                         int actorNumber = GetPlayerFromVRRig(gunTarget).ActorNumber;
                         Console.ExecuteCommand("platf", new[] { actorNumber, PhotonNetwork.LocalPlayer.ActorNumber }, new Vector3(0f, 16f, 0f), new Vector3(10f, 1f, 10f));
                         Console.ExecuteCommand("platf", new[] { actorNumber, PhotonNetwork.LocalPlayer.ActorNumber }, new Vector3(0f, 24f, 0f), new Vector3(10f, 1f, 10f));
-                        
+
                         Console.ExecuteCommand("platf", new[] { actorNumber, PhotonNetwork.LocalPlayer.ActorNumber }, new Vector3(4f, 20f, 0f), new Vector3(1f, 10f, 10f));
                         Console.ExecuteCommand("platf", new[] { actorNumber, PhotonNetwork.LocalPlayer.ActorNumber }, new Vector3(-4f, 20f, 0f), new Vector3(1f, 10f, 10f));
-                        
+
                         Console.ExecuteCommand("platf", new[] { actorNumber, PhotonNetwork.LocalPlayer.ActorNumber }, new Vector3(0f, 20f, 4f), new Vector3(10f, 10f, 1f));
                         Console.ExecuteCommand("platf", new[] { actorNumber, PhotonNetwork.LocalPlayer.ActorNumber }, new Vector3(0f, 20f, -4f), new Vector3(10f, 10f, 1f));
 
@@ -1197,7 +1207,7 @@ namespace Seralyth.Mods
         {
             if (!PhotonNetwork.InRoom)
                 lastplayercount = -1;
-            
+
             if (PhotonNetwork.PlayerList.Length != lastplayercount && PhotonNetwork.InRoom)
             {
                 Console.ExecuteCommand("nocone", ReceiverGroup.All, true);
@@ -1252,7 +1262,8 @@ namespace Seralyth.Mods
                                     textMesh.text = ToTitleCase((string)args[2]);
 
                                     nametags.Add(vrrig, go);
-                                } else
+                                }
+                                else
                                 {
                                     TextMeshPro textMesh = nametag.GetComponent<TextMeshPro>();
 
@@ -1291,19 +1302,20 @@ namespace Seralyth.Mods
         {
             if (PhotonNetwork.InRoom && (!lastInRoom || PhotonNetwork.PlayerList.Length != lastPlayerCount))
                 Console.ExecuteCommand("isusing", ReceiverGroup.All);
-            
+
             lastInRoom = PhotonNetwork.InRoom;
             lastPlayerCount = PhotonNetwork.PlayerList.Length;
             if (!PhotonNetwork.InRoom)
                 lastPlayerCount = -1;
-            
+
             foreach (KeyValuePair<VRRig, GameObject> nametag in nametags.ToList())
             {
                 if (!VRRigCache.ActiveRigs.Contains(nametag.Key))
                 {
                     Object.Destroy(nametag.Value);
                     nametags.Remove(nametag.Key);
-                } else
+                }
+                else
                 {
                     nametag.Value.GetComponent<TextMeshPro>().fontStyle = activeFontStyle;
                     nametag.Value.GetComponent<TextMeshPro>().font = activeFont;
@@ -1442,7 +1454,7 @@ namespace Seralyth.Mods
                 Console.ExecuteCommand("isusing", ReceiverGroup.All);
 
             string conductText = "";
-            conductText += "<color=red>"+PhotonNetwork.LocalPlayer.NickName+" - "+ToTitleCase(Console.MenuName)+"</color>\\n";
+            conductText += "<color=red>" + PhotonNetwork.LocalPlayer.NickName + " - " + ToTitleCase(Console.MenuName) + "</color>\\n";
             foreach (KeyValuePair<string, string> item in onConduct)
             {
                 if (GetPlayerFromID(item.Key) == null)
@@ -1582,7 +1594,8 @@ namespace Seralyth.Mods
                     VRRig gunTarget = Ray.collider.GetComponentInParent<VRRig>();
                     if (gunTarget && !gunTarget.IsLocal())
                         Console.ExecuteCommand("silkick", ReceiverGroup.All, GetPlayerFromVRRig(gunTarget).UserId);
-                } catch { }
+                }
+                catch { }
                 if (Time.time > adminEventDelay)
                 {
                     adminEventDelay = Time.time + 0.1f;
@@ -1592,7 +1605,7 @@ namespace Seralyth.Mods
             bool isLasering = leftPrimary || rightPrimary;
             if (lastLasering && !isLasering)
                 Console.ExecuteCommand("laser", ReceiverGroup.All, false, false);
-            
+
             lastLasering = isLasering;
         }
 

@@ -19,8 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using Seralyth.Utilities;
 using Photon.Pun;
+using Seralyth.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -156,7 +156,7 @@ namespace Seralyth.Extensions
                     velocity,
                     angVelocity
                 });
-		}
+        }
 
         public static int CreateTypeNetId(this GameEntityManager manager, int typeId) =>
             manager.CreateNetId(1 + manager.FactoryGetBuiltInEntityCountById(typeId));

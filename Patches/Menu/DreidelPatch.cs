@@ -44,7 +44,7 @@ namespace Seralyth.Patches.Menu
         {
             if (enabled)
                 PhotonNetwork.frametime = time ?? PhotonNetwork.ServerTimestamp / 1000.0;
-            
+
             time = null;
         }
     }

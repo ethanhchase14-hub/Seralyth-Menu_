@@ -20,7 +20,7 @@
  */
 
 using Seralyth.Classes.Menu;
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using static Seralyth.Mods.CustomMaps.Manager;
 
 namespace Seralyth.Mods.CustomMaps.Maps

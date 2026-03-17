@@ -21,14 +21,14 @@
 
 using ExitGames.Client.Photon;
 using GorillaLocomotion;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon.Voice.Unity;
 using Seralyth.Classes.Menu;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
-using Photon.Pun;
-using Photon.Realtime;
-using Photon.Voice.Unity;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -328,86 +328,86 @@ namespace Seralyth.Mods
             }
         }
 
-		private static readonly Dictionary<ButtonInfo, (Guid id, AudioClip clip, bool seen)> activeSounds = new Dictionary<ButtonInfo, (Guid id, AudioClip clip, bool seen)>();
+        private static readonly Dictionary<ButtonInfo, (Guid id, AudioClip clip, bool seen)> activeSounds = new Dictionary<ButtonInfo, (Guid id, AudioClip clip, bool seen)>();
 
-		public static void PlaySoundboardSound(object file, ButtonInfo info, bool loopAudio, bool bind)
-		{
-			bool[] bindings = {
-		        rightPrimary,
-		        rightSecondary,
-		        leftPrimary,
-		        leftSecondary,
-		        leftGrab,
-		        rightGrab,
-		        leftTrigger > 0.5f,
-		        rightTrigger > 0.5f,
-		        leftJoystickClick,
-		        rightJoystickClick
-	        };
+        public static void PlaySoundboardSound(object file, ButtonInfo info, bool loopAudio, bool bind)
+        {
+            bool[] bindings = {
+                rightPrimary,
+                rightSecondary,
+                leftPrimary,
+                leftSecondary,
+                leftGrab,
+                rightGrab,
+                leftTrigger > 0.5f,
+                rightTrigger > 0.5f,
+                leftJoystickClick,
+                rightJoystickClick
+            };
 
-			bool shouldPlay = true;
-			if (bind && BindMode > 0)
-			{
-				bool bindPressed = bindings[BindMode - 1];
-				shouldPlay = bindPressed && !lastBindPressed;
-				lastBindPressed = bindPressed;
-			}
+            bool shouldPlay = true;
+            if (bind && BindMode > 0)
+            {
+                bool bindPressed = bindings[BindMode - 1];
+                shouldPlay = bindPressed && !lastBindPressed;
+                lastBindPressed = bindPressed;
+            }
 
-			if (!shouldPlay)
-				return;
+            if (!shouldPlay)
+                return;
 
-			void Play(AudioClip clip)
-			{
-				if (clip == null)
-					return;
+            void Play(AudioClip clip)
+            {
+                if (clip == null)
+                    return;
 
-				if (!activeSounds.ContainsKey(info))
-				{
-					if (RecorderPatch.enabled)
-					{
-						Guid id = VoiceManager.Get().AudioClip(clip, false);
-						activeSounds[info] = (id, clip, false);
-					}
-				}
+                if (!activeSounds.ContainsKey(info))
+                {
+                    if (RecorderPatch.enabled)
+                    {
+                        Guid id = VoiceManager.Get().AudioClip(clip, false);
+                        activeSounds[info] = (id, clip, false);
+                    }
+                }
 
-				var ids = VoiceManager.Get().AudioClips.Select(c => c.Id).ToHashSet();
-				var keys = activeSounds.Keys.ToList();
+                var ids = VoiceManager.Get().AudioClips.Select(c => c.Id).ToHashSet();
+                var keys = activeSounds.Keys.ToList();
 
-				foreach (var key in keys)
-				{
-					var data = activeSounds[key];
-					bool existsNow = ids.Contains(data.id);
+                foreach (var key in keys)
+                {
+                    var data = activeSounds[key];
+                    bool existsNow = ids.Contains(data.id);
 
-					if (existsNow)
-					{
-						activeSounds[key] = (data.id, data.clip, true);
-						continue;
-					}
+                    if (existsNow)
+                    {
+                        activeSounds[key] = (data.id, data.clip, true);
+                        continue;
+                    }
 
-					if (data.seen)
-					{
-						AudioClip finishedClip = data.clip;
-						activeSounds.Remove(key);
+                    if (data.seen)
+                    {
+                        AudioClip finishedClip = data.clip;
+                        activeSounds.Remove(key);
 
-						if (loopAudio)
-						{
-							Guid newId = VoiceManager.Get().AudioClip(finishedClip, false);
-							activeSounds[key] = (newId, finishedClip, false);
-						}
-						else if (key.enabled)
-						{
-							Toggle(key);
-						}
-					}
-				}
-			}
+                        if (loopAudio)
+                        {
+                            Guid newId = VoiceManager.Get().AudioClip(finishedClip, false);
+                            activeSounds[key] = (newId, finishedClip, false);
+                        }
+                        else if (key.enabled)
+                        {
+                            Toggle(key);
+                        }
+                    }
+                }
+            }
 
-			if (file is string filePath)
-				LoadSoundFromFile(filePath, Play);
-			else if (file is AudioClip audioClip)
-				Play(audioClip);
-		}
-		public static void StopSoundboardSound(ButtonInfo info)
+            if (file is string filePath)
+                LoadSoundFromFile(filePath, Play);
+            else if (file is AudioClip audioClip)
+                Play(audioClip);
+        }
+        public static void StopSoundboardSound(ButtonInfo info)
         {
             if (activeSounds != null)
             {
@@ -424,8 +424,8 @@ namespace Seralyth.Mods
             {
                 LoadSoundFromFile(file, clip =>
                 {
-					PlayAudio(clip);
-				});
+                    PlayAudio(clip);
+                });
             }
         }
 
@@ -477,7 +477,8 @@ namespace Seralyth.Mods
                         info.enabled = false;
                 activeSounds.Clear();
                 VoiceManager.Get().StopAudioClips();
-            } else
+            }
+            else
             {
 
             }
@@ -612,7 +613,7 @@ namespace Seralyth.Mods
         {
             if (Time.time > soundSpamDelay)
                 squeakToggle = !squeakToggle;
-            
+
             SoundSpam(squeakToggle ? 75 : 76);
         }
 

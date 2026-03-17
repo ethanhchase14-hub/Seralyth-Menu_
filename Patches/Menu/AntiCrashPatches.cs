@@ -24,7 +24,7 @@ using GorillaExtensions;
 using HarmonyLib;
 using Photon.Pun;
 using Photon.Realtime;
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Seralyth.Patches.Menu

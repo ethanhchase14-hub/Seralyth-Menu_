@@ -20,10 +20,10 @@
  */
 
 // Thanks to kingofnetflix for doing literally everything in this class. I barely even touched it.
+using Photon.Pun;
 using Seralyth.Classes.Menu;
 using Seralyth.Menu;
 using Seralyth.Mods;
-using Photon.Pun;
 using System;
 using System.Collections;
 using System.IO;
@@ -101,7 +101,7 @@ namespace Seralyth.Managers
                     LogManager.LogError($"Error contacting AI api {request.error}.");
                     if (!string.IsNullOrEmpty(request.downloadHandler?.text))
                         LogManager.LogError($"Response Body: {request.downloadHandler.text}");
-                }   
+                }
                 NotificationManager.SendNotification($"<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> There was an issue generating your response. {request.error}", 4000);
                 LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/close.ogg", "Audio/Menu/close.ogg", clip => Settings.DictationPlay(clip, Main.buttonClickVolume / 10f));
                 if (!Buttons.GetIndex("Chain Voice Commands").enabled)
@@ -119,7 +119,7 @@ namespace Seralyth.Managers
             {
                 LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/confirm.ogg", "Audio/Menu/confirm.ogg", clip => Settings.DictationPlay(clip, Main.buttonClickVolume / 10f));
             }
-                
+
 
             string formatResponse = Regex.Replace(response, @"<([A-Z]+)(?:_""([^""]*)"")?>", "").Replace("\n", "");
             NotificationManager.ClearAllNotifications();
@@ -143,7 +143,7 @@ namespace Seralyth.Managers
                 else
                     Main.NarrateText(formatResponse);
             }
-            
+
             foreach (Match match in matches)
             {
                 string commandName = match.Groups[1].Value;
@@ -171,7 +171,8 @@ namespace Seralyth.Managers
                                     Main.Toggle(button.buttonText, true);
                                 else
                                     NotificationManager.SendNotification($"<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> Mod is already enabled.");
-                            } else
+                            }
+                            else
                                 NotificationManager.SendNotification($"<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> Mod \"{argument}\" does not exist.");
 
                             break;
@@ -232,8 +233,8 @@ namespace Seralyth.Managers
                         }
                     case "SETNAME":
                         {
-                           Main.ChangeName(argument.ToUpper());
-                           break;
+                            Main.ChangeName(argument.ToUpper());
+                            break;
                         }
                     case "SETCOLOR":
                         {

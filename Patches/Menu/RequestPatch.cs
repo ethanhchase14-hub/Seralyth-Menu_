@@ -21,10 +21,10 @@
 
 using GorillaNetworking;
 using HarmonyLib;
+using Photon.Pun;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Mods;
-using Photon.Pun;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -94,7 +94,7 @@ namespace Seralyth.Patches.Menu
 
                 while (Vector3.Distance(Main.ServerPos, target) > 0.2f)
                     yield return null;
-                
+
                 yield return new WaitForSeconds(0.1f);
 
                 GorillaTagger.Instance.myVRRig.SendRPC("RPC_UpdateCosmeticsWithTryonPacked", RpcTarget.Others, Fun.PackCosmetics(cosmeticArray), CosmeticsController.instance.currentWornSet.ToPackedIDArray(), false);
@@ -107,7 +107,7 @@ namespace Seralyth.Patches.Menu
                 float delay = Time.time + 30f;
                 while (Time.time < delay || PhotonNetwork.InRoom)
                     yield return null;
-                
+
                 currentCoroutine = null;
             }
         }

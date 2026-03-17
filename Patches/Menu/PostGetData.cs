@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-﻿using GorillaNetworking;
+using GorillaNetworking;
 using GorillaNetworking.Store;
 using HarmonyLib;
 using static Seralyth.Menu.Main;

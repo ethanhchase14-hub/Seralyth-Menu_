@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-﻿using Seralyth.Classes.Menu;
+using Seralyth.Classes.Menu;
 
 namespace Seralyth.Mods.CustomMaps
 {

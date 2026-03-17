@@ -19,53 +19,57 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+using System;
+
 namespace Seralyth.Managers
 {
-    public class LogManager
+    public enum Level
     {
-        /// <summary>
-        /// Logs an informational message.
-        /// </summary>
-        /// <param name="log">The message or object to log.</param>
-        public static void Log(object log) =>
-            Plugin.PluginLogger.LogInfo(log);
+        Info,
+        Warning,
+        Error,
+        Debug
+    }
 
-        /// <summary>
-        /// Logs a formatted informational message.
-        /// </summary>
-        /// <param name="log">The message format string.</param>
-        /// <param name="args">Arguments to format the message.</param>
+    public static class LogManager
+    {
+        private static Action<Level, string> _sink;
+
+        /// <summary>Call once from the loader entrypoint (BepInEx or MelonLoader).</summary>
+        public static void SetLogger(Action<Level, string> sink) => _sink = sink;
+
+        private static void Write(Level level, object log)
+        {
+            string msg = log?.ToString() ?? string.Empty;
+
+            // Fallback
+            if (_sink is null)
+            {
+                UnityEngine.Debug.Log($"[{level}] {msg}");
+                return;
+            }
+
+            _sink(level, msg);
+        }
+
+        public static void Log(object log) => Write(Level.Info, log);
+
         public static void Log(object log, object[] args) =>
-            Plugin.PluginLogger.LogInfo(string.Format(log.ToString(), args));
+            Write(Level.Info, string.Format(log?.ToString() ?? "", args));
 
-        /// <summary>
-        /// Logs an error message.
-        /// </summary>
-        /// <param name="log">The error message or object to log.</param>
-        public static void LogError(object log) =>
-            Plugin.PluginLogger.LogError(log);
+        public static void LogError(object log) => Write(Level.Error, log);
 
-        /// <summary>
-        /// Logs a formatted error message.
-        /// </summary>
-        /// <param name="log">The error message format string.</param>
-        /// <param name="args">Arguments to format the error message.</param>
         public static void LogError(object log, object[] args) =>
-            Plugin.PluginLogger.LogError(string.Format(log.ToString(), args));
+            Write(Level.Error, string.Format(log?.ToString() ?? "", args));
 
-        /// <summary>
-        /// Logs a warning message (as debug).
-        /// </summary>
-        /// <param name="log">The warning message or object to log.</param>
-        public static void LogWarning(object log) =>
-            Plugin.PluginLogger.LogDebug(log);
+        public static void LogWarning(object log) => Write(Level.Warning, log);
 
-        /// <summary>
-        /// Logs a formatted warning message (as debug).
-        /// </summary>
-        /// <param name="log">The warning message format string.</param>
-        /// <param name="args">Arguments to format the warning message.</param>
         public static void LogWarning(object log, object[] args) =>
-            Plugin.PluginLogger.LogDebug(string.Format(log.ToString(), args));
+            Write(Level.Warning, string.Format(log?.ToString() ?? "", args));
+
+        public static void LogDebug(object log) => Write(Level.Debug, log);
+
+        public static void LogDebug(object log, object[] args) =>
+            Write(Level.Debug, string.Format(log?.ToString() ?? "", args));
     }
 }

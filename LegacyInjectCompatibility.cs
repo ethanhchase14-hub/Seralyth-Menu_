@@ -26,7 +26,7 @@ using Seralyth;
 namespace Loading
 #pragma warning restore IDE0130 // Namespace does not match folder structure [for legacy compatibility with default SMI settings]
 {
-    public static class Loader 
+    public static class Loader
     {
         public static void Load() =>
             Plugin.InjectDontDestroy();

@@ -20,9 +20,9 @@
  */
 
 using HarmonyLib;
-using Seralyth.Managers;
 using Photon.Voice;
 using Photon.Voice.Unity;
+using Seralyth.Managers;
 
 namespace Seralyth.Patches.Menu
 {
@@ -39,7 +39,7 @@ namespace Seralyth.Patches.Menu
                 return false;
             }
             return true;
-            
+
         }
 
         [HarmonyPatch(nameof(Recorder.InputFactory), MethodType.Getter)]

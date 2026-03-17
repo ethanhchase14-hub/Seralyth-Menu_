@@ -47,7 +47,8 @@ namespace Seralyth.Patches.Menu
                         try
                         {
                             __instance.SerializeReadShared(data);
-                        } catch { }
+                        }
+                        catch { }
                         delay = oldDelay;
                     }, delay.Value)
                 );

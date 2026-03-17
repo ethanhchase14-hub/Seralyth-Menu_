@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-﻿using GorillaLocomotion;
+using GorillaLocomotion;
 using HarmonyLib;
 using Seralyth.Extensions;
 using UnityEngine;
@@ -40,7 +40,7 @@ namespace Seralyth.Patches.Menu
                     bool grounded = false;
 
                     TakeMyHand_HandLink handLink = releasingHand == EquipmentInteractor.instance.leftHand ? VRRig.LocalRig.leftHandLink : VRRig.LocalRig.rightHandLink;
-                   
+
                     HandLinkAuthorityStatus selfHandLinkAuthority = GTPlayer.Instance.TakeMyHand_GetSelfHandLinkAuthority();
                     HandLinkAuthorityStatus selfChainAuthority = handLink.GetChainAuthority(out _);
 
@@ -64,7 +64,7 @@ namespace Seralyth.Patches.Menu
                 }
                 return false;
             }
-            
+
             return true;
         }
     }

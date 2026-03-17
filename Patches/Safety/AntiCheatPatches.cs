@@ -20,8 +20,8 @@
  */
 
 using HarmonyLib;
-using Seralyth.Managers;
 using Photon.Pun;
+using Seralyth.Managers;
 using UnityEngine;
 using static Seralyth.Patches.PatchHandler;
 
@@ -123,7 +123,7 @@ namespace Seralyth.Patches.Safety
 
         [SecurityPatch]
         [HarmonyPatch(typeof(MonkeAgent), nameof(MonkeAgent.ShouldDisconnectFromRoom))]
-        public class NoShouldDisconnectFromRoom                                                                         
+        public class NoShouldDisconnectFromRoom
         {
             private static bool Prefix() =>
                 false;

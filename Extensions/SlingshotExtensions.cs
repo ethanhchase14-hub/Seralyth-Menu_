@@ -26,9 +26,9 @@ namespace Seralyth.Extensions
     public static class SlingshotExtensions
     {
         public static Vector3 GetTrueLaunchPosition(this Slingshot slingshot) =>
-            slingshot.drawingHand.transform.position + 
-            (slingshot.centerOrigin.position - slingshot.drawingHand.transform.position).normalized * 
-            (EquipmentInteractor.instance.grabRadius - slingshot.dummyProjectileColliderRadius) * 
+            slingshot.drawingHand.transform.position +
+            (slingshot.centerOrigin.position - slingshot.drawingHand.transform.position).normalized *
+            (EquipmentInteractor.instance.grabRadius - slingshot.dummyProjectileColliderRadius) *
             (slingshot.dummyProjectileInitialScale * Mathf.Abs(slingshot.transform.lossyScale.x));
 
         public static Vector3 GetNetworkedLaunchVelocity(this Slingshot slingshot)

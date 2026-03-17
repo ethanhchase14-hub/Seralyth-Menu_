@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Reflection;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using static Seralyth.Utilities.FileUtilities;
@@ -78,7 +77,7 @@ namespace Seralyth.Utilities
 
                 string filePath = $"{GetGamePath()}/{PluginInfo.BaseDirectory}/{fileName}";
                 string url = $"file://{filePath}";
-
+                LogManager.Log(url);
                 var handler = new DownloadHandlerAudioClip(url, GetAudioType(GetFileExtension(fileName)));
 
                 using UnityWebRequest request = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET, handler, null);

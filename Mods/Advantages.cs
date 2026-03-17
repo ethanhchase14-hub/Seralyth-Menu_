@@ -22,12 +22,12 @@
 using ExitGames.Client.Photon;
 using GorillaGameModes;
 using GorillaLocomotion;
+using Photon.Pun;
+using Photon.Realtime;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
-using Photon.Pun;
-using Photon.Realtime;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -89,7 +89,8 @@ namespace Seralyth.Mods
 
                             return false;
                         };
-                    } else
+                    }
+                    else
                     {
                         if (!rig.IsTagged()) return;
                         VRRig.LocalRig.enabled = false;
@@ -135,7 +136,7 @@ namespace Seralyth.Mods
             }
             else
                 RemoveInfected(PhotonNetwork.LocalPlayer);
-            
+
             GTPlayer.Instance.disableMovement = false;
         }
 
@@ -147,7 +148,8 @@ namespace Seralyth.Mods
                 {
                     if (!ReportTagPatch.invinciblePlayers.Contains(NetworkSystem.Instance.LocalPlayer))
                         ReportTagPatch.invinciblePlayers.Add(NetworkSystem.Instance.LocalPlayer);
-                } else
+                }
+                else
                 {
                     if (VRRig.LocalRig.IsTagged())
                         UntagSelf();
@@ -265,7 +267,8 @@ namespace Seralyth.Mods
 
                             ReportTagPatch.blacklistedPlayers.Add(GetPlayerFromVRRig(gunTarget));
 
-                        } else
+                        }
+                        else
                             NotificationManager.SendNotification("<color=grey>[</color><color=red>ERROR</color><color=grey>]</color> You are not master client.");
                     }
                 }
@@ -357,7 +360,7 @@ namespace Seralyth.Mods
                 tagAuraIndex = names.Length - 1;
 
             tagAuraDistance = distances[tagAuraIndex];
-            Buttons.GetIndex("ctaRange").overlapText = "Change Tag Aura Range <color=grey>[</color><color=green>"+names[tagAuraIndex]+"</color><color=grey>]</color>";
+            Buttons.GetIndex("ctaRange").overlapText = "Change Tag Aura Range <color=grey>[</color><color=green>" + names[tagAuraIndex] + "</color><color=grey>]</color>";
         }
 
         public static int tagRangeIndex;
@@ -676,7 +679,7 @@ namespace Seralyth.Mods
             {
                 foreach (Player v in PhotonNetwork.PlayerList)
                     AddInfected(v);
-                
+
                 Buttons.GetIndex("Tag All").enabled = false;
                 NotificationManager.SendNotification("<color=grey>[</color><color=green>SUCCESS</color><color=grey>]</color> Everyone is tagged!");
             }
@@ -709,7 +712,7 @@ namespace Seralyth.Mods
                             else
                             {
                                 Vector3 position = vrrig.transform.position + RandomVector3();
-                                    
+
                                 VRRig.LocalRig.transform.position = position;
                                 VRRig.LocalRig.transform.rotation = RandomQuaternion();
 
@@ -877,7 +880,8 @@ namespace Seralyth.Mods
                     if (InfectedList().Count != PhotonNetwork.PlayerList.Length)
                         TagAll();
                 }
-            } else
+            }
+            else
                 VRRig.LocalRig.enabled = true;
         }
 

@@ -20,7 +20,7 @@
  */
 
 using HarmonyLib;
-﻿using System;
+using System;
 using UnityEngine;
 
 namespace Seralyth.Patches.Menu

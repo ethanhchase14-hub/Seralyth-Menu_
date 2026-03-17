@@ -21,7 +21,7 @@
 
 using HarmonyLib;
 using Seralyth.Mods;
-﻿using System;
+using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

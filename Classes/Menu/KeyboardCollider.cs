@@ -26,25 +26,25 @@ using static Seralyth.Menu.Main;
 namespace Seralyth.Classes.Menu
 {
     public class KeyboardKey : MonoBehaviour
-	{
-		public static readonly Dictionary<string, KeyboardKey> keyLookupDictionary = new Dictionary<string, KeyboardKey>();
-		public string key;
-		public static float delay;
+    {
+        public static readonly Dictionary<string, KeyboardKey> keyLookupDictionary = new Dictionary<string, KeyboardKey>();
+        public string key;
+        public static float delay;
 
-		public void Start() =>
+        public void Start() =>
             keyLookupDictionary[gameObject.name] = this;
-		
-		public void OnTriggerEnter(Collider collider)
-		{
-			if ((collider != lKeyCollider && collider != rKeyCollider) || menu == null || !(Time.time > delay)) return;
-			if (!Seralyth.Menu.Buttons.GetIndex("Disable Keyboard Delay").enabled)
-				delay = Time.time + 0.1f;
 
-			if (doButtonsVibrate)
-				GorillaTagger.Instance.StartVibration(collider == lKeyCollider, GorillaTagger.Instance.tagHapticStrength / 2f, GorillaTagger.Instance.tagHapticDuration / 2f);
-				
-			VRRig.LocalRig.PlayHandTapLocal(66, collider == lKeyCollider, buttonClickVolume / 10f);
-			PressKeyboardKey(key);
-		}
-	}
+        public void OnTriggerEnter(Collider collider)
+        {
+            if ((collider != lKeyCollider && collider != rKeyCollider) || menu == null || !(Time.time > delay)) return;
+            if (!Seralyth.Menu.Buttons.GetIndex("Disable Keyboard Delay").enabled)
+                delay = Time.time + 0.1f;
+
+            if (doButtonsVibrate)
+                GorillaTagger.Instance.StartVibration(collider == lKeyCollider, GorillaTagger.Instance.tagHapticStrength / 2f, GorillaTagger.Instance.tagHapticDuration / 2f);
+
+            VRRig.LocalRig.PlayHandTapLocal(66, collider == lKeyCollider, buttonClickVolume / 10f);
+            PressKeyboardKey(key);
+        }
+    }
 }

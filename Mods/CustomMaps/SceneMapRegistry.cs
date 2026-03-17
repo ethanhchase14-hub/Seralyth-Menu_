@@ -42,10 +42,10 @@ namespace Seralyth.Mods.CustomMaps
 
         public static void FillRegistry()
         {
-            RegisterMap(5107228, "monke-magic-halloween-alt"); 
-            RegisterMap(5135423, "Guns");          
-            RegisterMap(5024157, "Flight-Simulator");          
-            RegisterMap(4977315, "MiningSimulator");          
+            RegisterMap(5107228, "monke-magic-halloween-alt");
+            RegisterMap(5135423, "Guns");
+            RegisterMap(5024157, "Flight-Simulator");
+            RegisterMap(4977315, "MiningSimulator");
         }
     }
 }

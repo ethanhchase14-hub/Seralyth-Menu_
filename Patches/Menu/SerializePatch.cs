@@ -20,9 +20,9 @@
  */
 
 using HarmonyLib;
-using Seralyth.Managers;
 using Photon.Pun;
-﻿using System;
+using Seralyth.Managers;
+using System;
 
 namespace Seralyth.Patches.Menu
 {
@@ -47,7 +47,8 @@ namespace Seralyth.Patches.Menu
             try
             {
                 OnSerialize?.Invoke();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 LogManager.LogError($"Error in SerializePatch.OnSerialize: {e}");
             }
@@ -58,7 +59,8 @@ namespace Seralyth.Patches.Menu
             try
             {
                 return OverrideSerialization();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 LogManager.LogError($"Error in SerializePatch.OverrideSerialization: {e}");
                 return false;

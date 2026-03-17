@@ -1,10 +1,10 @@
 ﻿namespace Seralyth.Managers.DiscordRPC.Logging
 {
-	/// <summary>
-	/// Level of logging to use.
-	/// </summary>
-	public enum LogLevel
-	{
+    /// <summary>
+    /// Level of logging to use.
+    /// </summary>
+    public enum LogLevel
+    {
         /// <summary>
         /// Trace, Info, Warning and Errors are logged
         /// </summary>
@@ -25,9 +25,9 @@
         /// </summary>
         Error = 4,
 
-		/// <summary>
-		/// Nothing is logged
-		/// </summary>
-		None = 256
-	}
+        /// <summary>
+        /// Nothing is logged
+        /// </summary>
+        None = 256
+    }
 }

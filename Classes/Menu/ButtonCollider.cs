@@ -26,33 +26,33 @@ using static Seralyth.Menu.Main;
 namespace Seralyth.Classes.Menu
 {
     public class ButtonCollider : MonoBehaviour
-	{
-		public string relatedText;
+    {
+        public string relatedText;
 
-		public bool incremental;
-		public bool positive;
+        public bool incremental;
+        public bool positive;
 
-		public void OnTriggerEnter(Collider collider)
-		{
-			if (!(Time.time > buttonCooldown) ||
-			    (collider != buttonCollider && collider != lKeyCollider && collider != rKeyCollider) || joystickMenu ||
-			    menu == null) return;
-			buttonCooldown = Time.time + 0.2f;
-			PlayButtonSound(relatedText);
+        public void OnTriggerEnter(Collider collider)
+        {
+            if (!(Time.time > buttonCooldown) ||
+                (collider != buttonCollider && collider != lKeyCollider && collider != rKeyCollider) || joystickMenu ||
+                menu == null) return;
+            buttonCooldown = Time.time + 0.2f;
+            PlayButtonSound(relatedText);
 
-			if (annoyingMode)
-			{
-				if (Random.Range(1, 5) == 2)
-				{
-					NotificationManager.SendNotification("Error");
-					return;
-				}
-			}
+            if (annoyingMode)
+            {
+                if (Random.Range(1, 5) == 2)
+                {
+                    NotificationManager.SendNotification("Error");
+                    return;
+                }
+            }
 
-			if (incremental)
-				ToggleIncremental(relatedText, positive);
-			else
-				Toggle(relatedText, true);
-		}
-	}
+            if (incremental)
+                ToggleIncremental(relatedText, positive);
+            else
+                Toggle(relatedText, true);
+        }
+    }
 }

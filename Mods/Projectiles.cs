@@ -22,12 +22,12 @@
 using ExitGames.Client.Photon;
 using GorillaExtensions;
 using GorillaLocomotion;
+using Photon.Pun;
+using Photon.Realtime;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
-using Photon.Pun;
-using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -181,7 +181,7 @@ namespace Seralyth.Mods
             catch (Exception e)
             {
                 LogManager.LogError($"Friend Projectile error: {e.Message}. Full exception:\n{e}");
-            } 
+            }
         }
 
         public static bool clientSided;
@@ -283,7 +283,8 @@ namespace Seralyth.Mods
                                 projectileSendData[7] = index;
 
                                 PhotonNetwork.RaiseEvent(FriendManager.FriendByte, projectileSendData, options, SendOptions.SendUnreliable);
-                            } else
+                            }
+                            else
                             {
                                 PhotonNetwork.RaiseEvent(176, new object[]
                                 {
@@ -339,14 +340,15 @@ namespace Seralyth.Mods
                                 projectileSendData.Add(Throwable.ProjectileHash);
                                 sendEventData.Add("sendProjectile");
                                 sendEventData.Add(projectileSendData.ToArray());
-                            } else
+                            }
+                            else
                             {
                                 sendEventData.Add(NetworkSystem.Instance.ServerTimestamp);
                                 sendEventData.Add(0);
                                 sendEventData.Add(projectileSendData.ToArray());
-                            } 
+                            }
 
-                            
+
                             if (showSelf)
                                 LaunchLocalProjectile(position, velocity, projectileSource, index, true, color32, friendSided ? friendProjectileScale : 1, Throwable.ProjectileHash, VRRig.LocalRig);
                             if (!clientSided && NetworkSystem.Instance.InRoom)
@@ -790,7 +792,7 @@ namespace Seralyth.Mods
             {
                 if (Buttons.GetIndex("Random Projectile").enabled)
                     projIndex = Random.Range(0, ProjectileObjectNames.Length);
-                
+
                 string projectilename = ProjectileObjectNames[projIndex];
 
                 Vector3 startpos = GorillaTagger.Instance.headCollider.transform.position;
@@ -859,10 +861,10 @@ namespace Seralyth.Mods
                 if (gunLocked && lockTarget != null)
                 {
                     int projIndex = projMode * 2;
-                    
+
                     if (Buttons.GetIndex("Random Projectile").enabled)
                         projIndex = Random.Range(0, ProjectileObjectNames.Length);
-                    
+
                     string projectilename = ProjectileObjectNames[projIndex];
 
                     Vector3 startpos = lockTarget.rightHandTransform.position;
@@ -1015,7 +1017,7 @@ namespace Seralyth.Mods
             HandleGrabProjectile(true);
             HandleGrabProjectile(false);
         }
-        
+
         public static void Urine()
         {
             if (rightGrab || Mouse.current.leftButton.isPressed)
@@ -1026,7 +1028,7 @@ namespace Seralyth.Mods
                 BetaFireProjectile("ScienceCandyLeftAnchor", startpos, charvel, Color.yellow);
             }
         }
-        
+
         public static void Feces()
         {
             if (rightGrab || Mouse.current.leftButton.isPressed)
@@ -1078,7 +1080,7 @@ namespace Seralyth.Mods
                 Vector3 startpos = GorillaTagger.Instance.headCollider.transform.position + GorillaTagger.Instance.headCollider.transform.forward * 0.1f + GorillaTagger.Instance.headCollider.transform.up * -0.15f;
                 Vector3 charvel = GorillaTagger.Instance.headCollider.transform.forward * 8.33f;
 
-                BetaFireProjectile("WaterBalloonLeftAnchor",  startpos, charvel, Color.cyan);
+                BetaFireProjectile("WaterBalloonLeftAnchor", startpos, charvel, Color.cyan);
             }
         }
 
@@ -1088,7 +1090,7 @@ namespace Seralyth.Mods
             {
                 Vector3 startpos = GorillaTagger.Instance.headCollider.transform.position;
                 Vector3 charvel = GorillaTagger.Instance.headCollider.transform.forward * 30f;
-                
+
                 BetaFireProjectile("Walnut_Anchor_Right", startpos, charvel, Color.red);
             }
         }
@@ -1308,7 +1310,7 @@ namespace Seralyth.Mods
                 {
                     Vector3 startpos = lockTarget.headMesh.transform.position + lockTarget.headMesh.transform.forward * 0.4f + lockTarget.headMesh.transform.up * -0.05f;
                     Vector3 charvel = lockTarget.headMesh.transform.forward * 30f;
-                
+
                     BetaFireProjectile("Walnut_Anchor_Right", startpos, charvel, Color.red);
                 }
                 if (GetGunInput(true))
@@ -1360,7 +1362,8 @@ namespace Seralyth.Mods
 
         public static void ProjectileBlindAll()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 if (PhotonNetwork.InRoom)
                 {
                     MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
@@ -1427,7 +1430,8 @@ namespace Seralyth.Mods
 
         public static void ProjectileLagAll()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 if (PhotonNetwork.InRoom)
                 {
                     MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });

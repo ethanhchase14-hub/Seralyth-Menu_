@@ -67,7 +67,7 @@ namespace Seralyth.Patches.Menu
                 {
                     active = true,
                     daysAccrued = int.MaxValue,
-                    subscriptionFeatureSettings = new[] {true, true},
+                    subscriptionFeatureSettings = new[] { true, true },
                     tier = int.MaxValue,
                     subscriptionActiveUntilDate = DateTime.MaxValue,
                     autoRenew = true,

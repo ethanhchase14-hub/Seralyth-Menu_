@@ -25,7 +25,7 @@ namespace Seralyth.Managers
             public bool GunReady { get; set; }
             public Collider Collider { get; set; }
 
-            public GunLibData( bool gripped = false, bool triggered = false, Vector3 hitpos = default, VRRig player = null, VRRig lastPlr = null, bool gunReady = false,Collider cPoint = null)
+            public GunLibData(bool gripped = false, bool triggered = false, Vector3 hitpos = default, VRRig player = null, VRRig lastPlr = null, bool gunReady = false, Collider cPoint = null)
             {
                 IsGripping = gripped;
                 IsTriggered = triggered;
@@ -105,11 +105,11 @@ namespace Seralyth.Managers
 
         public static GunLibData GunInstance(bool lockable = false)
         {
-            Vector3 pos = XRSettings.isDeviceActive ? DetermineHand().position - (DetermineHand().up / 4f) : GameObject.Find("Shoulder Camera").GetComponent<Camera>().ScreenPointToRay(UnityInput.Current.mousePosition).origin;
-            Vector3 dir = XRSettings.isDeviceActive ? -DetermineHand().up : GameObject.Find("Shoulder Camera").GetComponent<Camera>().ScreenPointToRay(UnityInput.Current.mousePosition).direction;
+            Vector3 pos = XRSettings.isDeviceActive ? DetermineHand().position - (DetermineHand().up / 4f) : GameObject.Find("Shoulder Camera").GetComponent<Camera>().ScreenPointToRay(UnityInput.mousePosition).origin;
+            Vector3 dir = XRSettings.isDeviceActive ? -DetermineHand().up : GameObject.Find("Shoulder Camera").GetComponent<Camera>().ScreenPointToRay(UnityInput.mousePosition).direction;
 
-            data.IsGripping = XRSettings.isDeviceActive ? DetermineGunHand(false) : UnityInput.Current.GetMouseButton(1);
-            data.IsTriggered = XRSettings.isDeviceActive ? DetermineGunHand(true) : UnityInput.Current.GetMouseButton(0);
+            data.IsGripping = XRSettings.isDeviceActive ? DetermineGunHand(false) : UnityInput.GetMouseButton(1);
+            data.IsTriggered = XRSettings.isDeviceActive ? DetermineGunHand(true) : UnityInput.GetMouseButton(0);
 
             if (data.IsGripping) //make null ptr pos & null rig (plr left) fallback
             {

@@ -19,12 +19,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using BepInEx;
 using ExitGames.Client.Photon;
 using GorillaExtensions;
 using GorillaLocomotion;
 using GorillaLocomotion.Climbing;
 using GorillaLocomotion.Swimming;
+using Photon.Pun;
+using Photon.Realtime;
 using Seralyth.Classes.Menu;
 using Seralyth.Classes.Mods;
 using Seralyth.Extensions;
@@ -32,8 +33,6 @@ using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
 using Seralyth.Utilities;
-using Photon.Pun;
-using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -344,7 +343,7 @@ namespace Seralyth.Mods
 
             jspeed = jspeedamounts[speedboostCycle];
             jmulti = jmultiamounts[speedboostCycle];
-            
+
             Buttons.GetIndex("Change Speed Boost Amount").overlapText = "Change Speed Boost Amount <color=grey>[</color><color=green>" + speedNames[speedboostCycle] + "</color><color=grey>]</color>";
         }
 
@@ -473,7 +472,8 @@ namespace Seralyth.Mods
                     noclip = true;
                     UpdateClipColliders(false);
                 }
-            } else
+            }
+            else
             {
                 if (noclip)
                 {
@@ -587,19 +587,19 @@ namespace Seralyth.Mods
         {
             bool stationary = !Buttons.GetIndex("Disable Stationary WASD Fly").enabled;
 
-            bool W = UnityInput.Current.GetKey(KeyCode.W);
-            bool A = UnityInput.Current.GetKey(KeyCode.A);
-            bool S = UnityInput.Current.GetKey(KeyCode.S);
-            bool D = UnityInput.Current.GetKey(KeyCode.D);
-            bool Space = UnityInput.Current.GetKey(KeyCode.Space);
-            bool Ctrl = UnityInput.Current.GetKey(KeyCode.LeftControl);
-            bool Shift = UnityInput.Current.GetKey(KeyCode.LeftShift);
-            bool Alt = UnityInput.Current.GetKey(KeyCode.LeftAlt);
+            bool W = UnityInput.GetKey(Key.W);
+            bool A = UnityInput.GetKey(Key.A);
+            bool S = UnityInput.GetKey(Key.S);
+            bool D = UnityInput.GetKey(Key.D);
+            bool Space = UnityInput.GetKey(Key.Space);
+            bool Ctrl = UnityInput.GetKey(Key.LeftCtrl);
+            bool Shift = UnityInput.GetKey(Key.LeftShift);
+            bool Alt = UnityInput.GetKey(Key.LeftAlt);
 
-            bool LeftArrow = UnityInput.Current.GetKey(KeyCode.LeftArrow);
-            bool RightArrow = UnityInput.Current.GetKey(KeyCode.RightArrow);
-            bool UpArrow = UnityInput.Current.GetKey(KeyCode.UpArrow);
-            bool DownArrow = UnityInput.Current.GetKey(KeyCode.DownArrow);
+            bool LeftArrow = UnityInput.GetKey(Key.LeftArrow);
+            bool RightArrow = UnityInput.GetKey(Key.RightArrow);
+            bool UpArrow = UnityInput.GetKey(Key.UpArrow);
+            bool DownArrow = UnityInput.GetKey(Key.DownArrow);
 
             if (stationary || W || A || S || D || Space || Ctrl)
                 GorillaTagger.Instance.rigidbody.linearVelocity = Vector3.zero;
@@ -609,7 +609,7 @@ namespace Seralyth.Mods
                 Transform parentTransform = GTPlayer.Instance.GetControllerTransform(false).parent;
 
                 float turnSpeed = 250f;
-                
+
                 if (LeftArrow)
                     parentTransform.eulerAngles += new Vector3(0, -turnSpeed, 0) * Time.deltaTime;
                 if (RightArrow)
@@ -618,7 +618,7 @@ namespace Seralyth.Mods
                     parentTransform.eulerAngles += new Vector3(-turnSpeed, 0, 0) * Time.deltaTime;
                 if (DownArrow)
                     parentTransform.eulerAngles += new Vector3(turnSpeed, 0, 0) * Time.deltaTime;
-                
+
                 if (Mouse.current.rightButton.isPressed)
                 {
                     Quaternion currentRotation = parentTransform.rotation;
@@ -688,7 +688,7 @@ namespace Seralyth.Mods
         public static void ChangeDriveSpeed(bool positive = true)
         {
             float[] speedamounts = { 10f, 30f, 50f, 100f, 3f };
-            string[] speedNames = { "Normal", "Fast", "Ultra Fast", "The Flash", "Slow",  };
+            string[] speedNames = { "Normal", "Fast", "Ultra Fast", "The Flash", "Slow", };
 
             if (positive)
                 driveInt++;
@@ -763,10 +763,10 @@ namespace Seralyth.Mods
         {
             if (rightPrimary && !previousDash)
                 GorillaTagger.Instance.rigidbody.linearVelocity += GTPlayer.Instance.headCollider.transform.forward * FlySpeed;
-            
+
             previousDash = rightPrimary;
         }
-        
+
         private static readonly float revCooldown = 0.5f;
         private static float nextrevTime = 0f;
         public static void ReverseVelocity()
@@ -804,7 +804,7 @@ namespace Seralyth.Mods
                 {
                     float force = Mathf.Min(6f * ((Mathf.Abs(leftVel.y) + Mathf.Abs(rightVel.y)) / 2f) / 1.2f, 9f);
                     GorillaTagger.Instance.bodyCollider.attachedRigidbody.AddForce(Vector3.up * force, ForceMode.VelocityChange);
-                        
+
                     flapTime = Time.time;
                 }
             }
@@ -868,9 +868,10 @@ namespace Seralyth.Mods
                     if (PhotonNetwork.InRoom)
                     {
                         GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlayHandTap", RpcTarget.All, 89, true, 999999f);
-                    } else
+                    }
+                    else
                         VRRig.LocalRig.PlayHandTapLocal(89, true, 999999f);
-                    
+
                     RPCProtection();
 
                     leftgrapplePoint = GorillaTagger.Instance.leftHandTransform.position + GorillaTagger.Instance.leftHandTransform.forward * 16f;
@@ -1079,7 +1080,8 @@ namespace Seralyth.Mods
                         VRRig.LocalRig.PlayHandTapLocal(89, false, 999999f);
 
                     rightgrapplePoint = GorillaTagger.Instance.rightHandTransform.position + GorillaTagger.Instance.rightHandTransform.forward * 16f;
-                } else
+                }
+                else
                     GorillaTagger.Instance.rigidbody.linearVelocity += Vector3.Normalize(rightgrapplePoint - GorillaTagger.Instance.rightHandTransform.position) * 0.5f;
 
                 GameObject line = new GameObject("Line");
@@ -1174,7 +1176,7 @@ namespace Seralyth.Mods
 
                     if (balloonState != BalloonHoldable.BalloonStates.Pop && balloonState != BalloonHoldable.BalloonStates.Waiting && balloonState != BalloonHoldable.BalloonStates.Refilling && balloonState != BalloonHoldable.BalloonStates.Returning)
                         tb.balloonState = BalloonHoldable.BalloonStates.Normal;
-                    
+
                     tb.rigidbodyInstance.isKinematic = false;
                     tb.gameObject.GetComponent<BalloonDynamics>().stringLength = 0.5f;
                     tb.gameObject.GetComponent<BalloonDynamics>().stringStrength = 0.9f;
@@ -1187,7 +1189,7 @@ namespace Seralyth.Mods
         }
 
         // We present to you: *misery*
-            // -- ii & kingofnetflix
+        // -- ii & kingofnetflix
 
         // TODO: Add parallax to cameras to simulate 3D views
         // TODO: Calculate proper velocity, rotation, and position when going through portals instead of cheating and just giving some basic stuff
@@ -1303,7 +1305,7 @@ namespace Seralyth.Mods
                         if (Buttons.GetIndex("High Quality Portals").enabled)
                             UpdateCameraRes(bluePortal.transform.Find("Rim/Camera/Eye").GetComponent<Camera>());
                     }
-                        
+
                     if (!orangeView.activeSelf)
                     {
                         orangeView.SetActive(true);
@@ -1322,7 +1324,7 @@ namespace Seralyth.Mods
 
                         blueTrigger.destination = orangePortal;
                         orangeTrigger.destination = bluePortal;
-                        
+
                         playedOpen = true;
                     }
                 }
@@ -1376,7 +1378,7 @@ namespace Seralyth.Mods
                     {
                         GTPlayer.Instance.rightHand.isHolding = true;
                         break;
-                    } 
+                    }
                 }
 
                 GorillaTagger.Instance.bodyCollider.enabled = true;
@@ -1396,7 +1398,7 @@ namespace Seralyth.Mods
             GameObject mainObject = LoadObject<GameObject>(orange ? "OrangePortal" : "BluePortal").transform.Find("Portal").gameObject;
             return mainObject;
         }
-        
+
         public static IEnumerator TeleportPortal(GameObject portal)
         {
             Vector3 velocity = portal.transform.up * GorillaTagger.Instance.rigidbody.linearVelocity.magnitude * 1.2f;
@@ -1491,7 +1493,7 @@ namespace Seralyth.Mods
         {
             if (rightTrigger > 0.5f || rightGrab)
                 ZeroGravity();
-            
+
             if (rightTrigger > 0.5f)
                 GorillaTagger.Instance.rigidbody.linearVelocity += Vector3.up * (Time.deltaTime * FlySpeed * 3f);
 
@@ -1515,7 +1517,7 @@ namespace Seralyth.Mods
         {
             if (rightTrigger > 0.5f || rightGrab)
                 ZeroGravity();
-            
+
             if (rightTrigger > 0.5f)
                 GorillaTagger.Instance.rigidbody.linearVelocity += GorillaTagger.Instance.bodyCollider.transform.forward * (Time.deltaTime * FlySpeed * 3f);
 
@@ -1619,7 +1621,7 @@ namespace Seralyth.Mods
 
                     foreach (Vector3 TreeBranchOffset in TreeBranchOffsets)
                         posArchive.Add(v.transform.TransformPoint(TreeBranchOffset));
-                    
+
                     v.transform.localScale = oldlocalscale;
                 }
             }
@@ -1661,7 +1663,7 @@ namespace Seralyth.Mods
                 }
                 else
                     rightPos = Vector3.Lerp(rightPos, GorillaTagger.Instance.rightHandTransform.position, lerpTime);
-                
+
                 GorillaTagger.Instance.rightHandTransform.position = rightPos;
 
                 Vector3 lastFoundDist = closeDist;
@@ -1690,7 +1692,8 @@ namespace Seralyth.Mods
                     leftPos = Vector3.Lerp(leftPos, GorillaTagger.Instance.leftHandTransform.position, lerpTime);
 
                 GorillaTagger.Instance.leftHandTransform.position = leftPos;
-            } else
+            }
+            else
             {
                 leftPos = GorillaTagger.Instance.leftHandTransform.position;
                 rightPos = GorillaTagger.Instance.rightHandTransform.position;
@@ -1773,7 +1776,8 @@ namespace Seralyth.Mods
 
                     playerPositions.RemoveAt(playerPositions.Count - 1);
                 }
-            } else
+            }
+            else
             {
                 playerPositions.Add(new object[] {
                     GorillaTagger.Instance.bodyCollider.transform.position,
@@ -2007,8 +2011,8 @@ namespace Seralyth.Mods
             {
                 Macro macro = macroData.Value;
                 string macroName = macroData.Key;
-                
-                buttons.Add(new ButtonInfo { buttonText = $"Macro{macroName}", overlapText = macro.name, enabled = macro.enabled, enableMethod =() => ToggleMacro(macroName, true), method =() => ExecuteMacroButton(macro), disableMethod = () => ToggleMacro(macroName, false), toolTip = $"Toggles on and off the {macro.name} macro." });
+
+                buttons.Add(new ButtonInfo { buttonText = $"Macro{macroName}", overlapText = macro.name, enabled = macro.enabled, enableMethod = () => ToggleMacro(macroName, true), method = () => ExecuteMacroButton(macro), disableMethod = () => ToggleMacro(macroName, false), toolTip = $"Toggles on and off the {macro.name} macro." });
                 index++;
             }
 
@@ -2067,7 +2071,8 @@ namespace Seralyth.Mods
 
                 if (recordingMacro && recordingData.Count > 0)
                     VisualizePlayerPosition(recordingData[0], Color.green);
-            } else
+            }
+            else
             {
                 if (recordingMacro)
                 {
@@ -2233,7 +2238,7 @@ namespace Seralyth.Mods
         {
             if (disableMacros)
                 return;
-            
+
             didMacro = midpointMacros && (didMacro
                 ? rightTrigger >= 0.5f
                 : activeMacro != null);
@@ -2305,7 +2310,7 @@ namespace Seralyth.Mods
                 walkNormal = ray.normal;
             }
 
-            bool wallWalkKey = 
+            bool wallWalkKey =
                 bothWallWalk ? leftGrab || rightGrab :
                 leftWallWalk ? leftGrab : rightGrab;
 
@@ -2462,12 +2467,12 @@ namespace Seralyth.Mods
         public static void EnterTeleportToMap() // Credits to Malachi for the positions
         {
             rememberPageNumber = pageNumber;
-            
+
             List<ButtonInfo> tpbuttons = new List<ButtonInfo> { new ButtonInfo { buttonText = "Exit Teleport to Map", method = ExitTeleportToMap, isTogglable = false, toolTip = "Returns you back to the movement mods." } };
 
             foreach (string[] Data in mapData)
                 tpbuttons.Add(new ButtonInfo { buttonText = "TeleportMap" + tpbuttons.Count, overlapText = Data[0], method = () => TeleportToMap(Data[1], Data[2]), isTogglable = false, toolTip = "Teleports you to the " + Data[0] + " map." });
-            
+
             Buttons.buttons[Buttons.GetCategory("Temporary Category")] = tpbuttons.ToArray();
 
             Buttons.CurrentCategoryName = "Temporary Category";
@@ -2480,10 +2485,11 @@ namespace Seralyth.Mods
                 VirtualStumpTeleporter tele = GetObject("Environment Objects/LocalObjects_Prefab/TreeRoom/VirtualStump_HeadsetTeleporter/TeleporterTrigger").GetComponent<VirtualStumpTeleporter>();
 
                 tele.gameObject.transform.parent.parent.parent.parent.parent.parent.gameObject.SetActive(true); // wtf
-                tele.gameObject.transform.parent.parent.parent.parent.gameObject.SetActive(true); 
+                tele.gameObject.transform.parent.parent.parent.parent.gameObject.SetActive(true);
 
                 tele.TeleportPlayer();
-            } else
+            }
+            else
             {
                 GetObject(zone).GetComponent<GorillaSetZoneTrigger>().OnBoxTriggered();
                 TeleportPlayer(GetObject(pos).transform.position);
@@ -2651,7 +2657,7 @@ namespace Seralyth.Mods
 
             foreach (GameObject checkpoint in checkpoints)
                 Object.Destroy(checkpoint);
-            
+
             checkpoints.Clear();
         }
 
@@ -2733,10 +2739,11 @@ namespace Seralyth.Mods
 
                 if (pearl.GetComponent<Rigidbody>() != null)
                     Object.Destroy(pearl.GetComponent<Rigidbody>());
-                
+
                 isrighthandedpearl = rightGrab;
                 pearl.transform.position = rightGrab ? GorillaTagger.Instance.rightHandTransform.position : GorillaTagger.Instance.leftHandTransform.position;
-            } else
+            }
+            else
             {
                 if (pearl != null)
                 {
@@ -2753,7 +2760,7 @@ namespace Seralyth.Mods
                             GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlayHandTap", RpcTarget.All, 84, true, 999999f);
                         else
                             VRRig.LocalRig.PlayHandTapLocal(84, true, 999999f);
-                        
+
                         RPCProtection();
                         Object.Destroy(pearl);
                     }
@@ -2797,7 +2804,7 @@ namespace Seralyth.Mods
             bool isTagged = VRRig.LocalRig.IsTagged();
 
             VRRig closestRig = VRRigCache.ActiveRigs
-                .Where(rig => rig != null && !rig.isLocal && 
+                .Where(rig => rig != null && !rig.isLocal &&
                                   (isTagged ? !rig.IsTagged() : rig.IsTagged()))
                 .OrderBy(rig => Vector3.Distance(rig.transform.position, GorillaTagger.Instance.bodyCollider.transform.position))
                 .FirstOrDefault();
@@ -2879,8 +2886,8 @@ namespace Seralyth.Mods
             for (int i = 2; i < 4; i++)
             {
                 GameObject c = ForestCollisions.transform.GetChild(i).gameObject;
-                    c.SetActive(false);
-                    forestColliders.Add(c);
+                c.SetActive(false);
+                forestColliders.Add(c);
             }
         }
 
@@ -2926,11 +2933,11 @@ namespace Seralyth.Mods
             bool hit = rightPrimary;
             if (Buttons.GetIndex("Non-Togglable Ghost").enabled)
                 ghostMonke = hit;
-            
+
             VRRig.LocalRig.enabled = !ghostMonke;
             if (hit && !lastHit)
                 ghostMonke = !ghostMonke;
-            
+
             lastHit = hit;
         }
 
@@ -3148,10 +3155,10 @@ namespace Seralyth.Mods
             VRRig.LocalRig.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + new Vector3(0f, 0.15f, 0f);
             VRRig.LocalRig.transform.rotation = GorillaTagger.Instance.bodyCollider.transform.rotation;
             VRRig.LocalRig.head.rigTarget.transform.rotation = GorillaTagger.Instance.headCollider.transform.rotation;
-        
+
             VRRig.LocalRig.leftHand.rigTarget.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.bodyCollider.transform.right * 0.2f + GorillaTagger.Instance.bodyCollider.transform.up * -0.2f;
             VRRig.LocalRig.rightHand.rigTarget.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.bodyCollider.transform.right * -0.2f + GorillaTagger.Instance.bodyCollider.transform.up * -0.2f;
-        
+
             VRRig.LocalRig.leftHand.rigTarget.transform.rotation = GorillaTagger.Instance.bodyCollider.transform.rotation;
             VRRig.LocalRig.rightHand.rigTarget.transform.rotation = GorillaTagger.Instance.bodyCollider.transform.rotation;
         }
@@ -3214,7 +3221,7 @@ namespace Seralyth.Mods
                 VRRig.LocalRig.transform.rotation = GorillaTagger.Instance.bodyCollider.transform.rotation;
 
                 VRRig.LocalRig.head.rigTarget.transform.rotation = GorillaTagger.Instance.bodyCollider.transform.rotation;
-                
+
                 VRRig.LocalRig.leftHand.rigTarget.transform.position = VRRig.LocalRig.transform.position + VRRig.LocalRig.transform.forward * 0.2f + VRRig.LocalRig.transform.right * -0.4f + VRRig.LocalRig.transform.up * (0.3f + Mathf.Sin(Time.frameCount / 20f) * 0.2f);
                 VRRig.LocalRig.rightHand.rigTarget.transform.position = VRRig.LocalRig.transform.position + VRRig.LocalRig.transform.forward * 0.2f + VRRig.LocalRig.transform.right * 0.4f + VRRig.LocalRig.transform.up * (0.3f + Mathf.Sin(Time.frameCount / 20f) * -0.2f);
 
@@ -3325,7 +3332,7 @@ namespace Seralyth.Mods
             {
                 if (stillBeybladeStartPos == Vector3.zero)
                     stillBeybladeStartPos = GorillaTagger.Instance.bodyCollider.transform.position + new Vector3(0f, 0.15f, 0f);
-                
+
                 VRRig.LocalRig.enabled = false;
 
                 VRRig.LocalRig.transform.position = stillBeybladeStartPos;
@@ -3402,10 +3409,10 @@ namespace Seralyth.Mods
             if (handRot_R == Vector3.zero)
                 handRot_R = GorillaTagger.Instance.rightHandTransform.transform.rotation.eulerAngles;
 
-            float positionSpeed = 0.01f; 
-            float rotationSpeed = 2.0f; 
+            float positionSpeed = 0.01f;
+            float rotationSpeed = 2.0f;
             float positionThreshold = 0.05f;
-            float rotationThreshold = 11.5f; 
+            float rotationThreshold = 11.5f;
             if (Vector3.Distance(headPos, GorillaTagger.Instance.headCollider.transform.position) > positionThreshold)
                 headPos += Vector3.Normalize(GorillaTagger.Instance.headCollider.transform.position - headPos) * positionSpeed;
 
@@ -3484,7 +3491,8 @@ namespace Seralyth.Mods
             {
                 VRRig.LocalRig.leftHand.rigTarget.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.bodyCollider.transform.right * -0.25f + GorillaTagger.Instance.bodyCollider.transform.up * -1f + GorillaTagger.Instance.bodyCollider.transform.forward * Mathf.Sin(Time.frameCount / 10f);
                 VRRig.LocalRig.rightHand.rigTarget.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.bodyCollider.transform.right * 0.25f + GorillaTagger.Instance.bodyCollider.transform.up * -1f + -(GorillaTagger.Instance.bodyCollider.transform.forward * Mathf.Sin(Time.frameCount / 10f));
-            } else
+            }
+            else
             {
                 VRRig.LocalRig.leftHand.rigTarget.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.bodyCollider.transform.right * -0.25f + GorillaTagger.Instance.bodyCollider.transform.up * -1f;
                 VRRig.LocalRig.rightHand.rigTarget.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.bodyCollider.transform.right * 0.25f + GorillaTagger.Instance.bodyCollider.transform.up * -1f;
@@ -3492,7 +3500,7 @@ namespace Seralyth.Mods
 
             if (rightSecondary)
             {
-                VRRig.LocalRig.rightHand.rigTarget.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.bodyCollider.transform.right * 0.25f + Vector3.Lerp(GorillaTagger.Instance.rightHandTransform.forward, - GorillaTagger.Instance.rightHandTransform.up, 0.5f) * 2f;
+                VRRig.LocalRig.rightHand.rigTarget.transform.position = GorillaTagger.Instance.bodyCollider.transform.position + GorillaTagger.Instance.bodyCollider.transform.right * 0.25f + Vector3.Lerp(GorillaTagger.Instance.rightHandTransform.forward, -GorillaTagger.Instance.rightHandTransform.up, 0.5f) * 2f;
                 VRRig.LocalRig.rightHand.rigTarget.transform.rotation = GorillaTagger.Instance.rightHandTransform.rotation;
             }
 
@@ -3545,7 +3553,8 @@ namespace Seralyth.Mods
 
         public static void StareAtAll()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Quaternion headRotArchive = VRRig.LocalRig.head.rigTarget.transform.rotation;
@@ -3608,16 +3617,16 @@ namespace Seralyth.Mods
             {
                 if (leftTrigger > 0.5f)
                     increment = 0.2f;
-                
+
                 if (leftGrab)
                     increment = 0.01f;
-                
+
                 if (rightTrigger > 0.5f)
                     sizeScale += increment;
-                
+
                 if (rightGrab)
                     sizeScale -= increment;
-                
+
                 if (rightPrimary)
                     sizeScale = 1f;
             }
@@ -3708,9 +3717,10 @@ namespace Seralyth.Mods
                     leftisclimbing = true;
                     GTPlayer.Instance.BeginClimbing(climb.AddComponent<GorillaClimbable>(), GetObject("Player Objects/Player VR Controller/GorillaPlayer/TurnParent/LeftHand Controller/GorillaHandClimber").GetComponent<GorillaHandClimber>());
                 }
-            } else
+            }
+            else
                 leftisclimbing = false;
-            
+
             if (rightGrab)
             {
                 if (GTPlayer.Instance.IsHandTouching(false) && !rightisclimbing)
@@ -3749,7 +3759,7 @@ namespace Seralyth.Mods
         public static void EnableWeakSlideControl()
         {
             oldSlide = GTPlayer.Instance.slideControl;
-            GTPlayer.Instance.slideControl = oldSlide*2f;
+            GTPlayer.Instance.slideControl = oldSlide * 2f;
         }
 
         public static void DisableSlideControl() =>
@@ -3771,7 +3781,7 @@ namespace Seralyth.Mods
 
                 if (distance < 0.25f)
                     GorillaTagger.Instance.rigidbody.linearVelocity += Vector3.Normalize(vrrig.rightHandTransform.position - lastRight[index]) * 10f;
-                    
+
                 lastRight[index] = vrrig.rightHandTransform.position;
 
                 they = vrrig.leftHandTransform.position;
@@ -3779,7 +3789,7 @@ namespace Seralyth.Mods
 
                 if (distance < 0.25f)
                     GorillaTagger.Instance.rigidbody.linearVelocity += Vector3.Normalize(vrrig.leftHandTransform.position - lastLeft[index]) * 10f;
-                    
+
                 lastLeft[index] = vrrig.leftHandTransform.position;
             }
         }
@@ -3826,9 +3836,11 @@ namespace Seralyth.Mods
                                 }
                             }
                         }
-                    } catch { }
+                    }
+                    catch { }
                 }
-            } else
+            }
+            else
             {
                 if (sithright ? sithlord.rightIndex.calcT < 0.5f && sithlord.rightMiddle.calcT > 0.5f : sithlord.leftMiddle.calcT < 0.5f && sithlord.leftMiddle.calcT > 0.5f)
                 {
@@ -3837,14 +3849,15 @@ namespace Seralyth.Mods
                     TeleportPlayer(Vector3.Lerp(GorillaTagger.Instance.bodyCollider.transform.position, hand.position + dir * sithdist, 0.1f));
                     GorillaTagger.Instance.rigidbody.linearVelocity = Vector3.zero;
                     ZeroGravity();
-                } else
+                }
+                else
                     sithlord = null;
             }
         }
 
         public static void SafetyBubble()
         {
-            foreach (VRRig rig in 
+            foreach (VRRig rig in
                 VRRigCache.ActiveRigs
                     .Where(rig => rig != null && !rig.isLocal)
                     .OrderBy(rig => Vector3.Distance(rig.transform.position, GorillaTagger.Instance.bodyCollider.transform.position)))
@@ -3958,7 +3971,7 @@ namespace Seralyth.Mods
 
             bool touchingGround = GTPlayer.Instance.IsHandTouching(left);
             previousTouchingGround.TryGetValue(left, out bool wasTouchingGround);
-            
+
             if (!touchingGround && wasTouchingGround)
             {
                 Vector3 normal = GTPlayer.Instance.lastHitInfoHand.normal;
@@ -4000,9 +4013,10 @@ namespace Seralyth.Mods
                     {
                         if (GetObject("Player Objects/Player VR Controller/GorillaPlayer/TurnParent/LeftHand Controller").GetComponent<GorillaVelocityEstimator>() == null)
                             GetObject("Player Objects/Player VR Controller/GorillaPlayer/TurnParent/LeftHand Controller").AddComponent<GorillaVelocityEstimator>();
-                        
+
                         comp.angularVelocity = GetObject("Player Objects/Player VR Controller/GorillaPlayer/TurnParent/LeftHand Controller").GetComponent<GorillaVelocityEstimator>().angularVelocity;
-                    } catch { }
+                    }
+                    catch { }
                 }
             }
             else
@@ -4035,9 +4049,10 @@ namespace Seralyth.Mods
                     {
                         if (GetObject("Player Objects/Player VR Controller/GorillaPlayer/TurnParent/RightHand Controller").GetComponent<GorillaVelocityEstimator>() == null)
                             GetObject("Player Objects/Player VR Controller/GorillaPlayer/TurnParent/RightHand Controller").AddComponent<GorillaVelocityEstimator>();
-                        
+
                         comp.angularVelocity = GetObject("Player Objects/Player VR Controller/GorillaPlayer/TurnParent/RightHand Controller").GetComponent<GorillaVelocityEstimator>().angularVelocity;
-                    } catch { }
+                    }
+                    catch { }
                 }
             }
             else
@@ -4092,10 +4107,10 @@ namespace Seralyth.Mods
                     rigidbody.isKinematic = false;
                     rigidbody.linearVelocity = rigidbody.GetComponent<GorillaVelocityTracker>().GetAverageVelocity(true, 0);
                 }
-                
+
                 GorillaTagger.Instance.leftHandTransform.position = GorillaTagger.Instance.headCollider.transform.position - flickLeft.transform.position;
                 GorillaTagger.Instance.leftHandTransform.rotation = initialRotationLeft;
-            } 
+            }
             else
             {
                 Rigidbody rigidbody = flickLeft.GetComponent<Rigidbody>();
@@ -4400,8 +4415,8 @@ namespace Seralyth.Mods
 
         public static void Strafe()
         {
-            Vector3 direction = Buttons.GetIndex("Hand Oriented Strafe").enabled 
-                ? new Vector3(-GorillaTagger.Instance.rightHandTransform.up.x, 0f, -GorillaTagger.Instance.rightHandTransform.up.z).normalized 
+            Vector3 direction = Buttons.GetIndex("Hand Oriented Strafe").enabled
+                ? new Vector3(-GorillaTagger.Instance.rightHandTransform.up.x, 0f, -GorillaTagger.Instance.rightHandTransform.up.z).normalized
                 : GorillaTagger.Instance.bodyCollider.transform.forward;
 
             float power = GTPlayer.Instance.maxJumpSpeed;
@@ -4559,7 +4574,8 @@ namespace Seralyth.Mods
 
         public static void PiggybackAll()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -4587,7 +4603,7 @@ namespace Seralyth.Mods
 
                 if (gunLocked && lockTarget != null)
                     CopyMovementPlayer(GetPlayerFromVRRig(lockTarget));
-                
+
                 if (GetGunInput(true))
                 {
                     VRRig gunTarget = Ray.collider.GetComponentInParent<VRRig>();
@@ -4646,7 +4662,8 @@ namespace Seralyth.Mods
 
         public static void CopyMovementAll()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -4736,7 +4753,7 @@ namespace Seralyth.Mods
 
                 if (gunLocked && lockTarget != null)
                     FollowPlayer(GetPlayerFromVRRig(lockTarget));
-                
+
                 if (GetGunInput(true))
                 {
                     VRRig gunTarget = Ray.collider.GetComponentInParent<VRRig>();
@@ -4760,7 +4777,8 @@ namespace Seralyth.Mods
         public static readonly Dictionary<VRRig, Vector3> followPositions = new Dictionary<VRRig, Vector3>();
         public static void FollowAllPlayers()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -4882,7 +4900,8 @@ namespace Seralyth.Mods
 
         public static void OrbitAllPlayers()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -4995,7 +5014,8 @@ namespace Seralyth.Mods
 
         public static void JumpscareAll()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -5110,7 +5130,8 @@ namespace Seralyth.Mods
 
         public static void AnnoyAllPlayers()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -5201,7 +5222,8 @@ namespace Seralyth.Mods
 
         public static void ConfuseAllPlayers()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -5292,10 +5314,10 @@ namespace Seralyth.Mods
                         gunLocked = true;
                         lockTarget = gunTarget;
 
-						AudioClip clip = CreateTinnitusSound();
-						Guid id = VoiceManager.Get().AudioClip(clip);
-						tinnitus[clip] = id;
-                        
+                        AudioClip clip = CreateTinnitusSound();
+                        Guid id = VoiceManager.Get().AudioClip(clip);
+                        tinnitus[clip] = id;
+
                         NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = tinnitusSelf;
 
                         SerializePatch.OverrideSerialization = () =>
@@ -5332,12 +5354,13 @@ namespace Seralyth.Mods
         public static void TinnitusAll()
         {
             if (!PhotonNetwork.InRoom) return;
-			AudioClip clip = CreateTinnitusSound();
-			Guid id = VoiceManager.Get().AudioClip(clip);
-			tinnitus[clip] = id;
-			NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = tinnitusSelf;
+            AudioClip clip = CreateTinnitusSound();
+            Guid id = VoiceManager.Get().AudioClip(clip);
+            tinnitus[clip] = id;
+            NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.DebugEchoMode = tinnitusSelf;
 
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -5412,9 +5435,9 @@ namespace Seralyth.Mods
                         FreeHoverboardManager.DataPerPlayer orCreatePlayerData = FreeHoverboardManager.instance.GetOrCreatePlayerData(NetworkSystem.Instance.LocalPlayer.ActorNumber);
                         int boardIndex = orCreatePlayerData.board0.gameObject.activeSelf ? ((!orCreatePlayerData.board1.gameObject.activeSelf) ? 1 : (1 - FreeHoverboardManager.instance.localPlayerLastSpawnedBoardIndex)) : 0;
 
-                        FreeHoverboardManager.instance.photonView.RPC("DropBoard_RPC", lockTarget.GetPhotonPlayer(), boardIndex == 1, 
-                            BitPackUtils.PackWorldPosForNetwork(lockTarget.headMesh.transform.TransformPoint(Vector3.forward * 0.2f)), 
-                            BitPackUtils.PackQuaternionForNetwork(RandomQuaternion()), 
+                        FreeHoverboardManager.instance.photonView.RPC("DropBoard_RPC", lockTarget.GetPhotonPlayer(), boardIndex == 1,
+                            BitPackUtils.PackWorldPosForNetwork(lockTarget.headMesh.transform.TransformPoint(Vector3.forward * 0.2f)),
+                            BitPackUtils.PackQuaternionForNetwork(RandomQuaternion()),
                             BitPackUtils.PackWorldPosForNetwork(RandomVector3(3)), BitPackUtils.PackWorldPosForNetwork(RandomVector3(3)),
                             BitPackUtils.PackColorForNetwork(RandomColor()));
 
@@ -5462,7 +5485,8 @@ namespace Seralyth.Mods
 
         public static void OverstimulateAll()
         {
-            SerializePatch.OverrideSerialization ??= () => {
+            SerializePatch.OverrideSerialization ??= () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
                 foreach (NetPlayer Player in NetworkSystem.Instance.PlayerListOthers)
@@ -5573,7 +5597,7 @@ namespace Seralyth.Mods
                         gunLocked = true;
                         lockTarget = gunTarget;
 
-                        SerializePatch.OverrideSerialization = () => 
+                        SerializePatch.OverrideSerialization = () =>
                         {
                             NetPlayer target = GetPlayerFromVRRig(lockTarget);
                             MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
@@ -5667,7 +5691,8 @@ namespace Seralyth.Mods
 
                         VRRig.LocalRig.leftHand.rigTarget.transform.rotation = lockTarget.transform.rotation;
                         VRRig.LocalRig.rightHand.rigTarget.transform.rotation = lockTarget.transform.rotation;
-                    } else
+                    }
+                    else
                     {
                         VRRig.LocalRig.transform.position = lockTarget.transform.position + lockTarget.transform.forward * (0.2f + Mathf.Sin(Time.frameCount / 8f) * 0.1f);
                         VRRig.LocalRig.transform.rotation = lockTarget.transform.rotation;
@@ -5742,7 +5767,8 @@ namespace Seralyth.Mods
 
         public static void IntercourseAll()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;
@@ -5886,7 +5912,8 @@ namespace Seralyth.Mods
 
         public static void HeadAll()
         {
-            SerializePatch.OverrideSerialization = () => {
+            SerializePatch.OverrideSerialization = () =>
+            {
                 MassSerialize(true, new[] { GorillaTagger.Instance.myVRRig.GetView });
 
                 Vector3 archivePos = VRRig.LocalRig.transform.position;

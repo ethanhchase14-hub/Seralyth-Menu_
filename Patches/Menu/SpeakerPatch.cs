@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-﻿using HarmonyLib;
-using Seralyth.Mods;
+using HarmonyLib;
 using Photon.Voice;
 using Photon.Voice.Unity;
+using Seralyth.Mods;
 
 namespace Seralyth.Patches.Menu
 {

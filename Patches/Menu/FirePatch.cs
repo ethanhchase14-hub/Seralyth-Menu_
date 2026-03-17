@@ -46,7 +46,8 @@ namespace Seralyth.Patches.Menu
                 Transform head = GorillaTagger.Instance.headCollider.transform;
                 VRRig targetRig = rigs
                     .Where(rig => rig != null)
-                    .Select(rig => new {
+                    .Select(rig => new
+                    {
                         Rig = rig,
                         ToRig = (rig.transform.position - head.position).normalized,
                         Distance = Vector3.Distance(head.position, rig.transform.position)

@@ -20,11 +20,12 @@
  */
 
 using GorillaNetworking;
-using Seralyth.Managers;
-using Seralyth.Menu;
 using MonoMod.Utils;
 using Photon.Pun;
 using Photon.Realtime;
+using Seralyth.Extensions;
+using Seralyth.Managers;
+using Seralyth.Menu;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,7 +36,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using Valve.Newtonsoft.Json;
 using Valve.Newtonsoft.Json.Linq;
-using Seralyth.Extensions;
 
 namespace Seralyth.Classes.Menu
 {
@@ -259,7 +259,8 @@ namespace Seralyth.Classes.Menu
                         GivenAdminMods = true;
                         SetupAdminPanel(administrator);
                     }
-                } else
+                }
+                else
                     Console.Log("On extreme outdated version of Console, not loading administrators");
 
                 // Patreon members
@@ -284,7 +285,7 @@ namespace Seralyth.Classes.Menu
                 OptionA = (string)data["option-a"];
                 OptionB = (string)data["option-b"];
 
-                if (!Plugin.FirstLaunch && LastPollAnswered != CurrentPoll)
+                if (!Bootstrapper.FirstLaunch && LastPollAnswered != CurrentPoll)
                 {
                     if (!shownPrompt)
                     {

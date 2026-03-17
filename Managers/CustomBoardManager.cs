@@ -56,7 +56,8 @@ namespace Seralyth.Managers
 
                     GetObject("Environment Objects/LocalObjects_Prefab/TreeRoom/motdBodyText").SetActive(false);
                     GetObject("Environment Objects/LocalObjects_Prefab/TreeRoom/motdHeadingText").SetActive(false);
-                } else
+                }
+                else
                 {
                     foreach (GorillaNetworkJoinTrigger joinTrigger in PhotonNetworkController.Instance.allJoinTriggers)
                     {
@@ -347,10 +348,10 @@ namespace Seralyth.Managers
                 motdBodyText.SafeSetFont(activeFont);
                 FollowMenuSettings(motdBodyText, -4f);
 
-                motdBodyText.SafeSetText(FollowMenuSettings(string.Format(motdTemplate, PluginInfo.Version, fullModAmount, PluginInfo.BetaBuild ? "Beta" : "Release", PluginInfo.BuildTimestamp )));
+                motdBodyText.SafeSetText(FollowMenuSettings(string.Format(motdTemplate, PluginInfo.Version, fullModAmount, PluginInfo.BetaBuild ? "Beta" : "Release", PluginInfo.BuildTimestamp)));
             }
             catch { }
-            
+
             try
             {
                 Color targetColor = textColors[0].GetCurrentColor();

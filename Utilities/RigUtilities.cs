@@ -19,11 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using Seralyth.Extensions;
 using Photon.Pun;
 using Photon.Realtime;
 using PlayFab;
 using PlayFab.ClientModels;
+using Seralyth.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

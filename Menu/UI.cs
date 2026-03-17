@@ -19,18 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using BepInEx;
 using GorillaNetworking;
+using Photon.Pun;
 using Seralyth.Classes.Menu;
 using Seralyth.Extensions;
 using Seralyth.Managers;
-using Photon.Pun;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static Seralyth.Menu.Main;
 using static Seralyth.Utilities.AssetUtilities;
@@ -131,7 +131,7 @@ namespace Seralyth.Menu
             watermark.material = new Material(watermark.material);
             watermarkImage = LoadTextureFromResource($"{PluginInfo.ClientResourcePath}.icon.png");
 
-            if (!Plugin.FirstLaunch)
+            if (!Bootstrapper.FirstLaunch)
             {
                 GameObject closeMessage = uiPrefab.transform.Find("Canvas")?.Find("HideMessage")?.gameObject;
                 closeMessage?.SetActive(false);
@@ -139,9 +139,9 @@ namespace Seralyth.Menu
 
             versionLabelDefaultAnchorMin = versionLabel.rectTransform.anchorMin;
             versionLabelDefaultAnchorMax = versionLabel.rectTransform.anchorMax;
-            versionLabelDefaultPivot     = versionLabel.rectTransform.pivot;
-            versionLabelDefaultPosition  = versionLabel.rectTransform.anchoredPosition;
-            
+            versionLabelDefaultPivot = versionLabel.rectTransform.pivot;
+            versionLabelDefaultPosition = versionLabel.rectTransform.anchoredPosition;
+
             Update();
         }
 
@@ -173,14 +173,14 @@ namespace Seralyth.Menu
 
         private void Update()
         {
-            if (UnityInput.Current.GetKeyDown(KeyCode.Backslash))
+            if (Keyboard.current.backslashKey.wasPressedThisFrame)
                 ToggleGUI();
 
             if (isOpen)
             {
                 uiPrefab.SetActive(true);
 
-                if (UnityInput.Current.GetKeyDown(KeyCode.BackQuote))
+                if (Keyboard.current.backquoteKey.wasPressedThisFrame)
                     ToggleDebug();
 
                 Color guiColor = Buttons.GetIndex("Swap GUI Colors").enabled
@@ -191,7 +191,7 @@ namespace Seralyth.Menu
                 roomStatus.color = guiColor;
                 arraylist.color = guiColor;
                 watermark.color = guiColor;
-                
+
                 watermark.gameObject.SetActive(!disableWatermark);
 
                 versionLabel.SafeSetFont(activeFont);
@@ -217,19 +217,19 @@ namespace Seralyth.Menu
                 watermark.transform.rotation = Quaternion.Euler(0f, 0f, rockWatermark ? Mathf.Sin(Time.time * 2f) * 10f : 0f);
                 versionLabel.SafeSetText(FollowMenuSettings("Build") + " " + PluginInfo.Version + "\n" +
                                     serverLink.Replace("https://", ""));
-                
+
                 if (disableWatermark)
                 {
                     versionLabel.rectTransform.anchorMin = new Vector2(1f, versionLabel.rectTransform.anchorMin.y);
                     versionLabel.rectTransform.anchorMax = new Vector2(1f, versionLabel.rectTransform.anchorMax.y);
-                    versionLabel.rectTransform.pivot     = new Vector2(1f, 0.5f);
-                    versionLabel.rectTransform.anchoredPosition = new Vector2(-10f, versionLabel.rectTransform.anchoredPosition.y); 
+                    versionLabel.rectTransform.pivot = new Vector2(1f, 0.5f);
+                    versionLabel.rectTransform.anchoredPosition = new Vector2(-10f, versionLabel.rectTransform.anchoredPosition.y);
                 }
                 else
                 {
-                    versionLabel.rectTransform.anchorMin        = versionLabelDefaultAnchorMin;
-                    versionLabel.rectTransform.anchorMax        = versionLabelDefaultAnchorMax;
-                    versionLabel.rectTransform.pivot            = versionLabelDefaultPivot;
+                    versionLabel.rectTransform.anchorMin = versionLabelDefaultAnchorMin;
+                    versionLabel.rectTransform.anchorMax = versionLabelDefaultAnchorMax;
+                    versionLabel.rectTransform.pivot = versionLabelDefaultPivot;
                     versionLabel.rectTransform.anchoredPosition = versionLabelDefaultPosition;
                 }
 
@@ -273,7 +273,7 @@ namespace Seralyth.Menu
 
                     watermark.sprite = sprite;
                 }
-                   
+
                 if (flipArraylist)
                 {
                     controlBackground.rectTransform.anchoredPosition = new Vector2(10f, -10f);
@@ -344,7 +344,8 @@ namespace Seralyth.Menu
                 }
 
                 arraylist.SafeSetText(modListText);
-            } else
+            }
+            else
                 uiPrefab.SetActive(false);
         }
 

@@ -58,7 +58,7 @@ namespace Seralyth.Managers
             int achievementCount = Achievements.Count;
 
             List<ButtonInfo> achievementButtons = new List<ButtonInfo> { new ButtonInfo { buttonText = "Exit Achievements", method = () => Buttons.CurrentCategoryName = "Main", isTogglable = false, toolTip = "Returns you back to the main page." } };
-            
+
             if (achievementCount <= 0)
                 achievementButtons.Add(
                     new ButtonInfo
@@ -66,7 +66,7 @@ namespace Seralyth.Managers
                         buttonText = "You have no achievements.",
                         label = true
                     });
-            else 
+            else
                 for (int i = 0; i < achievementCount; i++)
                 {
                     Achievement achievement = Achievements[i];

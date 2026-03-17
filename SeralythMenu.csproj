@@ -134,6 +134,9 @@
     <Reference Include="LIV.NativeAudioBridge">
       <HintPath>$(ProjectDir)References\Managed\LIV.NativeAudioBridge.dll</HintPath>
     </Reference>
+	<Reference Include="MelonLoader">
+      <HintPath>$(ProjectDir)References\core\MelonLoader.dll</HintPath>
+    </Reference>
     <Reference Include="MeshBakerCore">
       <HintPath>$(ProjectDir)References\Managed\MeshBakerCore.dll</HintPath>
     </Reference>

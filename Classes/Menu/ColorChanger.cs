@@ -43,7 +43,7 @@ namespace Seralyth.Classes.Menu
                 Destroy(this);
                 return;
             }
-            
+
             Update();
         }
 

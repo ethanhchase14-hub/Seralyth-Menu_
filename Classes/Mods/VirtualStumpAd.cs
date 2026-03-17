@@ -30,9 +30,9 @@ namespace Seralyth.Classes.Mods
     public class VirtualStumpAd : MonoBehaviour
     {
         public static VirtualStumpAd Instance { get; private set; }
-        
+
         public static SpriteRenderer SpriteRenderer { get; private set; }
-        
+
         private bool hasSetupFeaturedMapVideo;
         private VideoPlayer videoPlayer;
 
@@ -40,10 +40,10 @@ namespace Seralyth.Classes.Mods
         public static GameObject MapInfoText;
         public static GameObject FeaturedMaps;
         public static GameObject DisplayTextObj;
-        
+
         private Vector3 oldLocalScale = Vector3.zero;
         private string oldText = "";
-        
+
         private SpriteRendererData cachedSpriteRendererData;
 
 
@@ -56,22 +56,22 @@ namespace Seralyth.Classes.Mods
             featuredMapText.text = oldText;
             MapInfoText.SetActive(false);
             LoadingText.SetActive(true);
-            
+
             foreach (Transform child in DisplayTextObj.transform)
                 if (child.name.ToLower().EndsWith("tmp"))
                     child.gameObject.SetActive(!child.gameObject.activeSelf);
-            
+
             GameObject featuredMapImage = FeaturedMaps.transform.Find("FeaturedMapImage")?.gameObject;
-            
+
             if (featuredMapImage == null)
                 return;
 
             Destroy(featuredMapImage.GetOrAddComponent<MeshFilter>());
             Destroy(featuredMapImage.GetOrAddComponent<MeshRenderer>());
 
-            featuredMapImage.transform.localScale                = oldLocalScale;
+            featuredMapImage.transform.localScale = oldLocalScale;
             Destroy(featuredMapImage.GetOrAddComponent<VideoPlayer>());
-            
+
             ApplySpriteRenderer(featuredMapImage);
         }
 
@@ -83,7 +83,7 @@ namespace Seralyth.Classes.Mods
                     videoPlayer.isLooping = true;
                 videoPlayer.Play();
             }
-                
+
 
             if (hasSetupFeaturedMapVideo)
                 return;
@@ -106,7 +106,7 @@ namespace Seralyth.Classes.Mods
                 TextMeshPro featuredMapText = MapInfoText.GetComponent<TextMeshPro>();
                 if (featuredMapText != null)
                 {
-                    oldText              = featuredMapText.text;
+                    oldText = featuredMapText.text;
                     featuredMapText.text = "<b><color=#FF8000>Seralyth Menu</color></b>";
                     MapInfoText.SetActive(true);
                 }
@@ -148,7 +148,7 @@ namespace Seralyth.Classes.Mods
             }
             catch { }
         }
-        
+
         private void CacheAndRemoveSpriteRenderer(GameObject target)
         {
             SpriteRenderer = target.GetComponent<SpriteRenderer>();
@@ -170,7 +170,7 @@ namespace Seralyth.Classes.Mods
 
             Destroy(SpriteRenderer);
         }
-        
+
         private void ApplySpriteRenderer(GameObject target)
         {
             if (cachedSpriteRendererData == null)
@@ -189,7 +189,7 @@ namespace Seralyth.Classes.Mods
             SpriteRenderer.size = cachedSpriteRendererData.Size;
         }
     }
-    
+
     public sealed class SpriteRendererData
     {
         public Sprite Sprite;

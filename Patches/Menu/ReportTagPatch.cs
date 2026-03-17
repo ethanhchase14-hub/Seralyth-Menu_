@@ -20,7 +20,7 @@
  */
 
 using HarmonyLib;
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Seralyth.Patches.Menu
 {

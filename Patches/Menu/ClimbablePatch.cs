@@ -53,7 +53,7 @@ namespace Seralyth.Patches.Menu
                     {
                         if (!bounds.Intersects(potentialClimbable.colliderCache.bounds))
                             continue;
-                        
+
                         Vector3 vector = potentialClimbable.colliderCache.ClosestPoint(position);
                         distance = Vector3.Distance(position, vector);
                     }

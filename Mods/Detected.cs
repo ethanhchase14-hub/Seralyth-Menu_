@@ -22,12 +22,12 @@
 using ExitGames.Client.Photon;
 using GorillaGameModes;
 using GorillaNetworking;
+using Photon.Pun;
+using Photon.Realtime;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Patches.Menu;
-using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,10 +43,12 @@ namespace Seralyth.Mods
     {
         public static void EnterDetectedTab()
         {
-            if (!allowDetected) { 
-                LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/danger.ogg", "Audio/Menu/danger.ogg", clip => Play2DAudio(clip, buttonClickVolume / 10f)); 
-                Prompt("The mods in this category are detected. <b>Unless you know what you're doing, you will get banned.</b> Are you sure you would like to continue?", 
-                    () => { 
+            if (!allowDetected)
+            {
+                LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/danger.ogg", "Audio/Menu/danger.ogg", clip => Play2DAudio(clip, buttonClickVolume / 10f));
+                Prompt("The mods in this category are detected. <b>Unless you know what you're doing, you will get banned.</b> Are you sure you would like to continue?",
+                    () =>
+                    {
                         allowDetected = true; Buttons.CurrentCategoryName = "Detected Mods";
 
                         AchievementManager.UnlockAchievement(new AchievementManager.Achievement
@@ -56,8 +58,9 @@ namespace Seralyth.Mods
                             icon = "Images/Achievements/sinister.png"
 
                         });
-                    }); 
-            } else Buttons.CurrentCategoryName = "Detected Mods";
+                    });
+            }
+            else Buttons.CurrentCategoryName = "Detected Mods";
         }
 
         public static float masterDelay;
@@ -171,7 +174,7 @@ namespace Seralyth.Mods
                     break;
             }
         }
-        
+
         public static void CrashGun()
         {
             if (GetGunInput(false))
@@ -224,7 +227,7 @@ namespace Seralyth.Mods
             if (nearbyPlayers.Count > 0)
             {
                 foreach (VRRig nearbyPlayer in nearbyPlayers)
-                {  
+                {
                     PhotonNetwork.SetMasterClient(nearbyPlayer.GetPhotonPlayer());
                     PhotonNetwork.SetMasterClient(PhotonNetwork.LocalPlayer);
                 }
@@ -440,7 +443,7 @@ namespace Seralyth.Mods
             foreach (var scoreboard in GorillaScoreboardTotalUpdater.allScoreboards.Where(scoreboard => scoreboard.buttonText.text.Contains("GHOST")))
                 scoreboard.buttonText.text = scoreboard.buttonText.text.Replace("GHOST", "REPORT");
 
-            foreach(GorillaPlayerScoreboardLine line in GorillaScoreboardTotalUpdater.allScoreboardLines)
+            foreach (GorillaPlayerScoreboardLine line in GorillaScoreboardTotalUpdater.allScoreboardLines)
             {
                 line.SetReportState(false, GorillaPlayerLineButton.ButtonType.Cancel);
                 line.reportButton.isOn = false;
@@ -458,7 +461,8 @@ namespace Seralyth.Mods
                     try
                     {
                         Destroy(rig);
-                    } catch { }
+                    }
+                    catch { }
                 }
             }
         }
@@ -490,7 +494,7 @@ namespace Seralyth.Mods
                     Destroy(rig, null, null, viewID);
             }
         }
-        
+
         public static void UnghostAura()
         {
             if (!PhotonNetwork.InRoom) return;
@@ -535,7 +539,7 @@ namespace Seralyth.Mods
             foreach (VRRig rig in touchedRigs)
             {
                 int viewID = viewIdArchive[rig];
-                Destroy(rig, null, null,viewID);
+                Destroy(rig, null, null, viewID);
             }
         }
 
@@ -690,7 +694,7 @@ namespace Seralyth.Mods
                     gunLocked = false;
             }
         }
-        
+
         public static void LagAll()
         {
             foreach (var rig in VRRigCache.ActiveRigs.Where(rig => !rig.IsLocal()))
@@ -838,7 +842,7 @@ namespace Seralyth.Mods
         {
             while (PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient)
                 yield return null;
-            
+
             GameModePatch.enabled = false;
         }
 

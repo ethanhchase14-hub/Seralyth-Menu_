@@ -56,7 +56,7 @@ namespace Seralyth.Mods
             Settings.Panic();
             foreach (string mod in presetMods)
                 Toggle(mod);
-            
+
             NotificationManager.SendNotification("<color=grey>[</color><color=purple>PRESET</color><color=grey>]</color> Legitimate preset enabled successfully.");
         }
 
@@ -74,7 +74,7 @@ namespace Seralyth.Mods
             };
 
             Movement.longarmCycle = 2;
-            
+
             Settings.Panic();
             foreach (string mod in presetMods)
                 Toggle(mod);
@@ -86,7 +86,7 @@ namespace Seralyth.Mods
         {
             if (!Directory.Exists($"{PluginInfo.BaseDirectory}/SavedPresets"))
                 Directory.CreateDirectory($"{PluginInfo.BaseDirectory}/SavedPresets");
-            
+
             File.WriteAllText($"{PluginInfo.BaseDirectory}/SavedPresets/Preset_" + id + ".txt", Settings.SavePreferencesToText());
         }
 
@@ -151,7 +151,7 @@ namespace Seralyth.Mods
 
             NotificationManager.SendNotification("<color=grey>[</color><color=purple>PRESET</color><color=grey>]</color> Safety preset enabled successfully.");
         }
-        
+
         public static void SimplePreset()
         {
             string[] presetMods = {
@@ -162,10 +162,10 @@ namespace Seralyth.Mods
             };
 
             pageButtonType = 2;
-            
+
             foreach (string mod in presetMods)
                 Toggle(mod);
-            
+
             NotificationManager.SendNotification("<color=grey>[</color><color=purple>PRESET</color><color=grey>]</color> Simple preset enabled successfully.");
         }
     }

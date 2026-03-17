@@ -21,13 +21,13 @@
 
 using GorillaExtensions;
 using GorillaLocomotion;
+using Photon.Pun;
+using Photon.Realtime;
 using Seralyth.Classes.Menu;
 using Seralyth.Extensions;
 using Seralyth.Managers;
 using Seralyth.Menu;
 using Seralyth.Utilities;
-using Photon.Pun;
-using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -76,7 +76,7 @@ namespace Seralyth.Mods
             lockShift = false;
 
             if (isKeyboardPc)
-                lastPressedKeys.Add(KeyCode.Q);
+                lastPressedKeys.Add(Key.Q);
 
             if (!isKeyboardPc)
             {
@@ -110,7 +110,7 @@ namespace Seralyth.Mods
                         .Select(name => VRKeyboard.transform.Find(name))
                         .Where(t => t != null)
                         .SelectMany(t => t.Children())
-                        .Select(t => t.gameObject); 
+                        .Select(t => t.gameObject);
 
                     foreach (GameObject v in keys)
                     {
@@ -377,7 +377,7 @@ namespace Seralyth.Mods
 
             string version = PluginInfo.Version;
             if (PluginInfo.BetaBuild) version = "<color=blue>Beta</color> " + version;
-            Buttons.AddButton(category, new ButtonInfo { buttonText = "Exit Info Screen", method =() => Toggle("Info Screen"), isTogglable = false, toolTip = "Returns you back to the main page." });
+            Buttons.AddButton(category, new ButtonInfo { buttonText = "Exit Info Screen", method = () => Toggle("Info Screen"), isTogglable = false, toolTip = "Returns you back to the main page." });
             Buttons.AddButton(category, new ButtonInfo { buttonText = "DebugMenuName", overlapText = "<color=grey><b>Seralyth Menu </b></color>" + version, label = true });
             Buttons.AddButton(category, new ButtonInfo { buttonText = "DebugColor", overlapText = "Loading...", label = true });
             Buttons.AddButton(category, new ButtonInfo { buttonText = "DebugName", overlapText = "Loading...", label = true });
@@ -427,13 +427,13 @@ namespace Seralyth.Mods
 
         public static void PlayersTab()
         {
-            List<ButtonInfo> buttons = new List<ButtonInfo> { 
-                new ButtonInfo { 
-                    buttonText = "Exit Players", 
-                    method =() => Buttons.CurrentCategoryName = "Main", 
-                    isTogglable = false, 
-                    toolTip = "Returns you back to the main page." 
-                } 
+            List<ButtonInfo> buttons = new List<ButtonInfo> {
+                new ButtonInfo {
+                    buttonText = "Exit Players",
+                    method =() => Buttons.CurrentCategoryName = "Main",
+                    isTogglable = false,
+                    toolTip = "Returns you back to the main page."
+                }
             };
 
             if (!PhotonNetwork.InRoom)
@@ -454,7 +454,7 @@ namespace Seralyth.Mods
                     {
                         buttonText = $"PlayerButton{i}",
                         overlapText = $"<color={playerColor}>" + player.NickName + "</color>",
-                        method =() => NavigatePlayer(player),
+                        method = () => NavigatePlayer(player),
                         isTogglable = false,
                         toolTip = $"See information on the player {player.NickName}."
                     });
@@ -721,7 +721,7 @@ namespace Seralyth.Mods
 
         public static void CategorySettings()
         {
-            List<ButtonInfo> buttons = new List<ButtonInfo> {new ButtonInfo { buttonText = "Exit Menu Settings", method =() => { Buttons.CurrentCategoryName = "Settings"; Buttons.buttons[Buttons.GetCategory("Temporary Category")] = Array.Empty<ButtonInfo>(); }, isTogglable = false, toolTip = "Returns you back to the settings menu."}};
+            List<ButtonInfo> buttons = new List<ButtonInfo> { new ButtonInfo { buttonText = "Exit Menu Settings", method = () => { Buttons.CurrentCategoryName = "Settings"; Buttons.buttons[Buttons.GetCategory("Temporary Category")] = Array.Empty<ButtonInfo>(); }, isTogglable = false, toolTip = "Returns you back to the settings menu." } };
 
             foreach (var button in Buttons.buttons[Buttons.GetCategory("Main")])
             {
@@ -730,8 +730,8 @@ namespace Seralyth.Mods
                     buttonText = $"Category{button.buttonText.Hash()}",
                     overlapText = button.buttonText,
                     enabled = !skipButtons.Contains(button.buttonText),
-                    enableMethod =() => skipButtons.Remove(button.buttonText),
-                    disableMethod =() => skipButtons.Add(button.buttonText),
+                    enableMethod = () => skipButtons.Remove(button.buttonText),
+                    disableMethod = () => skipButtons.Add(button.buttonText),
                     toolTip = "Toggles the visibility of the category " + button.buttonText + "."
                 });
             }
@@ -814,12 +814,12 @@ namespace Seralyth.Mods
             switch (SystemInfo.operatingSystemFamily)
             {
                 case OperatingSystemFamily.Windows:
-                {
-                    string logoLines = "";
-                    foreach (string line in PluginInfo.Logo.Split(@"
+                    {
+                        string logoLines = "";
+                        foreach (string line in PluginInfo.Logo.Split(@"
                     "))
-                    logoLines += Environment.NewLine + @" ""    " + line + @" """;
-                    string updateScript = @"@echo off
+                            logoLines += Environment.NewLine + @" ""    " + line + @" """;
+                        string updateScript = @"@echo off
                     title Seralyth Menu
                     color 0E
 
@@ -864,22 +864,22 @@ namespace Seralyth.Mods
                     start steam://run/1533390
                     exit";
 
-                    string fileName = $"{PluginInfo.BaseDirectory}/UpdateScript.bat";
+                        string fileName = $"{PluginInfo.BaseDirectory}/UpdateScript.bat";
 
-                    File.WriteAllText(fileName, updateScript);
+                        File.WriteAllText(fileName, updateScript);
 
-                    string filePath = FileUtilities.GetGamePath() + "/" + fileName;
-                    Process.Start(filePath);
-                    Application.Quit();
-                    break;
-                }
+                        string filePath = FileUtilities.GetGamePath() + "/" + fileName;
+                        Process.Start(filePath);
+                        Application.Quit();
+                        break;
+                    }
                 case OperatingSystemFamily.Linux:
-                {
-                    string logoLines = "";
-                    foreach (string line in PluginInfo.Logo.Split(@"
+                    {
+                        string logoLines = "";
+                        foreach (string line in PluginInfo.Logo.Split(@"
                     "))
-                    logoLines += Environment.NewLine + @" ""    " + line + @" """;
-                    string updateScript = @"#!/bin/bash
+                            logoLines += Environment.NewLine + @" ""    " + line + @" """;
+                        string updateScript = @"#!/bin/bash
                     clear
                     echo " + logoLines + @"
                     echo
@@ -913,18 +913,18 @@ namespace Seralyth.Mods
                     xdg-open ""steam://run/1533390""
                     exit 0";
 
-                    string fileName = $"{PluginInfo.BaseDirectory}/UpdateScript.sh";
-                    File.WriteAllText(fileName, updateScript);
-                    Process.Start("chmod", $"+x \"{fileName}\"");
-                    Process.Start(new ProcessStartInfo
-                    {
-                        FileName = "/bin/bash",
-                        Arguments = $"\"{fileName}\"",
-                        UseShellExecute = false
-                    });
-                    Application.Quit();
-                    break;
-                }
+                        string fileName = $"{PluginInfo.BaseDirectory}/UpdateScript.sh";
+                        File.WriteAllText(fileName, updateScript);
+                        Process.Start("chmod", $"+x \"{fileName}\"");
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = "/bin/bash",
+                            Arguments = $"\"{fileName}\"",
+                            UseShellExecute = false
+                        });
+                        Application.Quit();
+                        break;
+                    }
             }
         }
 
@@ -950,7 +950,7 @@ namespace Seralyth.Mods
         {
             watchMenu = true;
             GameObject mainwatch = VRRig.LocalRig.transform.Find("rig/hand.L/huntcomputer (1)").gameObject;
-            watchobject = Object.Instantiate(mainwatch, 
+            watchobject = Object.Instantiate(mainwatch,
                 rightHand ?
                 VRRig.LocalRig.transform.Find("rig/hand.R").transform :
                 VRRig.LocalRig.transform.Find("rig/hand.L").transform, false);
@@ -1075,9 +1075,9 @@ namespace Seralyth.Mods
         // I know there's better ways to do this. Trust me.
         public static void ChangeMenuTheme(bool increment = true)
         {
-            if (increment) 
-                themeType++; 
-            else 
+            if (increment)
+                themeType++;
+            else
                 themeType--;
 
             const int themeCount = 65;
@@ -1118,7 +1118,7 @@ namespace Seralyth.Mods
                         new ExtGradient // Title
                         {
                             colors = ExtGradient.GetSolidGradient(Color.white)
-                        },  
+                        },
                         new ExtGradient // Button Released
                         {
                             colors = ExtGradient.GetSolidGradient(Color.white)
@@ -3974,7 +3974,7 @@ namespace Seralyth.Mods
         public static void CMTBackgroundSecond()
         {
             modifyWhatId = 1;
-  
+
             List<ButtonInfo> buttons = new List<ButtonInfo> {
                 new ButtonInfo { buttonText = "Exit Second Color", method = () => CMTBackground(), isTogglable = false, toolTip = "Returns you back to the background menu." },
                 new ButtonInfo { buttonText = "Red", overlapText = "Red <color=grey>[</color><color=green>" + (int)Math.Round(backgroundColor.GetColor(1).r * 10f) + "</color><color=grey>]</color>", method =() => CMTRed(), enableMethod =() => CMTRed(), disableMethod =() => CMTRed(false), incremental = true, isTogglable = false, toolTip = "Change the red of the second color of the background." },
@@ -4228,7 +4228,7 @@ namespace Seralyth.Mods
             customMenuBackgroundImage = null;
             doCustomMenuBackground = false;
         }
-        
+
         public static void EnableWatermark()
         {
             bool enabled = Buttons.GetIndex("Custom Watermark").enabled;
@@ -4365,7 +4365,8 @@ namespace Seralyth.Mods
             if (fontCycle < 0)
                 fontCycle = 14;
 
-            switch (fontCycle) {
+            switch (fontCycle)
+            {
                 case 0:
                     activeFont = AgencyFB;
                     return;
@@ -4759,10 +4760,11 @@ namespace Seralyth.Mods
                 else
                     GorillaTagger.Instance.rigidbody.transform.position = closePosition;
                 GorillaTagger.Instance.rigidbody.linearVelocity = new Vector3(0f, 0f, 0f);
-            } else
+            }
+            else
                 closePosition = Vector3.zero;
         }
-        
+
         public static bool currentmentalstate;
         public static void FreezeRigInMenu()
         {
@@ -4811,9 +4813,11 @@ namespace Seralyth.Mods
 
         public static void DisablePageButtons()
         {
-            if (Buttons.GetIndex("Joystick Menu").enabled) {
+            if (Buttons.GetIndex("Joystick Menu").enabled)
+            {
                 disablePageButtons = true;
-            } else
+            }
+            else
             {
                 Buttons.GetIndex("Disable Page Buttons").enabled = false;
                 NotificationManager.SendNotification("<color=grey>[</color><color=red>DISABLE</color><color=grey>]</color> Disable Page Buttons can only be used when using Joystick Menu.");
@@ -4825,7 +4829,7 @@ namespace Seralyth.Mods
             doCustomName = true;
             if (!File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_CustomMenuName.txt"))
                 File.WriteAllText($"{PluginInfo.BaseDirectory}/Seralyth_CustomMenuName.txt", "Your Text Here");
-            
+
             customMenuName = File.ReadAllText($"{PluginInfo.BaseDirectory}/Seralyth_CustomMenuName.txt");
         }
 
@@ -4850,7 +4854,7 @@ namespace Seralyth.Mods
             keyWords = File.ReadAllLines($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt");
             mainPhrases = new KeywordRecognizer(keyWords);
             mainPhrases.OnPhraseRecognized += ModRecognition;
-            mainPhrases.Start();          
+            mainPhrases.Start();
         }
 
         private static Coroutine timeoutCoroutine;
@@ -4860,7 +4864,7 @@ namespace Seralyth.Mods
 
             if (!Buttons.GetIndex("Chain Voice Commands").enabled)
                 timeoutCoroutine = CoroutineManager.instance.StartCoroutine(Timeout(string.Empty));
-            
+
             List<string> rawbuttonnames = cancelKeywords.ToList();
 
             foreach (ButtonInfo[] buttonlist in Buttons.buttons)
@@ -4883,7 +4887,7 @@ namespace Seralyth.Mods
 
             if (dynamicSounds)
                 LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/select.ogg", "Audio/Menu/select.ogg", clip => DictationPlay(clip, buttonClickVolume / 10f));
-            
+
             NotificationManager.SendNotification("<color=grey>[</color><color=purple>VOICE</color><color=grey>]</color> Listening...", 3000);
         }
 
@@ -4924,7 +4928,8 @@ namespace Seralyth.Mods
                     {
                         modTarget = v.buttonText;
                         exactMatch = true;
-                    } else
+                    }
+                    else
                     {
                         if (args.text.Contains(buttonName.ToLower()))
                             modTarget = v.buttonText;
@@ -4935,14 +4940,15 @@ namespace Seralyth.Mods
             if (modTarget != null)
             {
                 ButtonInfo mod = Buttons.GetIndex(modTarget);
-                NotificationManager.SendNotification("<color=grey>[</color><color=" + (mod.enabled ? "red" : "green") + ">VOICE</color><color=grey>]</color> " + (mod.enabled ? "Disabling " : "Enabling ") + (mod.overlapText ?? mod.buttonText) +"...", 3000);
+                NotificationManager.SendNotification("<color=grey>[</color><color=" + (mod.enabled ? "red" : "green") + ">VOICE</color><color=grey>]</color> " + (mod.enabled ? "Disabling " : "Enabling ") + (mod.overlapText ?? mod.buttonText) + "...", 3000);
                 if (dynamicSounds)
                     LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/confirm.ogg", "Audio/Menu/confirm.ogg", clip => DictationPlay(clip, buttonClickVolume / 10f));
-                
+
                 Toggle(modTarget, true, true);
-            } else
+            }
+            else
             {
-                NotificationManager.SendNotification("<color=grey>[</color><color=red>VOICE</color><color=grey>]</color> No command found ("+args.text+").", 3000);
+                NotificationManager.SendNotification("<color=grey>[</color><color=red>VOICE</color><color=grey>]</color> No command found (" + args.text + ").", 3000);
                 if (dynamicSounds)
                     LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/close.ogg", "Audio/Menu/close.ogg", clip => DictationPlay(clip, buttonClickVolume / 10f));
             }
@@ -4961,8 +4967,9 @@ namespace Seralyth.Mods
             try
             {
                 CoroutineManager.instance.StopCoroutine(timeoutCoroutine);
-            } catch { }
-            
+            }
+            catch { }
+
             NotificationManager.SendNotification($"<color=grey>[</color><color=red>VOICE</color><color=grey>]</color> {(text == "i hate you" ? "I hate you too." : "Cancelling...")}", 3000);
             if (dynamicSounds)
                 LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/close.ogg", "Audio/Menu/close.ogg", clip => DictationPlay(clip, buttonClickVolume / 10f));
@@ -4988,7 +4995,7 @@ namespace Seralyth.Mods
 
         public static IEnumerator DictationOn()
         {
-            
+
 
             ButtonInfo mod = Buttons.GetIndex("AI Assistant");
 
@@ -5013,7 +5020,7 @@ namespace Seralyth.Mods
 
             string[] kw = keyWords;
             if (narratorName == "Mommy ASMR")
-               kw = kw.Concat(new[] { "mommy", "momma" }).ToArray();
+                kw = kw.Concat(new[] { "mommy", "momma" }).ToArray();
 
             krec = new KeywordRecognizer(kw);
 
@@ -5028,7 +5035,7 @@ namespace Seralyth.Mods
                 yield break;
 
             ButtonInfo mod = Buttons.GetIndex("AI Assistant");
-            
+
             PhraseRecognitionSystem.Shutdown();
             while (PhraseRecognitionSystem.Status != SpeechSystemStatus.Stopped)
                 yield return null;
@@ -5057,7 +5064,7 @@ namespace Seralyth.Mods
                 {
                     if (dynamicSounds)
                         LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/close.ogg", "Audio/Menu/close.ogg", clip => DictationPlay(clip, buttonClickVolume / 10f));
-                        
+
                     NotificationManager.SendNotification($"<color=grey>[</color><color=red>AI</color><color=grey>]</color> {(text.ToLower() == "i hate you" ? "I hate you too." : "Cancelling...")}", 3000);
                     CoroutineManager.instance.StartCoroutine(DictationRestart());
                     return;
@@ -5073,11 +5080,11 @@ namespace Seralyth.Mods
                         break;
 
                 }
-                
-                
+
+
                 CoroutineManager.instance.StartCoroutine(AIManager.AskAI(text));
                 return;
-                    
+
             };
 
             drec.DictationComplete += (completionCause) =>
@@ -5126,7 +5133,7 @@ namespace Seralyth.Mods
             CoroutineManager.instance.StartCoroutine(DictationOn());
             yield break;
         }
-        public static void DictationOff() 
+        public static void DictationOff()
         {
             drec?.Dispose();
             drec?.Stop();
@@ -5168,7 +5175,7 @@ namespace Seralyth.Mods
 
         public static void EnableClickGUI()
         {
-            clickGUI = true; 
+            clickGUI = true;
             ReloadMenu();
 
             Buttons.OnCategoryChanged += ReloadOnCategoryChange;
@@ -5189,7 +5196,7 @@ namespace Seralyth.Mods
         public static void InitializeClickGUI()
         {
             canvas = menu.transform.Find("Canvas").GetComponent<Canvas>();
-            
+
             if (!XRSettings.isDeviceActive)
             {
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -5391,29 +5398,29 @@ namespace Seralyth.Mods
 
                 Transform transform = button.transform;
                 if (info.incremental)
+                {
+                    transform.Find("Increment").GetComponent<Button>().onClick.AddListener(() =>
                     {
-                        transform.Find("Increment").GetComponent<Button>().onClick.AddListener(() =>
-                        {
-                            ToggleIncremental(info.buttonText, true);
-                            PlayButtonSound();
-                            UpdateButton(button, info);
-                        });
-                        transform.Find("Decrement").GetComponent<Button>().onClick.AddListener(() =>
-                        {
-                            ToggleIncremental(info.buttonText, false);
-                            PlayButtonSound();
-                            UpdateButton(button, info);
-                        });
-                    }
-                    else
+                        ToggleIncremental(info.buttonText, true);
+                        PlayButtonSound();
+                        UpdateButton(button, info);
+                    });
+                    transform.Find("Decrement").GetComponent<Button>().onClick.AddListener(() =>
                     {
-                        transform.Find("Toggle").GetComponent<Button>().onClick.AddListener(() =>
-                        {
-                            Toggle(info);
-                            PlayButtonSound();
-                            UpdateButton(button, info);
-                        });
-                    }
+                        ToggleIncremental(info.buttonText, false);
+                        PlayButtonSound();
+                        UpdateButton(button, info);
+                    });
+                }
+                else
+                {
+                    transform.Find("Toggle").GetComponent<Button>().onClick.AddListener(() =>
+                    {
+                        Toggle(info);
+                        PlayButtonSound();
+                        UpdateButton(button, info);
+                    });
+                }
             }
 
             if (CurrentPrompt != null)
@@ -5497,7 +5504,7 @@ namespace Seralyth.Mods
                     categoryIndex++;
                 }
                 enabledMods = enabledMods.OrderBy(v => v.overlapText ?? v.buttonText).ToList();
-                
+
                 if (enabledMods.Count > 0)
                 {
                     canvasTransform.Find("Main/HomeTab/Enabled/Viewport/Content/None").gameObject.SetActive(false);
@@ -5815,7 +5822,8 @@ namespace Seralyth.Mods
                         GorillaTagger.Instance.StartVibration(leftHand, GorillaTagger.Instance.tagHapticStrength / 2f, 0.05f);
 
                         lastTarget = rigTarget;
-                    } else
+                    }
+                    else
                         lastTarget.mainSkin.material.color = targetColor;
 
                     bool trigger = leftHand ? leftTrigger > 0.5f : rightTrigger > 0.5f;
@@ -5832,7 +5840,8 @@ namespace Seralyth.Mods
                     }
 
                     lastTriggerSelect = trigger;
-                } else
+                }
+                else
                 {
                     if (lastTarget != null)
                     {
@@ -5843,7 +5852,8 @@ namespace Seralyth.Mods
                         lastTarget = null;
                     }
                 }
-            } else
+            }
+            else
             {
                 if (selectObject != null)
                 {
@@ -6065,7 +6075,7 @@ namespace Seralyth.Mods
             }
 
             string quickActionString = string.Join(seperator, quickActions);
-            
+
             string rebindingtext = "";
             foreach (ButtonInfo[] buttonlist in Buttons.buttons)
             {
@@ -6362,7 +6372,8 @@ namespace Seralyth.Mods
                         ModBindings[BindName] = Binds;
                     }
                 }
-            } catch { }
+            }
+            catch { }
 
             try
             {
@@ -6373,8 +6384,9 @@ namespace Seralyth.Mods
                     if (button != null)
                         quickActions.Add(quickAction);
                 }
-            } catch { }
-            
+            }
+            catch { }
+
             try
             {
                 foreach (string bind in textData[8].Split(";;"))
@@ -6385,7 +6397,8 @@ namespace Seralyth.Mods
                     if (button != null)
                         button.rebindKey = rebindKey;
                 }
-            } catch { }
+            }
+            catch { }
 
             try
             {
@@ -6396,7 +6409,8 @@ namespace Seralyth.Mods
                     if (button != null)
                         skipButtons.Add(skipButton);
                 }
-            } catch { }
+            }
+            catch { }
 
             hasLoadedPreferences = true;
         }
@@ -6413,7 +6427,8 @@ namespace Seralyth.Mods
 
                 string text = File.ReadAllText($"{PluginInfo.BaseDirectory}/Seralyth_Preferences.txt");
                 LoadPreferencesFromText(text);
-            } catch (Exception e) { LogManager.Log("Error loading preferences: " + e.Message); }
+            }
+            catch (Exception e) { LogManager.Log("Error loading preferences: " + e.Message); }
         }
 
         public static void Panic()
@@ -6444,18 +6459,18 @@ namespace Seralyth.Mods
             LeftOverride
         }
 
-        public static readonly Dictionary<ControllerBinding, KeyCode> pcBindings = new Dictionary<ControllerBinding, KeyCode>
+        public static readonly Dictionary<ControllerBinding, Key> pcBindings = new Dictionary<ControllerBinding, Key>
         {
-            { ControllerBinding.RightPrimaryButton, KeyCode.E },
-            { ControllerBinding.RightSecondaryButton, KeyCode.R },
-            { ControllerBinding.LeftPrimaryButton, KeyCode.F },
-            { ControllerBinding.LeftSecondaryButton, KeyCode.G },
-            { ControllerBinding.LeftGrip, KeyCode.LeftBracket },
-            { ControllerBinding.RightGrip, KeyCode.RightBracket },
-            { ControllerBinding.LeftTrigger, KeyCode.Minus },
-            { ControllerBinding.RightTrigger, KeyCode.Equals },
-            { ControllerBinding.JoystickClick, KeyCode.Return },
-            { ControllerBinding.LeftOverride, KeyCode.LeftAlt }
+            { ControllerBinding.RightPrimaryButton, Key.E },
+            { ControllerBinding.RightSecondaryButton, Key.R },
+            { ControllerBinding.LeftPrimaryButton, Key.F },
+            { ControllerBinding.LeftSecondaryButton, Key.G },
+            { ControllerBinding.LeftGrip, Key.LeftBracket },
+            { ControllerBinding.RightGrip, Key.RightBracket },
+            { ControllerBinding.LeftTrigger, Key.Minus },
+            { ControllerBinding.RightTrigger, Key.Equals },
+            { ControllerBinding.JoystickClick, Key.Enter },
+            { ControllerBinding.LeftOverride, Key.LeftAlt }
         };
 
         public static void LoadPCControls()
@@ -6477,7 +6492,7 @@ namespace Seralyth.Mods
 
                     string[] splitData = finalLine.Split(" - ");
 
-                    if (Enum.TryParse(splitData[1], out ControllerBinding binding) && Enum.TryParse(splitData[0], out KeyCode key))
+                    if (Enum.TryParse(splitData[1], out ControllerBinding binding) && Enum.TryParse(splitData[0], out Key key))
                         pcBindings[binding] = key;
                 }
             }

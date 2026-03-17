@@ -300,7 +300,7 @@ namespace Seralyth.Managers
                 string[] Data = plugin.Split(";");
                 buttonInfos.Add(new ButtonInfo { buttonText = "PluginDownload" + index, overlapText = Data[0], method = () => DownloadPlugin(Data[0], Data[2]), isTogglable = false, toolTip = Data[1] });
             }
-            
+
             Buttons.buttons[Buttons.GetCategory("Temporary Category")] = buttonInfos.ToArray();
             Buttons.CurrentCategoryName = "Temporary Category";
         }

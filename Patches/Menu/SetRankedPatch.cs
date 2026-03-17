@@ -20,7 +20,7 @@
  */
 
 using HarmonyLib;
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Seralyth.Patches.Menu
 {
@@ -33,7 +33,7 @@ namespace Seralyth.Patches.Menu
         {
             if (enabled)
             {
-                Dictionary<int, int[]> tierData = new Dictionary<int, int[]> 
+                Dictionary<int, int[]> tierData = new Dictionary<int, int[]>
                 {
                     { 0, new[] { 0, 0 } },
                     { 1, new[] { 0, 1 } },

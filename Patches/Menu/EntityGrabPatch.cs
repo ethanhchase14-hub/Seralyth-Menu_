@@ -20,7 +20,7 @@
  */
 
 using HarmonyLib;
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Seralyth.Patches.Menu
@@ -58,7 +58,7 @@ namespace Seralyth.Patches.Menu
 
                 return false;
             }
-            
+
             return true;
         }
     }

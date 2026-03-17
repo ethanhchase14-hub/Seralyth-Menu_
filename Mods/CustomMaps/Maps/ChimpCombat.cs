@@ -20,10 +20,10 @@
  */
 
 using ExitGames.Client.Photon;
-using Seralyth.Classes.Menu;
-using Seralyth.Managers;
 using Photon.Pun;
 using Photon.Realtime;
+using Seralyth.Classes.Menu;
+using Seralyth.Managers;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -284,7 +284,7 @@ namespace Seralyth.Mods.CustomMaps.Maps
             if (!(Time.time > crashDelay)) return;
             foreach (NetPlayer player in NetworkSystem.Instance.PlayerListOthers)
                 CrashPlayer(player.ActorNumber);
-                
+
             crashDelay = Time.time + 0.1f;
         }
         public static void AntiReportCrash()

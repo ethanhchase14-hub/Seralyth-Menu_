@@ -21,10 +21,10 @@
 
 using GorillaNetworking;
 using HarmonyLib;
-using Seralyth.Managers;
 using PlayFab;
 using PlayFab.CloudScriptModels;
 using PlayFab.Internal;
+using Seralyth.Managers;
 using System;
 using System.Collections.Generic;
 
@@ -102,7 +102,7 @@ namespace Seralyth.Patches.Menu
                     return true;
 
                 CallRequestContainer callRequestContainer = (CallRequestContainer)reqContainerObj;
-                
+
                 if (callRequestContainer.ErrorCallback != null)
                 {
                     Action<PlayFabError> errorCallback = callRequestContainer.ErrorCallback;
