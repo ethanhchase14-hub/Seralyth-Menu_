@@ -2450,8 +2450,13 @@ namespace Seralyth.Mods
         public static void ProcessFrameBuffer(float[] data) =>
             factory.Feed(data);
 
-        public static void ReloadMicrophone() =>
-            NetworkSystem.Instance.VoiceConnection.PrimaryRecorder.RestartRecording(true);
+        public static void ReloadMicrophone()
+        {
+            Recorder recorder = NetworkSystem.Instance.VoiceConnection.PrimaryRecorder;
+            if (!RecorderPatch.enabled && recorder.SourceType != Recorder.InputSourceType.Microphone)
+                recorder.SourceType = Recorder.InputSourceType.Microphone;
+            recorder.RestartRecording(true);
+        }
 
         public static IEnumerator DelayReloadMicrophone()
         {
