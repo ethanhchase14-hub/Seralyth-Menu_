@@ -2991,28 +2991,6 @@ Piece Name: {gunTarget.name}";
             GTPlayer.Instance.hoverTiltAdjustsForwardFactor = 0.2f;
         }
 
-        private static bool hasGrabbedHoverboard;
-        public static void GlobalHoverboard()
-        {
-            if (!hasGrabbedHoverboard)
-            {
-                GTPlayer.Instance.GrabPersonalHoverboard(false, Vector3.zero, Quaternion.identity, Color.black);
-                hasGrabbedHoverboard = true;
-            }
-
-            GTPlayer.Instance.SetHoverAllowed(true);
-            GTPlayer.Instance.SetHoverActive(true);
-            VRRig.LocalRig.hoverboardVisual.gameObject.SetActive(true);
-        }
-
-        public static void DisableGlobalHoverboard()
-        {
-            hasGrabbedHoverboard = false;
-
-            GTPlayer.Instance.SetHoverAllowed(false);
-            GTPlayer.Instance.SetHoverActive(false);
-            VRRig.LocalRig.hoverboardVisual.gameObject.SetActive(false);
-        }
 
         public static Coroutine DisableHoverboardCoroutine;
         public static IEnumerator DisableHoverboard()
