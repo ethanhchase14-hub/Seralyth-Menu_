@@ -792,7 +792,7 @@ namespace Seralyth.Menu
                             if (previousButton)
                             {
                                 pageButtonChangeDelay = Time.time + 0.2f;
-                                if (exclusivePageSounds)
+                                if (exclusivePageSounds || (!string.IsNullOrEmpty(SoundManager.DefaultSoundpack) && SoundManager.DefaultSoundpack != "None"))
                                     SoundManager.Play("Previous");
                                 else
                                     SoundManager.Play("Button");
@@ -802,7 +802,7 @@ namespace Seralyth.Menu
                             if (nextButton)
                             {
                                 pageButtonChangeDelay = Time.time + 0.2f;
-                                if (exclusivePageSounds)
+                                if (exclusivePageSounds || (!string.IsNullOrEmpty(SoundManager.DefaultSoundpack) && SoundManager.DefaultSoundpack != "None"))
                                     SoundManager.Play("Next");
                                 else 
                                     SoundManager.Play("Button");
@@ -3372,7 +3372,7 @@ namespace Seralyth.Menu
             catch { }
 
             if (dynamicSounds)
-                LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/open.ogg", "Audio/Menu/open.ogg", clip => Play2DAudio(clip, buttonClickVolume / 10f));
+                SoundManager.Play(SoundManager.DefaultSounds["Open"]);
 
             CreateMenu();
 
@@ -3417,7 +3417,7 @@ namespace Seralyth.Menu
 
             GetObject("Shoulder Camera").transform.Find("CM vcam1").gameObject.SetActive(true);
             if (dynamicSounds)
-                LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/Audio/Menu/close.ogg", "Audio/Menu/close.ogg", clip => Play2DAudio(clip, buttonClickVolume / 10f));
+                SoundManager.Play(SoundManager.DefaultSounds["Close"]);
 
             try
             {

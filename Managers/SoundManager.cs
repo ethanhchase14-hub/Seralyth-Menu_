@@ -112,7 +112,7 @@ namespace Seralyth.Managers
                 { "GMod Error", "Audio/Menu/Notifications/gmod-error.ogg" }
             }
         };
-
+         
         public static Dictionary<string, string> DefaultSounds = new Dictionary<string, string>
         {
             { "Button", "Default" },
@@ -126,53 +126,214 @@ namespace Seralyth.Managers
             { "Select", "Select" }
         };
 
+        public static readonly Dictionary<string, Dictionary<string, object>> Soundpacks = new Dictionary<string, Dictionary<string, object>>
+        {
+            ["None"] = null,
+
+            ["SteamVR"] = new Dictionary<string, object>
+            {
+                ["Buttons"] = new Dictionary<string, object>
+                {
+                    { "Default", "Audio/Menu/Preset/SteamVR/click.ogg" }
+                },
+                ["Menu"] = new Dictionary<string, object>
+                {
+                    { "Open", "Audio/Menu/Preset/SteamVR/open.ogg" },
+                    { "Close", "Audio/Menu/Preset/SteamVR/close.ogg" },
+                    { "Achievement", "Audio/Menu/Preset/SteamVR/achievement.ogg" },
+                    { "Admin", "Audio/Menu/Preset/SteamVR/patreon.ogg" },
+                    { "Patreon", "Audio/Menu/Preset/SteamVR/patreon.ogg" }
+                },
+
+                ["Notifications"] = new Dictionary<string, object>
+                {
+                    { "None", "Audio/Menu/Preset/SteamVR/notification.ogg" },
+                }
+            },
+            ["Minecraft Legacy Edition"] = new Dictionary<string, object>
+            {
+                ["Buttons"] = new Dictionary<string, object>
+                {
+                    { "Default", "Audio/Menu/Preset/MinecraftLegacyEdition/click.ogg" }
+                },
+
+                ["Menu"] = new Dictionary<string, object>
+                {
+                    { "Admin", "Audio/Menu/Preset/MinecraftLegacyEdition/patreon.ogg" },
+                    { "Patreon", "Audio/Menu/Preset/MinecraftLegacyEdition/patreon.ogg" },
+                    { "Return",  "Audio/Menu/Preset/MinecraftLegacyEdition/back.ogg" }
+                },
+                ["Notifications"] = new Dictionary<string, object>
+                {
+                    { "None", "Audio/Menu/Preset/MinecraftLegacyEdition/notification.ogg" },
+                }
+            },
+            ["Playstation 2"] = new Dictionary<string, object>
+            {
+                ["Buttons"] = new Dictionary<string, object>
+                {
+                    { "Default", "Audio/Menu/Preset/Playstation2/click.ogg" }
+                },
+                ["Notifications"] = new Dictionary<string, object>
+                {
+                    { "None", "Audio/Menu/Preset/Playstation2/notification.ogg" },
+                }
+            },
+            ["Nintendo Switch"] = new Dictionary<string, object>
+            {
+                ["Buttons"] = new Dictionary<string, object>
+                {
+                    { "Default", "Audio/Menu/Preset/NintendoSwitch/click.ogg" }
+                },
+
+                ["Menu"] = new Dictionary<string, object>
+                {
+                    { "Achievement", "Audio/Menu/Preset/NintendoSwitch/achievement.ogg" },
+                    { "Return",  "Audio/Menu/Preset/NintendoSwitch/back.ogg" }
+                },
+                ["Notifications"] = new Dictionary<string, object>
+                {
+                    { "None", "Audio/Menu/Preset/NintendoSwitch/notification.ogg" },
+                }
+            },
+
+        };
+
+        public static string DefaultSoundpack = "None";
+
         public static void Play(string sound, string outputPath = null, Action<AudioClip> action = null, string buttonText = null, bool overlapHand = false, bool leftOverlap = false)
         {
             if (string.IsNullOrEmpty(sound)) return;
 
-            bool archiveRightHand = rightHand;
-            if (overlapHand) rightHand = leftOverlap;
-
-            if (doButtonsVibrate)
-                GorillaTagger.Instance.StartVibration(rightHand, GorillaTagger.Instance.tagHapticStrength / 2f, GorillaTagger.Instance.tagHapticDuration / 2f);
-
-            object path = null;
-            foreach (var category in Sounds.Values)
-                if (category.TryGetValue(sound, out path)) break;
-
-            if (path == null)
+            try
             {
-                rightHand = archiveRightHand;
-                return;
-            }
+                bool archiveRightHand = rightHand;
+                if (overlapHand) rightHand = leftOverlap;
 
-            switch (path)
-            {
-                case int rpcId:
-                    VRRig.LocalRig.PlayHandTapLocal(rpcId, rightHand, buttonClickVolume / 10f);
-                    if (PhotonNetwork.InRoom)
-                        GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlayHandTap", RpcTarget.Others, rpcId, rightHand, buttonClickVolume / 10f);
+                if (doButtonsVibrate)
+                    GorillaTagger.Instance.StartVibration(rightHand, GorillaTagger.Instance.tagHapticStrength / 2f, GorillaTagger.Instance.tagHapticDuration / 2f);
+
+                object path = ResolveSoundPath(sound);
+                if (path == null)
+                {
+                    rightHand = archiveRightHand;
+                    return;
+                }
+
+                switch (path)
+                {
+                    case int rpcId:
+                        VRRig.LocalRig.PlayHandTapLocal(rpcId, rightHand, buttonClickVolume / 10f);
+                        if (PhotonNetwork.InRoom)
+                            GorillaTagger.Instance.myVRRig.SendRPC("RPC_PlayHandTap", RpcTarget.Others, rpcId, rightHand, buttonClickVolume / 10f);
                         RPCProtection();
-                    break;
+                        break;
 
-                case string s:
-                    if (string.IsNullOrEmpty(s))
-                    {
-                        rightHand = archiveRightHand;
-                        return;
-                    }
-                    if (s.Contains("lever$1") && !string.IsNullOrEmpty(buttonText))
-                        s = s.Replace("$1", Buttons.GetIndex(buttonText).enabled ? "up" : "down");
-                    else if (s.Contains("lever$1") && string.IsNullOrEmpty(buttonText))
-                        s.Replace("lever$1", "leverup");
-                    AudioSource audioSource = rightHand ? VRRig.LocalRig.leftHandPlayer : VRRig.LocalRig.rightHandPlayer;
-                    audioSource.volume = buttonClickVolume / 10f;
-                    LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/{s}", outputPath ?? s, action ?? (clip => audioSource.PlayOneShot(clip, buttonClickVolume / 10f)));
-                    break;
+                    case string s:
+                        if (string.IsNullOrEmpty(s))
+                        {
+                            rightHand = archiveRightHand;
+                            return;
+                        }
+                        AudioSource audioSource = rightHand ? VRRig.LocalRig.leftHandPlayer : VRRig.LocalRig.rightHandPlayer;
+                        audioSource.volume = buttonClickVolume / 10f;
+                        LoadSoundFromURL($"{PluginInfo.ServerResourcePath}/{s}", outputPath ?? s,
+                            action ?? (clip =>
+                            {
+                                if (shouldBePC)
+                                    AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position, buttonClickVolume / 10f);
+                                else
+                                    audioSource.PlayOneShot(clip, buttonClickVolume / 10f);
+                            }
+                        )); 
+                        break;
+                }
+
+                rightHand = archiveRightHand;
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError(ex.Message);
+            }
+        }
+
+        private static string ResolveSoundPath(string sound, string buttonText = null)
+        {
+            if (string.IsNullOrEmpty(sound)) return null;
+
+            Dictionary<string, object> pack = null;
+            bool hasPack = !string.IsNullOrEmpty(DefaultSoundpack) && DefaultSoundpack != "None" && Soundpacks.TryGetValue(DefaultSoundpack, out pack) && pack != null;
+
+            if (sound == "Return")
+            {
+                if (hasPack && pack.TryGetValue("Menu", out var returnMenuObj) && returnMenuObj is Dictionary<string, object> returnMenu && returnMenu.TryGetValue("Return", out var returnPathObj) && returnPathObj is string returnPath && !string.IsNullOrEmpty(returnPath))
+                {
+                    return returnPath;
+                }
+
+                string fallbackButtonName = DefaultSounds.TryGetValue("Button", out var btnName) ? btnName : "Default";
+                if (Sounds.TryGetValue("Buttons", out var buttonsDict) && buttonsDict.TryGetValue(fallbackButtonName, out var btnPathObj) && btnPathObj is string btnPath && !string.IsNullOrEmpty(btnPath))
+                {
+                    return btnPath;
+                }
+
+                if (Sounds.TryGetValue("Buttons", out var buttonsDefaultDict) && buttonsDefaultDict.TryGetValue("Default", out var btnDefaultObj) && btnDefaultObj is string btnDefaultPath && !string.IsNullOrEmpty(btnDefaultPath))
+                {
+                    return btnDefaultPath;
+                }
+
+                return null;
             }
 
-            rightHand = archiveRightHand;
-        } 
+            string category = null;
+            foreach (var kvp in Sounds)
+            {
+                if (kvp.Value == null) continue;
+                if (!kvp.Value.ContainsKey(sound)) continue;
+                category = kvp.Key;
+                break;
+            }
+
+            object baseRequestedPath = null;
+            if (category != null && Sounds.TryGetValue(category, out var baseCategory))
+            {
+                baseCategory.TryGetValue(sound, out baseRequestedPath);
+            }
+
+            object rawPath;
+            if (hasPack && category != null && pack.TryGetValue(category, out var packCategoryObj) && packCategoryObj is Dictionary<string, object> packCategory)
+            {
+                packCategory.TryGetValue(sound, out rawPath);
+                if (rawPath == null && !packCategory.TryGetValue("Default", out rawPath))
+                {
+                    packCategory.TryGetValue("None", out rawPath);
+                }
+                rawPath ??= baseRequestedPath;
+            }
+            else
+            {
+                rawPath = baseRequestedPath;
+            }
+
+            if (!(rawPath is string s)) return null;
+            if (string.IsNullOrEmpty(s)) return null;
+
+            if (s.Contains("lever$1"))
+            {
+                if (!string.IsNullOrEmpty(buttonText))
+                {
+                    var button = Buttons.GetIndex(buttonText);
+                    s = s.Replace("$1", button != null && button.enabled ? "up" : "down");
+                }
+                else
+                {
+                    s = s.Replace("lever$1", "leverup");
+                }
+            }
+
+            return s;
+        }
+
     }
 }
 

@@ -38,7 +38,8 @@ namespace Seralyth.Classes.Menu
                 (collider != buttonCollider && collider != lKeyCollider && collider != rKeyCollider) || joystickMenu ||
                 menu == null) return;
             buttonCooldown = Time.time + 0.2f;
-            SoundManager.Play(SoundManager.DefaultSounds["Button"], buttonText: relatedText);
+            if (relatedText != "Global Return") // HARDCODED GLOBAL RETURN CHECK (im gonna forget)
+                SoundManager.Play(SoundManager.DefaultSounds["Button"], buttonText: relatedText);
 
             if (annoyingMode)
             {

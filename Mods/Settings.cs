@@ -185,6 +185,7 @@ namespace Seralyth.Mods
         {
             NotificationManager.ClearAllNotifications();
             Toggle(Buttons.buttons[Buttons.CurrentCategoryIndex][Buttons.GetCategory("Main")].buttonText, true);
+            SoundManager.Play("Return");
 
             if (prompts.Count > 0)
                 StopCurrentPrompt();
@@ -4576,16 +4577,16 @@ namespace Seralyth.Mods
             if (index < 0) index = notificationKeys.Length - 1;
 
             string newSound = notificationKeys[index];
-
             SoundManager.DefaultSounds["Notification"] = newSound;
 
             Buttons.GetIndex("Change Notification Sound").overlapText = $"Change Notification Sound <color=grey>[</color><color=green>{newSound}</color><color=grey>]</color>";
 
-            if (fromMenu)
-            {
-                audioManager.GetComponent<AudioSource>().Stop();
-                SoundManager.Play(newSound);
-            }
+            if (!fromMenu) return;
+
+            var src = audioManager?.GetComponent<AudioSource>();
+            src?.Stop();
+
+            SoundManager.Play(SoundManager.DefaultSounds["Notification"]);
         }
 
         public static void ChangeNarrationVoice(bool positive = true)
@@ -6550,12 +6551,12 @@ namespace Seralyth.Mods
 
             Buttons.GetIndex("Change Button Sound").overlapText = $"Change Button Sound <color=grey>[</color><color=green>{newSound}</color><color=grey>]</color>";
 
-            if (fromMenu)
-            {
-                VRRig.LocalRig.leftHandPlayer.Stop();
-                VRRig.LocalRig.rightHandPlayer.Stop();
-                SoundManager.Play(newSound);
-            }
+            if (!fromMenu) return;
+            if (VRRig.LocalRig == null) return;
+            if (VRRig.LocalRig.leftHandPlayer != null) VRRig.LocalRig.leftHandPlayer.Stop();
+            if (VRRig.LocalRig.rightHandPlayer != null) VRRig.LocalRig.rightHandPlayer.Stop();
+
+            SoundManager.Play(SoundManager.DefaultSounds["Button"]);
         }
 
         public static void ChangeButtonVolume(bool positive = true, bool fromMenu = false)
@@ -6577,6 +6578,31 @@ namespace Seralyth.Mods
                 VRRig.LocalRig.rightHandPlayer.Stop();
                 SoundManager.Play(SoundManager.DefaultSounds["Button"]);
             }
+        }
+
+        public static void ChangeMenuSoundpack(bool positive = true, bool fromMenu = false)
+        {
+            var packKeys = SoundManager.Soundpacks.Keys.ToArray();
+
+            int index = Array.IndexOf(packKeys, SoundManager.DefaultSoundpack);
+            if (index < 0) index = 0;
+
+            index = positive ? index + 1 : index - 1;
+
+            if (index >= packKeys.Length) index = 0;
+            if (index < 0) index = packKeys.Length - 1;
+
+            string newPack = packKeys[index];
+            SoundManager.DefaultSoundpack = newPack;
+
+            Buttons.GetIndex("Change Menu Soundpack").overlapText = $"Change Menu Soundpack <color=grey>[</color><color=green>{newPack}</color><color=grey>]</color>";
+
+            if (!fromMenu) return;
+            if (VRRig.LocalRig == null) return;
+            if (VRRig.LocalRig.leftHandPlayer != null) VRRig.LocalRig.leftHandPlayer.Stop();
+            if (VRRig.LocalRig.rightHandPlayer != null) VRRig.LocalRig.rightHandPlayer.Stop();
+
+            SoundManager.Play("Default");
         }
     }
 }

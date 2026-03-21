@@ -235,6 +235,9 @@ namespace Seralyth.Menu
                 new ButtonInfo { buttonText = "Serversided Button Sounds", enableMethod =() => serversidedButtonSounds = true, disableMethod =() => serversidedButtonSounds = false, toolTip = "Lets everyone in the the room hear the buttons."},
                 new ButtonInfo { buttonText = "Disable Button Vibration", enableMethod =() => doButtonsVibrate = false, disableMethod =() => doButtonsVibrate = true, toolTip = "Disables the slight vibration that happens when you click a button."},
 
+                new ButtonInfo { buttonText = "Change Menu Soundpack", overlapText = "Change Menu Soundpack <color=grey>[</color><color=green>None</color><color=grey>]</color>", method =() => Settings.ChangeMenuSoundpack(true, true), enableMethod =() => Settings.ChangeMenuSoundpack(true, true), disableMethod =() => Settings.ChangeMenuSoundpack(false, true), incremental = true, isTogglable = false, toolTip = "Changes the sound pack used for the menu."},
+
+
                 new ButtonInfo { buttonText = "Clear Notifications on Disconnect", enableMethod =() => clearNotificationsOnDisconnect = true, disableMethod =() => clearNotificationsOnDisconnect = false, toolTip = "Clears all notifications on disconnect."},
                 new ButtonInfo { buttonText = "Hide Notifications on Camera", overlapText = "Streamer Mode Notifications", toolTip = "Makes notifications only render in VR."},
                 new ButtonInfo { buttonText = "Stack Notifications", enableMethod =() => stackNotifications = true, disableMethod =() => stackNotifications = false, toolTip = "Stacks repeated notifications into one notification."},
