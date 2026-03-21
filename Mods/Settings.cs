@@ -6065,7 +6065,8 @@ namespace Seralyth.Mods
                 Movement.targetHz.ToString(),
                 Safety.pingSpoofValue.ToString(),
                 Fun.soundboardVolumeIndex.ToString(),
-                Fun.soundboardSpeedIndex.ToString()
+                Fun.soundboardSpeedIndex.ToString(),
+                SoundManager.DefaultSoundpack,
             };
 
             string settingstext = string.Join(seperator, settings);
@@ -6350,6 +6351,9 @@ namespace Seralyth.Mods
 
                 Fun.soundboardSpeedIndex = int.Parse(data[70]) - 1;
                 Fun.ChangeSoundboardPitch();
+
+                SoundManager.DefaultSoundpack = data[71];
+                Buttons.GetIndex("Change Menu Soundpack").overlapText = $"Change Menu Soundpack <color=grey>[</color><color=green>{SoundManager.DefaultSoundpack}</color><color=grey>]</color>";
             }
             catch { LogManager.Log("Save file out of date"); }
 
