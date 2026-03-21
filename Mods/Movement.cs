@@ -2264,9 +2264,13 @@ namespace Seralyth.Mods
             }
         }
 
+        public static bool frameStepper;
         public static bool midpointMacros;
         public static bool didMacro;
         public static bool directionBased;
+
+        private static bool frameCompleted;
+        private static bool frameStepperNotified;
         public static void ExecuteMacroButton(Macro macro)
         {
             didMacro = midpointMacros && (didMacro
@@ -2287,17 +2291,33 @@ namespace Seralyth.Mods
             }
 
             PlayerPosition startPosition = macro.positions[position];
+
+            if (frameStepper)
+            {
+                if (rightTriggerPressed && !frameStepperNotified)
+                {
+                    NotificationManager.SendNotification("<color=grey>[</color><color=green>MACRO</color><color=grey>]</color> Frame Stepper is on. Hit the A button to progress instead.");
+                    frameStepperNotified = true;
+                }
+                if (!frameCompleted && rightPrimary)
+                    frameCompleted = true;
+
+                if (!frameCompleted)
+                {
+                    VisualizePlayerPosition(startPosition, Color.white, 0.05f);
+                    return;
+                }
+
+                frameCompleted = false;
+            }
+
             bool doMacro = !directionBased || (GorillaTagger.Instance.rigidbody.linearVelocity.magnitude > 2f && Vector3.Angle(startPosition.velocity.normalized, GorillaTagger.Instance.rigidbody.linearVelocity.normalized) < 70f);
 
             VisualizePlayerPosition(startPosition, doMacro ? buttonColors[1].GetCurrentColor() : Color.white, doMacro ? 0.15f : 0.05f);
-            switch (doMacro)
-            {
-                case true:
-                    Visuals.VisualizeAura(startPosition.position, 1f, buttonColors[1].GetCurrentColor(), null, 0.05f);
-                    break;
-                case false:
-                    return;
-            }
+            if (doMacro)
+                Visuals.VisualizeAura(startPosition.position, 1f, buttonColors[1].GetCurrentColor(), null, 0.05f);
+            else
+                return;
 
             if (Vector3.Distance(GorillaTagger.Instance.bodyCollider.transform.position, startPosition.position) < 1f)
                 activeMacro = CoroutineManager.instance.StartCoroutine(PlayMacro(macro, position));
