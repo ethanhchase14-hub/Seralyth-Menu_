@@ -891,6 +891,11 @@ namespace Seralyth.Mods
             RankedPatch.targetTier = tier;
         }
 
+        /// <summary>
+        /// Spoofs your platform for the Ranked gamemode.
+        /// </summary>
+        /// <param name="enabled"></param>
+        /// <param name="target"></param>
         public static void SpoofPlatform(bool enabled, string target = null)
         {
             RankedPatch.enabled = enabled;
@@ -898,8 +903,10 @@ namespace Seralyth.Mods
         }
 
 
+        public static bool spoofingPlatform;
         public static void SpoofPlatform(bool enabled)
         {
+            spoofingPlatform = enabled;
             GorillaTagger.Instance.myVRRig.SendRPC("RPC_UpdateRankedInfo", RpcTarget.Others, 0, enabled ? 1 : 0, enabled ? 0 : 1);
         }
 

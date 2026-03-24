@@ -5698,6 +5698,8 @@ namespace Seralyth.Menu
             if (!disableRoomNotifications)
                 NotificationManager.SendNotification($"<color=grey>[</color><color=blue>JOIN ROOM</color><color=grey>]</color> Room Code: {lastRoom}");
 
+            Safety.SpoofPlatform(Safety.spoofingPlatform);
+
             OnMasterClientSwitch(NetworkSystem.Instance.MasterClient);
             RPCProtection();
         }
