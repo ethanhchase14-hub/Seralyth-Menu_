@@ -61,7 +61,6 @@ using WebSocketSharp;
 using static Seralyth.Utilities.AssetUtilities;
 using static Seralyth.Utilities.FileUtilities;
 using static Seralyth.Utilities.RandomUtilities;
-using static Unity.Burst.Intrinsics.X86.Avx;
 using ButtonCollider = Seralyth.Classes.Menu.ButtonCollider;
 using CommonUsages = UnityEngine.XR.CommonUsages;
 using Console = Seralyth.Classes.Menu.Console;

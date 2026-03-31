@@ -27,7 +27,6 @@ using Photon.Pun;
 using Seralyth.Classes.Menu;
 using Seralyth.Extensions;
 using Seralyth.Managers;
-using Seralyth.Menu;
 using Seralyth.Mods;
 using Seralyth.Patches.Menu;
 using Seralyth.Patches.Safety;
@@ -38,7 +37,6 @@ using System.Diagnostics;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using static Fusion.Sockets.NetBitBuffer;
 using static Seralyth.Menu.Main;
 using static Seralyth.Utilities.RandomUtilities;
 using static Seralyth.Utilities.RigUtilities;
@@ -2714,7 +2712,7 @@ namespace Seralyth.Menu
             new[] // Sound Properties [50]
             {
                 new ButtonInfo { buttonText = "Exit Sound's Properties", method = () => CurrentCategoryName = "Soundboard", isTogglable = false, toolTip = "Returns you back to the Soundboard page." }
-            } 
+            }
         };
 
         public static string[] categoryNames = {
