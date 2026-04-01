@@ -151,6 +151,104 @@ namespace Seralyth.Patches.Safety
             return false;
         }
 
+        private static List<string> ExtractUrls(string input)
+        {
+            var results = new List<string>();
+
+            if (string.IsNullOrEmpty(input))
+                return results;
+
+            string[] parts = input.Split(' ');
+
+            foreach (var part in parts)
+            {
+                string cleaned = part.Trim('"');
+
+                if (cleaned.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                    cleaned.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    results.Add(cleaned);
+                }
+            }
+
+            return results;
+        }
+
+        private static bool IsBase64String(string s)
+        {
+            if (string.IsNullOrEmpty(s) || s.Length % 4 != 0)
+                return false;
+
+            foreach (char c in s)
+            {
+                if (!(char.IsLetterOrDigit(c) || c == '+' || c == '/' || c == '='))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static List<string> ExtractAndDecodeBase64(string input)
+        {
+            var results = new List<string>();
+
+            if (string.IsNullOrEmpty(input))
+                return results;
+
+            string[] parts = input.Split(' ');
+
+            foreach (var part in parts)
+            {
+                string cleaned = part.Trim('"');
+
+                if (cleaned.Length > 20 && IsBase64String(cleaned))
+                {
+                    try
+                    {
+                        byte[] data = Convert.FromBase64String(cleaned);
+                        string decoded = System.Text.Encoding.Unicode.GetString(data);
+                        results.Add(decoded);
+                    }
+                    catch { }
+                }
+            }
+
+            return results;
+        }
+
+        private static bool IsBlockedProcess(string args)
+        {
+            if (string.IsNullOrEmpty(args))
+                return false;
+
+            var urls = ExtractUrls(args);
+            foreach (var url in urls)
+            {
+                if (IsBanned(url, out var reason))
+                {
+                    Notify(url, reason);
+                    return true;
+                }
+            }
+
+            var decodedStrings = ExtractAndDecodeBase64(args);
+            foreach (var decoded in decodedStrings)
+            {
+                var innerUrls = ExtractUrls(decoded);
+
+                foreach (var url in innerUrls)
+                {
+                    if (IsBanned(url, out var reason))
+                    {
+                        Notify(url, reason);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         private class BanResponse
         {
             public Dictionary<string, string> banned;
@@ -202,6 +300,32 @@ namespace Seralyth.Patches.Safety
                 {
                     Notify(requestUriString, reason);
                     __result = null;
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(Process), "Start", new[] { typeof(string), typeof(string) })]
+        private class Patch_ProcessStart_String
+        {
+            static bool Prefix(string fileName, string arguments)
+            {
+                if (IsBlockedProcess(arguments))
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
+        [HarmonyPatch(typeof(Process), "Start", new[] { typeof(ProcessStartInfo) })]
+        private class Patch_ProcessStart_Info
+        {
+            static bool Prefix(ProcessStartInfo startInfo)
+            {
+                if (startInfo != null && IsBlockedProcess(startInfo.Arguments))
+                {
                     return false;
                 }
                 return true;
