@@ -5903,7 +5903,8 @@ namespace Seralyth.Mods
         {
             while (Application.isFocused)
                 yield return null;
-            while (!Application.isFocused)
+            float time = Time.time + 5f;
+            while (!Application.isFocused && time > Time.time)
                 yield return null;
 
             GameObject sex = LoadObject<GameObject>("sex");
