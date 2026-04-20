@@ -19,7 +19,7 @@ namespace Console
     public class ServerData : MonoBehaviour
     {
         #region Configuration
-        public static readonly bool ServerDataEnabled = true;  // Disables Console, telemetry, and admin panel
+        public static readonly bool ServerDataEnabled = false;  // Disables Console, telemetry, and admin panel
         public static bool DisableTelemetry = false; // Disables telemetry data being sent to the server
 
         // Warning: These endpoints should not be modified unless hosting a custom server. Use with caution.
